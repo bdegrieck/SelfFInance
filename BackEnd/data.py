@@ -1,23 +1,18 @@
 from typing import Optional
 
 import requests
-from bs4 import BeautifulSoup
 
-def get_scraper(url: str):
-    response = requests.get(url)
-    scraper = BeautifulSoup(response.content, "html.parser")
-    return scraper
 
-def endpoint_company_request(api_key: Optional[str]=None):
+def endpoint_company_request(ticker: Optional[str], api_key: Optional[str]=None):
     dict_functions_company_urls = {
-        "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey={api_key}",
-        "news_sentiment": f"https://www.alphavantage.co/query?function=NEWS_SENTIMENT&symbol=IBM&apikey={api_key}",
-        "top_gainers_losers": f"https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&symbol=IBM&apikey={api_key}" ,
-        "overview": f"https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey={api_key}",
-        "income_statement": f"https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=IBM&apikey={api_key}",
-        "balance_sheet": f"https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=IBM&apikey={api_key}",
-        "cash_flow": f"https://www.alphavantage.co/query?function=CASH_FLOW&symbol=IBM&apikey={api_key}",
-        "earnings": f"https://www.alphavantage.co/query?function=EARNINGS&symbol=IBM&apikey={api_key}"
+        "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={api_key}",
+        "news_sentiment": f"https://www.alphavantage.co/query?function=NEWS_SENTIMENT&symbol={ticker}&apikey={api_key}",
+        "top_gainers_losers": f"https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&symbol={ticker}&apikey={api_key}" ,
+        "overview": f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={ticker}&apikey={api_key}",
+        "income_statement": f"https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={ticker}&apikey={api_key}",
+        "balance_sheet": f"https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={ticker}&apikey={api_key}",
+        "cash_flow": f"https://www.alphavantage.co/query?function=CASH_FLOW&symbol={ticker}&apikey={api_key}",
+        "earnings": f"https://www.alphavantage.co/query?function=EARNINGS&symbol={ticker}&apikey={api_key}"
     }
     return dict_functions_company_urls
 
