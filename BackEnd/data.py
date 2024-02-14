@@ -16,19 +16,26 @@ def endpoint_company_request(ticker: Optional[str], api_key: Optional[str]=None)
     }
     return dict_functions_company_urls
 
-def endpoint_micro_request(api_key: Optional[str]=None):
+
+def endpoint_micro_request(ticker: Optional[str], api_key: Optional[str]=None):
     dict_functions_micro_urls = {
-        "real_gdp": f"https://www.alphavantage.co/query?function=REAL_GDP&symbol=IBM&apikey={api_key}",
-        "cpi": f"https://www.alphavantage.co/query?function=CPI&symbol=IBM&apikey={api_key}",
-        "inflation": f"https://www.alphavantage.co/query?function=INFLATION&symbol=IBM&apikey={api_key}",
-        "federal_funds_rate": f"https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&symbol=IBM&apikey={api_key}",
-        "retail_sales": f"https://www.alphavantage.co/query?function=RETAIL_SALES&symbol=IBM&apikey={api_key}",
-        "unemployment": f"https://www.alphavantage.co/query?function=UNEMPLOYMENT&symbol=IBM&apikey={api_key}"
+        "real_gdp": f"https://www.alphavantage.co/query?function=REAL_GDP&symbol={ticker}&apikey={api_key}",
+        "cpi": f"https://www.alphavantage.co/query?function=CPI&symbol={ticker}&apikey={api_key}",
+        "inflation": f"https://www.alphavantage.co/query?function=INFLATION&symbol={ticker}&apikey={api_key}",
+        "federal_funds_rate": f"https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&symbol={ticker}&apikey={api_key}",
+        "retail_sales": f"https://www.alphavantage.co/query?function=RETAIL_SALES&symbol={ticker}&apikey={api_key}",
+        "unemployment": f"https://www.alphavantage.co/query?function=UNEMPLOYMENT&symbol={ticker}&apikey={api_key}"
     }
     return dict_functions_micro_urls
 
+
 def get_api_data(endpoints: dict):
     api_data = {}
-    for function, endpoint_url in endpoints.items():
-        api_data[function] = requests.get(url=endpoint_url)
+    for data_description, endpoint_url in endpoints.items():
+        api_data[data_description] = requests.get(url=endpoint_url).json()
     return api_data
+
+
+def format_data(api_data: dict):
+
+
