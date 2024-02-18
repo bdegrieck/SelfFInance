@@ -1,4 +1,4 @@
-from BackEnd.data import endpoint_company_request, endpoint_micro_request, get_raw_api_data, get_spec_api_data
+from BackEnd.data import endpoint_company_request, endpoint_micro_request, get_raw_api_data, get_spec_api_data, get_df
 
 
 # getting user data for ticker and economic data
@@ -25,3 +25,5 @@ class Main:
     #micro_raw_data = get_raw_api_data(endpoints=micro_endpoints)
 
     spec_company_data = get_spec_api_data(raw_data=company_raw_data)
+
+    company_df = get_df(spec_data=spec_company_data)

@@ -1,5 +1,5 @@
 from typing import Optional
-
+import pandas as pd
 import requests
 
 
@@ -38,7 +38,7 @@ def get_raw_api_data(endpoints: dict) -> dict:
 def get_spec_api_data(raw_data: dict) -> dict:
     spec_data = {}
     spec_data["Current Date"] = raw_data["times_series_data"]["Meta Data"]["3. Last Refreshed"]
-    spec_data["Current Price"] = raw_data["times_series_data"]["Time Series (Daily)"][spec_data["Current Date"]]
+    spec_data["Current Price"] = raw_data["times_series_data"]["Time Series (Daily)"][spec_data["Current Date"]]["4. close"]
     spec_data["Volume"] = raw_data["times_series_data"]["Time Series (Daily)"][spec_data["Current Date"]]["5. volume"]
     spec_data["Ticker Symbol"] = raw_data["overview"]["Symbol"]
     spec_data["Company Description"] = raw_data["overview"]["Description"]
@@ -52,4 +52,9 @@ def get_spec_api_data(raw_data: dict) -> dict:
     spec_data["Profit"] = raw_data["income_statement"]["quarterlyReports"][00]["grossProfit"]
 
     return spec_data
+
+
+def get_html(spec_data: dict) -> str:
+    html = pd.DataFrame([spec_data]).to_html()
+    return html
 
