@@ -18,16 +18,16 @@ class Main:
 
     # get url endpoints
     company_endpoints = endpoint_company_request(ticker=user_input_ticker, api_key=api_key)
-    micro_endpoints = endpoint_micro_request(ticker=user_input_ticker, api_key=api_key)
+    #micro_endpoints = endpoint_micro_request(ticker=user_input_ticker, api_key=api_key)
 
     # get raw
     company_raw_data = get_raw_api_data(endpoints=company_endpoints)
-    micro_raw_data = get_raw_api_data(endpoints=micro_endpoints)
+    #micro_raw_data = get_raw_api_data(endpoints=micro_endpoints)
 
     # get real data
     spec_company_data = get_spec_api_data(raw_data=company_raw_data)
-    spec_micro_data = get_spec_api_data(raw_data=micro_raw_data)
+    #spec_micro_data = get_spec_api_data(raw_data=micro_raw_data)
 
     # format data to html
     company_html = get_html(spec_data=spec_company_data)
-    micro_html = get_html(spec_data=spec_micro_data)
+    #micro_html = get_html(spec_data=spec_micro_data)
