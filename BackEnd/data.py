@@ -2,8 +2,7 @@ from typing import Optional
 import pandas as pd
 import requests
 
-
-
+# format company endpoints
 def endpoint_company_request(ticker: Optional[str], api_key: Optional[str] = None) -> dict:
     dict_functions_company_urls = {
         "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={api_key}",
@@ -15,7 +14,7 @@ def endpoint_company_request(ticker: Optional[str], api_key: Optional[str] = Non
     }
     return dict_functions_company_urls
 
-
+# format micro endpoints
 def endpoint_micro_request(ticker: Optional[str], api_key: Optional[str] = None) -> dict:
     dict_functions_micro_urls = {
         "real_gdp": f"https://www.alphavantage.co/query?function=REAL_GDP&symbol={ticker}&apikey={api_key}",
@@ -27,14 +26,14 @@ def endpoint_micro_request(ticker: Optional[str], api_key: Optional[str] = None)
     }
     return dict_functions_micro_urls
 
-
+# get raw data endpoints are passed in
 def get_raw_api_data(endpoints: dict) -> dict:
     raw_data = {}
     for data_description, endpoint_url in endpoints.items():
         raw_data[data_description] = requests.get(url=endpoint_url).json()
     return raw_data
 
-
+# format raw data to specific data returns a dictionary
 def get_spec_api_data(raw_data: dict) -> dict:
     spec_data = {}
     spec_data["Current Date"] = raw_data["times_series_data"]["Meta Data"]["3. Last Refreshed"]
@@ -53,7 +52,7 @@ def get_spec_api_data(raw_data: dict) -> dict:
 
     return spec_data
 
-
+# format data to html to frontend
 def get_html(spec_data: dict) -> str:
     html = pd.DataFrame([spec_data]).to_html()
     return html
