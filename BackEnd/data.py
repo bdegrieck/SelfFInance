@@ -33,24 +33,35 @@ def get_raw_api_data(endpoints: dict) -> dict:
         raw_data[data_description] = requests.get(url=endpoint_url).json()
     return raw_data
 
-# format raw data to specific data returns a dictionary
-def get_spec_api_data(raw_data: dict) -> dict:
-    spec_data = {}
-    current_date = raw_data["times_series_data"]["Meta Data"]["3. Last Refreshed"]
-    spec_data["Current Price"] = raw_data["times_series_data"]["Time Series (Daily)"][current_date]["4. close"]
-    spec_data["Volume"] = raw_data["times_series_data"]["Time Series (Daily)"][current_date]["5. volume"]
-    spec_data["Ticker Symbol"] = raw_data["overview"]["Symbol"]
-    spec_data["Company Description"] = raw_data["overview"]["Description"]
-    spec_data["Market Cap"] = raw_data["overview"]["MarketCapitalization"]
-    spec_data["52 Week High"] = raw_data["overview"]["52WeekHigh"]
-    spec_data["52 Week Low"] = raw_data["overview"]["52WeekLow"]
-    spec_data["Latest Quarter Date"] = raw_data["earnings"]["quarterlyEarnings"][000]["reportedDate"]
-    spec_data["Reported EPS"] = raw_data["earnings"]["quarterlyEarnings"][000]["reportedEPS"]
-    spec_data["Estimated EPS"] = raw_data["earnings"]["quarterlyEarnings"][000]["estimatedEPS"]
-    spec_data["Revenue"] = raw_data["income_statement"]["quarterlyReports"][00]["totalRevenue"]
-    spec_data["Profit"] = raw_data["income_statement"]["quarterlyReports"][00]["grossProfit"]
 
-    return spec_data
+# format raw data to specific data returns a dictionary
+def get_spec_api_data(raw_data: dict) -> tuple:
+    ticker_prices_df = pd.DataFrame(raw_data["times_series_data"]["Time Series (Daily)"]).transpose()
+    ticker_overview_df = pd.DataFrame({
+        "Ticker Symbol": [raw_data["overview"]["Symbol"]],
+        "Company Description": [raw_data["overview"]["Description"]],
+        "Market Cap": [raw_data["overview"]["MarketCapitalization"]],
+        "52 Week High": [raw_data["overview"]["52WeekHigh"]],
+        "52 Week Low": [raw_data["overview"]["52WeekLow"]]
+    })
+    ticker_eps_df = pd.DataFrame(raw_data["earnings"]["quarterlyEarnings"])
+    ticker_balance_df = pd.DataFrame({
+        "Date": pd.DataFrame(raw_data["income_statement"]["quarterlyReports"])["fiscalDateEnding"],
+        "Total Revenue": pd.DataFrame(raw_data["income_statement"]["quarterlyReports"])["totalRevenue"],
+        "Profit": pd.DataFrame(raw_data["income_statement"]["quarterlyReports"])["totalRevenue"]
+    })
+    return ticker_prices_df, ticker_overview_df, ticker_eps_df, ticker_balance_df
+
+
+def get_micro_df_data(raw_micro_data: dict) -> tuple:
+    real_gdp_df = pd.DataFrame(raw_micro_data["real_gdp"]["data"])
+    cpi_df = pd.DataFrame(raw_micro_data["cpi"]["data"])
+    inflation_df = pd.DataFrame(raw_micro_data["inflation"]["data"])
+    federal_funds_df = pd.DataFrame(raw_micro_data["federal_funds_rate"]["data"])
+    retail_funds_df = pd.DataFrame(raw_micro_data["retail_sales"]["data"])
+    unemployment_df = pd.DataFrame(raw_micro_data["unemployment"]["data"])
+    return real_gdp_df, cpi_df, inflation_df, federal_funds_df, retail_funds_df, unemployment_df
+
 
 # format data to html to frontend
 def get_html(spec_data: dict) -> str:
