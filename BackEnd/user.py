@@ -1,4 +1,4 @@
-from BackEnd.data import endpoint_company_request, endpoint_micro_request, get_raw_api_data, get_spec_api_data, get_html, get_micro_df_data
+from BackEnd.data import get_endpoint_company, get_endpoint_micro, get_raw_api_data, get_company_df_data, get_html, get_micro_df_data
 
 
 # getting user data for ticker and economic data
@@ -17,17 +17,17 @@ class Main:
     user_input_ticker = get_user_input()
 
     # get url endpoints
-    company_endpoints = endpoint_company_request(ticker=user_input_ticker, api_key=api_key)
-    #micro_endpoints = endpoint_micro_request(ticker=user_input_ticker, api_key=api_key)
+    company_endpoints = get_endpoint_company(ticker=user_input_ticker, api_key=api_key)
+    micro_endpoints = get_endpoint_micro(ticker=user_input_ticker, api_key=api_key)
 
     # get raw
     company_raw_data = get_raw_api_data(endpoints=company_endpoints)
-    #micro_raw_data = get_raw_api_data(endpoints=micro_endpoints)
+    micro_raw_data = get_raw_api_data(endpoints=micro_endpoints)
 
     # get real data
-    spec_company_data = get_spec_api_data(raw_data=company_raw_data)
-    #spec_micro_data = get_micro_df_data(raw_micro_data=micro_raw_data)
+    company_dfs = get_company_df_data(raw_company_data=company_raw_data)
+    micro_dfs = get_micro_df_data(raw_micro_data=micro_raw_data)
 
     # format data to html
-    #company_html = get_html(spec_data=spec_company_data)
-    micro_html = get_html(spec_data=spec_micro_data)
+    company_html = get_html(df_data=company_dfs)
+    micro_html = get_html(df_data=micro_dfs)
