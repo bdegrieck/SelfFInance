@@ -1,14 +1,18 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request
 
 views = Blueprint("views", __name__)
 
 @views.route("/")
-@views.route("/home", methods=["GET", "POST"])
-def main_input():
+def get_input():
     ticker = ""
     if request.form:
         ticker = request.form
 
     return render_template("home.html", tickerinput=ticker)
+
+@views.route("/ticker")
+def post_data():
+    return render_template("tickerinfo.html")
+
 
 

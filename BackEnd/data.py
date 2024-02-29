@@ -2,6 +2,8 @@ from typing import Optional
 import pandas as pd
 import requests
 
+
+
 # format company endpoints
 def get_endpoint_company(ticker: Optional[str], api_key: Optional[str] = None) -> dict:
     dict_functions_company_urls = {
@@ -13,6 +15,7 @@ def get_endpoint_company(ticker: Optional[str], api_key: Optional[str] = None) -
         "earnings": f"https://www.alphavantage.co/query?function=EARNINGS&symbol={ticker}&apikey={api_key}"
     }
     return dict_functions_company_urls
+
 
 # format micro endpoints
 def get_endpoint_micro(ticker: Optional[str], api_key: Optional[str] = None) -> dict:
@@ -26,6 +29,7 @@ def get_endpoint_micro(ticker: Optional[str], api_key: Optional[str] = None) -> 
     }
     return dict_functions_micro_urls
 
+
 # get raw data endpoints are passed in
 def get_raw_api_data(endpoints: dict) -> dict:
     raw_data = {}
@@ -34,7 +38,7 @@ def get_raw_api_data(endpoints: dict) -> dict:
     return raw_data
 
 
-# format raw data to specific data returns a dictionary
+# format raw data to specific data returns a dictionary of dfs
 def get_company_df_data(raw_company_data: dict) -> dict:
     company_dfs = {}
     company_dfs["ticker_prices_df"] = pd.DataFrame(raw_company_data["times_series_data"]["Time Series (Daily)"]).transpose()
@@ -54,6 +58,7 @@ def get_company_df_data(raw_company_data: dict) -> dict:
     return company_dfs
 
 
+# format raw data to specific returns a dictionary of dfs
 def get_micro_df_data(raw_micro_data: dict) -> dict:
     micro_dfs = {}
     micro_dfs["real_gdp_df"] = pd.DataFrame(raw_micro_data["real_gdp"]["data"])
@@ -65,7 +70,7 @@ def get_micro_df_data(raw_micro_data: dict) -> dict:
     return micro_dfs
 
 
-# format data to html to frontend
+# format spec data dfs to html to frontend
 def get_html(df_data: dict) -> dict:
     html_data = {}
     for df, data in df_data.items():
@@ -73,4 +78,6 @@ def get_html(df_data: dict) -> dict:
     return html_data
 
 
-
+# sends df data to flask template
+# def render_data(html_data: str):
+#     return post_data(data=html_data)
