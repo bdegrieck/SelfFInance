@@ -1,6 +1,5 @@
 from flask import Flask
 from Website import views
-from BackEnd.user import Main
 
 def create_app():
     app = Flask(__name__)

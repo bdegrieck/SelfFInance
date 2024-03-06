@@ -11,8 +11,8 @@ def get_input():
     return render_template("home.html", tickerinput=ticker)
 
 @views.route("/ticker")
-def post_data():
-    return render_template("tickerinfo.html")
+def post_data(html_data: str):
+    return render_template("tickerinfo.html", data_html=html_data)
 
 
 
