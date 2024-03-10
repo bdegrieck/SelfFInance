@@ -3,27 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataFrame Display</title>
+    <title>DataFrame Table</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style>
-        th {
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <h2>Prices</h2>
-        {{ prices|safe }}
+        <h1>{{ ticker }}</h1>
+        <h2> Prices </h2>
+        {{ ticker_data.ticker_prices_df|safe }}
 
-        <h2>Overview</h2>
-        {{ overview|safe }}
+        <h2>Company Overview</h2>
+        {{ ticker_data.ticker_overview_df|safe }}
 
-        <h2>EPS</h2>
-        {{ balance|safe }}
+        <h2>EPS Data</h2>
+        {{ ticker_data.ticker_eps_df|safe }}
 
         <h2>Balance Sheet</h2>
-        {{ eps|safe }}
+        {{ ticker_data.ticker_balance_df|safe }}
     </div>
 </body>
 </html>
