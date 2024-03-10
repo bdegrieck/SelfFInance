@@ -2,10 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Another Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataFrame Display</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        th {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>You are now on another page!</h1>
-    <a href="/">Go back to Home</a>
+    <div class="container">
+        <h2>Prices</h2>
+        {{ prices|safe }}
+
+        <h2>Overview</h2>
+        {{ overview|safe }}
+
+        <h2>EPS</h2>
+        {{ balance|safe }}
+
+        <h2>Balance Sheet</h2>
+        {{ eps|safe }}
+    </div>
 </body>
 </html>

@@ -1,18 +1,22 @@
 from flask import Blueprint, render_template, request
+from BackEnd.user import User
 
 views = Blueprint("views", __name__)
 
 @views.route("/")
+def home():
+    return render_template("home.html")
+
+@views.route("/submit", methods=["POST"])
 def get_input():
-    ticker = ""
-    if request.form:
-        ticker = request.form
-
-    return render_template("home.html", tickerinput=ticker)
-
-@views.route("/ticker")
-def post_data(html_data: str):
-    return render_template("tickerinfo.html", data_html=html_data)
-
-
-
+    ticker = request.form["stockTicker"]
+    micro = request.form["micro"]
+    endpoints = request.form.getlist("endpoints")
+    user_input = User(ticker, micro, endpoints)
+    return render_template(
+        "tickerinfo.html",
+        prices=user_input.main_ticker_data.ticker_html_data["ticker_prices_df"],
+        overview=user_input.main_ticker_data.ticker_html_data["ticker_overview_df"],
+        eps=user_input.main_ticker_data.ticker_html_data["ticker_eps_df"],
+        balance=user_input.main_ticker_data.ticker_df_data["ticker_balance_df"],
+    )

@@ -1,6 +1,5 @@
 from typing import Optional
 from BackEnd.data import get_raw_api_data, get_html
-from BackEnd.display import Display
 import pandas as pd
 
 

@@ -12,10 +12,10 @@
 </head>
 <body>
     <h1>Enter Stock Ticker</h1>
-    <form action="/submit_ticker" method="post">
+    <form action="/submit" method="post">
         <label for="stockTicker">Stock Ticker:</label><br />
-        <input type="Text" id="stockTicker" name="stockTicker" /><br />
-        
+        <input type="Text" id="stockTicker" name="stockTicker"/><br />
+
     </br>
 
         Do you want microeconomic data?
@@ -40,18 +40,17 @@
         they want. Either way, the code for all of those options are provided below (you should be able to just highlight the
         code and ctrl + / to uncomment it) -->
 
-        <!-- Only one endpoint -->
+     <!--   &lt;!&ndash; Only one endpoint &ndash;&gt;
         <input type="radio" name="endpoint" value="companyOverview"> Company Overview </br>
         <input type="radio" name="endpoint" value="priceAndEPS"> Price + EPS </br>
-        <input type="radio" name="endpoint" value="balanceSheet"> Balance Sheet </br>
+        <input type="radio" name="endpoint" value="balanceSheet"> Balance Sheet </br>-->
 
-        <!-- Checkboxes -->
-        <!-- <input type="checkbox" id="companyOverview" name="companyOverview" value="companyOverview">
+        <input type="checkbox" id="companyOverview" name="endpoints" value="companyOverview">
         <label for="companyOverview"> Company Overview</label><br>
-        <input type="checkbox" id="priceAndEPS" name="priceAndEPS" value="priceAndEPS">
+        <input type="checkbox" id="priceAndEPS" name="endpoints" value="priceAndEPS">
         <label for="priceAndEPS"> Price + EPS </label><br>
-        <input type="checkbox" id="balanceSheet" name="balanceSheet" value="balanceSheet">
-        <label for="balanceSheet"> Balance Sheet </label><br> -->
+        <input type="checkbox" id="balanceSheet" name="endpoints" value="balanceSheet">
+        <label for="balanceSheet"> Balance Sheet </label><br>
 
         <!-- NO MISCLICK >:( -->
         <!-- <input type="radio" value="companyOverview"> Company Overview </br>

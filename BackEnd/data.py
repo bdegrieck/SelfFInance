@@ -13,5 +13,5 @@ def get_raw_api_data(endpoints: dict) -> dict:
 def get_html(df_data: dict) -> dict:
     html_data = {}
     for df, data in df_data.items():
-        html_data[df] = data.to_html()
+        html_data[df] = data.to_html(classes="table table-striped")
     return html_data
