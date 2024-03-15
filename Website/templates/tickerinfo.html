@@ -19,7 +19,26 @@
         {{ ticker_data.ticker_eps_df|safe }}
 
         <h2>Balance Sheet</h2>
-        {{ ticker_data.ticker_balance_df|safe }}
+
+        <table border="1" class="dataframe table table-striped">
+            <thead>
+                 <tr>
+                     <th>Date</th>
+                    <th>Total Revenue</th>
+                    <th>Profit</th>
+                    <th>Cash Flow</th>
+                </tr>
+            </thead>
+            {% for index, row in ticker_data.ticker_balance.iterrows() %}
+            <tr>
+                <td>{{ index }}</td>
+                <td>{{ row['Total Revenue'] | format_currency }}</td>
+                <td>{{ row['Profit'] | format_currency }}</td>
+                <td>{{ row['Cash Flow'] | format_currency }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
     </div>
 </body>
 </html>

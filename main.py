@@ -1,9 +1,13 @@
 import os
 
 from Website import create_app
-from Website.views import format_currency
 
 app = create_app()
+
+# Define your custom filter function
+def format_currency(value):
+    return "{:,.2f}".format(value)
+
 app.jinja_env.filters['format_currency'] = format_currency
 
 if __name__ == '__main__':

@@ -69,4 +69,3 @@ class CompanyData:
         balance_df = balance_df.set_index("Date").fillna(0)
         balance_df["Cash Flow"] = balance_df[["Operating Cash Flow", "Cash Flow From Financing", "Cash Flow From Investment"]].sum(axis=1)
         return balance_df[["Total Revenue", "Profit", "Cash Flow"]]
-
