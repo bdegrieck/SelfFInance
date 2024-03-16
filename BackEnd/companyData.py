@@ -17,7 +17,7 @@ class CompanyData:
     # format company endpoints
     def get_endpoint_company(self) -> dict:
         dict_functions_company_urls = {
-            "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={self.api_key}&outputsize=full",
+            "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={self.api_key}",
             "overview": f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={self.ticker}&apikey={self.api_key}",
             "income_statement": f"https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey={self.api_key}",
             "balance_sheet": f"https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey={self.api_key}",
@@ -35,10 +35,10 @@ class CompanyData:
 
         company_dfs["ticker_overview_df"] = pd.DataFrame({
             "Ticker Symbol": [self.ticker_raw_data["overview"]["Symbol"]],
-            "Company Description": [self.ticker_raw_data["overview"]["Description"]],
-            "Market Cap": [float(self.ticker_raw_data["overview"]["MarketCapitalization"])],
-            "52 Week High": [float(self.ticker_raw_data["overview"]["52WeekHigh"])],
-            "52 Week Low": [float(self.ticker_raw_data["overview"]["52WeekLow"])]
+            "Company Description": self.ticker_raw_data["overview"]["Description"],
+            "Market Cap": float(self.ticker_raw_data["overview"]["MarketCapitalization"]),
+            "52 Week High": float(self.ticker_raw_data["overview"]["52WeekHigh"]),
+            "52 Week Low": float(self.ticker_raw_data["overview"]["52WeekLow"])
         })
 
         company_dfs["ticker_eps_df"] = pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"])
