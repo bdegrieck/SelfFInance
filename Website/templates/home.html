@@ -48,36 +48,15 @@
 
         <br />
 
-            <!-- these might be wrong, I can't really read the diagram I'm so sorry -->
-
-            <!-- also beacuse radio buttons are ment to be used in the way above where you asked a required question that has
-            only one answer theres really no convenient way uncheck the radio button, so either we can let them choose only one
-            of the three endpoints, or we can switch to checkboxes ... or we can hope they don't misclick the endpoints that 
-            they want. Either way, the code for all of those options are provided below (you should be able to just highlight the
-            code and ctrl + / to uncomment it) -->
-
-        <!--   &lt;!&ndash; Only one endpoint &ndash;&gt;
-            <input type="radio" name="endpoint" value="companyOverview"> Company Overview </br>
-            <input type="radio" name="endpoint" value="priceAndEPS"> Price + EPS </br>
-            <input type="radio" name="endpoint" value="balanceSheet"> Balance Sheet </br>-->
-
-            <input type="checkbox" id="companyOverview" name="endpoints" value="companyOverview">
+            <input type="checkbox" id="companyOverview" name="companyOverview" value="companyOverview">
             <label for="companyOverview"> Company Overview</label><br>
-            <input type="checkbox" id="priceAndEPS" name="endpoints" value="priceAndEPS">
+            <input type="checkbox" id="priceAndEPS" name="priceAndEPS" value="priceAndEPS">
             <label for="priceAndEPS"> Price + EPS </label><br>
-            <input type="checkbox" id="balanceSheet" name="endpoints" value="balanceSheet">
+            <input type="checkbox" id="balanceSheet" name="balanceSheet" value="balanceSheet">
             <label for="balanceSheet"> Balance Sheet </label><br>
 
-            <!-- NO MISCLICK >:( -->
-            <!-- <input type="radio" value="companyOverview"> Company Overview </br>
-            <input type="radio" value="priceAndEPS"> Price + EPS </br>
-            <input type="radio" value="balanceSheet"> Balance Sheet </br> -->
-
-        </br>
-
             <input type="submit" value="Submit"/>
-
-    </article>
-    </form>
+            </form>
+        </article>
 </body>
 </html>

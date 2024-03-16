@@ -10,8 +10,12 @@ def home():
 @views.route("/submit", methods=["POST"])
 def get_input():
     ticker = request.form["stockTicker"]
-    micro = request.form["micro"]
-    endpoints = request.form.getlist("endpoints")
+    micro = request.form.get("micro")
+    endpoints = {
+        "Company Overview": "companyOverview" in request.form.getlist("companyOverview"),
+        "priceAndEPS": "priceAndEPS" in request.form.getlist("priceAndEPS"),
+        "Balance Sheet": "balanceSheet" in request.form.getlist("balanceSheet")
+    }
     user_input = User(ticker, micro, endpoints)
     return render_template("tickerinfo.html", ticker=user_input.input_ticker,
-                           ticker_data=user_input.main_ticker_data.ticker_df_data)
+                           ticker_data=user_input.main_ticker_data.ticker_df_data, endpoints=endpoints)
