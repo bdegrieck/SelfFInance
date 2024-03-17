@@ -11,7 +11,6 @@ class MicroData:
         self.micro_raw_data = get_raw_api_data(endpoints=self.micro_endpoints)
         self.micro_df_data = self.get_micro_df_data()
         self.micro_html_data = get_html(self.micro_df_data)
-        #Display(html_data=self.micro_html_data)
 
     def get_endpoint_micro(self) -> dict:
         dict_functions_micro_urls = {
@@ -27,11 +26,11 @@ class MicroData:
     # format raw data to specific returns a dictionary of dfs
     def get_micro_df_data(self) -> dict:
         micro_dfs = {
-            "real_gdp_df": pd.DataFrame(self.micro_raw_data["real_gdp"]["data"]),
-            "cpi_df": pd.DataFrame(self.micro_raw_data["cpi"]["data"]),
-            "inflation_df": pd.DataFrame(self.micro_raw_data["inflation"]["data"]),
-            "federal_funds_df": pd.DataFrame(self.micro_raw_data["federal_funds_rate"]["data"]),
-            "retail_funds_df": pd.DataFrame(self.micro_raw_data["retail_sales"]["data"]),
-            "unemployment_df": pd.DataFrame(self.micro_raw_data["unemployment"]["data"])
+            "real_gdp_df": pd.DataFrame(self.micro_raw_data["real_gdp"]["data"]).set_index("date").astype(float),
+            "cpi_df": pd.DataFrame(self.micro_raw_data["cpi"]["data"]).set_index("date").astype(float),
+            "inflation_df": pd.DataFrame(self.micro_raw_data["inflation"]["data"]).set_index("date").astype(float),
+            "federal_funds_df": pd.DataFrame(self.micro_raw_data["federal_funds_rate"]["data"]).set_index("date").astype(float),
+            "retail_funds_df": pd.DataFrame(self.micro_raw_data["retail_sales"]["data"]).set_index("date").astype(float),
+            "unemployment_df": pd.DataFrame(self.micro_raw_data["unemployment"]["data"]).set_index("date").astype(float)
         }
         return micro_dfs

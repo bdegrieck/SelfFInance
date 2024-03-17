@@ -2,46 +2,77 @@
 <html lang="en">
 
 <head>
-<style>
-    .back-button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        font-size: 16px;
-        cursor: pointer;
-        text-align: center;
-        text-decoration: none;
-        outline: none;
-        color: #fff;
-        background-color: #4CAF50;
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 9px #999;
-    }
-
-    .back-button:hover {background-color: #3e8e41}
-
-    .back-button:active {
-        background-color: #3e8e41;
-        box-shadow: 0 5px #666;
-        transform: translateY(4px);
-    }
-</style>
-</head>
-<body>
-
-<a href="/" class="back-button">Back to Home</a>
-
-</body>
-
-
-
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ ticker }} Data</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+
+<head>
+    <style>
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+        }
+
+        .back-button:hover {background-color: #3e8e41}
+
+        .back-button:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+        .micro-button {
+                display: inline-block;
+                padding: 10px 20px;
+                margin: 10px;
+                font-size: 16px;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                outline: none;
+                color: #fff;
+                background-color: #4CAF50;
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 9px #999;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+            .micro-button:hover { background-color: #3e8e41; }
+
+            .micro-button:active {
+                background-color: #3e8e41;
+                box-shadow: 0 5px #666;
+                transform: translateY(4px);
+            }
+    </style>
+</head>
+
+<body>
+<a href="/" class="back-button">Back to Home</a>
+</body>
+
+{% if micro == "yes" %}
+     <body>
+     <a href="/micro" class="micro-button">Microeconomic Data</a>
+     </body>
+{% endif %}
+
 <body>
     <div class="container">
         <h1>{{ ticker }}</h1>
