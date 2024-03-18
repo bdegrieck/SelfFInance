@@ -64,19 +64,16 @@
 </head>
 
 <body>
-<a href="/" class="back-button">Back to Home</a>
+    <a href="/" class="back-button">Back to Home</a>
 </body>
 
 {% if micro == "yes" %}
-     <body>
-     <a href="/micro" class="micro-button">Microeconomic Data</a>
-     </body>
+    <a href="/micro" class="micro-button">Microeconomic Data</a>
 {% endif %}
 
 <body>
     <div class="container">
         <h1>{{ ticker }}</h1>
-
 
         {% if endpoints["Company Overview"] %}
 

@@ -1,12 +1,13 @@
 from typing import Optional
-from BackEnd.data import get_raw_api_data, get_html
+from BackEnd.data import get_raw_api_data, get_html, get_ticker
 import pandas as pd
 
 
 class MicroData:
-    def __init__(self, ticker: str, api_key: str):
-        self.ticker = ticker
-        self.api_key = api_key
+    def __init__(self):
+        self.api_key = "CRU63X7J4COJ46F2"
+        #self.ticker = get_ticker(ticker=ticker, api_key=self.api_key)
+        self.ticker = "AAPL"
         self.micro_endpoints = self.get_endpoint_micro()
         self.micro_raw_data = get_raw_api_data(endpoints=self.micro_endpoints)
         self.micro_df_data = self.get_micro_df_data()
@@ -26,11 +27,11 @@ class MicroData:
     # format raw data to specific returns a dictionary of dfs
     def get_micro_df_data(self) -> dict:
         micro_dfs = {
-            "real_gdp_df": pd.DataFrame(self.micro_raw_data["real_gdp"]["data"]).set_index("date").astype(float),
-            "cpi_df": pd.DataFrame(self.micro_raw_data["cpi"]["data"]).set_index("date").astype(float),
-            "inflation_df": pd.DataFrame(self.micro_raw_data["inflation"]["data"]).set_index("date").astype(float),
-            "federal_funds_df": pd.DataFrame(self.micro_raw_data["federal_funds_rate"]["data"]).set_index("date").astype(float),
-            "retail_funds_df": pd.DataFrame(self.micro_raw_data["retail_sales"]["data"]).set_index("date").astype(float),
-            "unemployment_df": pd.DataFrame(self.micro_raw_data["unemployment"]["data"]).set_index("date").astype(float)
+            "real_gdp_df": pd.DataFrame(self.micro_raw_data["real_gdp"]["data"]).set_index("date").astype(float).rename(columns={"value": "Real GDP"}),
+            "cpi_df": pd.DataFrame(self.micro_raw_data["cpi"]["data"]).set_index("date").astype(float).rename(columns={"value": "CPI"}),
+            "inflation_df": pd.DataFrame(self.micro_raw_data["inflation"]["data"]).set_index("date").astype(float).rename(columns={"value": "Inflation"}),
+            "federal_funds_rate_df": pd.DataFrame(self.micro_raw_data["federal_funds_rate"]["data"]).set_index("date").astype(float).rename(columns={"value": "Federal Funds Rate"}),
+            "retail_sales_df": pd.DataFrame(self.micro_raw_data["retail_sales"]["data"]).set_index("date").astype(float).rename(columns={"value": "Retail Sales"}),
+            "unemployment_rate_df": pd.DataFrame(self.micro_raw_data["unemployment"]["data"]).set_index("date").astype(float).rename(columns={"value": "Unemployment Rate"}),
         }
         return micro_dfs

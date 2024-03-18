@@ -5,6 +5,106 @@
     <title>Title</title>
 </head>
 <body>
+    <div class="container">
 
-</body>
+        <h1>Microeconomic Data</h1>
+
+        <h2>Real GDP</h2>
+            <table border='1' class='dataframe table table-striped'>
+                <thead>
+                     <tr>
+                         <th>Date</th>
+                         <th>Real GDP</th>
+                    </tr>
+                </thead>
+                {% for index, row in microdata['real_gdp_df'].iterrows() %}
+                <tr>
+                    <td>{{ index }}</td>
+                    <td>{{ row.iloc[0] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        <h2>CPI</h2>
+            <table border='1' class='dataframe table table-striped'>
+                <thead>
+                     <tr>
+                         <th>Date</th>
+                         <th>CPI</th>
+                    </tr>
+                </thead>
+                {% for index, row in microdata['cpi_df'].iterrows() %}
+                <tr>
+                    <td>{{ index }}</td>
+                    <td>{{ row.iloc[0] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        <h2>Inflation</h2>
+            <table border='1' class='dataframe table table-striped'>
+                <thead>
+                     <tr>
+                         <th>Date</th>
+                         <th>Inflation</th>
+                    </tr>
+                </thead>
+                {% for index, row in microdata['inflation_df'].iterrows() %}
+                <tr>
+                    <td>{{ index }}</td>
+                    <td>{{ row.iloc[0] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        <h2>Federal Funds Rate</h2>
+            <table border='1' class='dataframe table table-striped'>
+                <thead>
+                     <tr>
+                         <th>Date</th>
+                         <th>Federal Funds Rate</th>
+                    </tr>
+                </thead>
+                {% for index, row in microdata['federal_funds_rate_df'].iterrows() %}
+                <tr>
+                    <td>{{ index }}</td>
+                    <td>{{ row.iloc[0] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        <h2>Retail Sales</h2>
+            <table border='1' class='dataframe table table-striped'>
+                <thead>
+                     <tr>
+                         <th>Date</th>
+                         <th>Retail Sales</th>
+                    </tr>
+                </thead>
+                {% for index, row in microdata['retail_sales_df'].iterrows() %}
+                <tr>
+                    <td>{{ index }}</td>
+                    <td>{{ row.iloc[0] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        <h2>Unemployment Rate</h2>
+            <table border='1' class='dataframe table table-striped'>
+                <thead>
+                     <tr>
+                         <th>Date</th>
+                         <th>Retail Sales</th>
+                    </tr>
+                </thead>
+                {% for index, row in microdata['unemployment_rate_df'].iterrows() %}
+                <tr>
+                    <td>{{ index }}</td>
+                    <td>{{ row.iloc[0] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </body>
 </html>

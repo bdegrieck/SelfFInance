@@ -1,18 +1,17 @@
-from BackEnd.data import get_raw_api_data, get_html
+import requests
+
+from BackEnd.data import get_raw_api_data, get_html, get_ticker
 import pandas as pd
-
-
 
 class CompanyData:
 
-    def __init__(self, ticker: str, api_key: str):
-        self.ticker = ticker
-        self.api_key = api_key
+    def __init__(self, ticker: str):
+        self.api_key = "CRU63X7J4COJ46F2"
+        self.ticker = get_ticker(ticker=ticker, api_key=self.api_key)
         self.ticker_endpoints = self.get_endpoint_company()
         self.ticker_raw_data = get_raw_api_data(endpoints=self.ticker_endpoints)
         self.ticker_df_data = self.get_company_df_data()
         self.ticker_html_data = get_html(df_data=self.ticker_df_data)
-        print("hi")
 
     # format company endpoints
     def get_endpoint_company(self) -> dict:
