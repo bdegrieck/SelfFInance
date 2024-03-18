@@ -60,6 +60,39 @@
                 box-shadow: 0 5px #666;
                 transform: translateY(4px);
             }
+
+        .news-button {
+                display: inline-block;
+                padding: 10px 20px;
+                margin: 10px;
+                font-size: 16px;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                outline: none;
+                color: #fff;
+                background-color: #4CAF50;
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 9px #999;
+
+                /* Updated positioning */
+                position: absolute;
+                top: 10px;
+                left: 50%;           /* Center horizontally */
+                transform: translateX(-50%); /* Adjust for the button's width */
+            }
+
+            .news-button:hover {
+                background-color: #3e8e41;
+            }
+
+            .news-button:active {
+                background-color: #3e8e41;
+                box-shadow: 0 5px #666;
+                transform: translateY(4px) translateX(-50%);
+            }
+
     </style>
 </head>
 
@@ -69,6 +102,10 @@
 
 {% if micro == "yes" %}
     <a href="/micro" class="micro-button">Microeconomic Data</a>
+{% endif %}
+
+{% if news_input == "yes" %}
+    <a href={{ news_link }} class="news-button">News</a>
 {% endif %}
 
 <body>
