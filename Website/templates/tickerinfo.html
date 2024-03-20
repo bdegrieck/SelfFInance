@@ -174,7 +174,7 @@
                      <tr>
                          <th>Date</th>
                          <th>Estimated EPS</th>
-                         <th>Surprise EPS</th>
+                         <th>Reported EPS</th>
                          <th>Surprise Percentage</th>
                     </tr>
                 </thead>
@@ -182,7 +182,7 @@
                 <tr>
                     <td>{{ index }}</td>
                     <td>{{ row['estimatedEPS'] | format_currency }}</td>
-                    <td>{{ row['surprise'] | format_currency }}</td>
+                    <td>{{ row['reportedEPS'] | format_currency }}</td>
                     <td>{{ row['surprisePercentage'] | format_currency }}</td>
                 </tr>
                 {% endfor %}

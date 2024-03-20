@@ -3,6 +3,7 @@ import requests
 from BackEnd.data import get_raw_api_data, get_html, get_ticker
 import pandas as pd
 
+
 class CompanyData:
 
     def __init__(self, ticker: str):
@@ -61,7 +62,7 @@ class CompanyData:
 
     def get_ticker_eps_df_adj(self, eps_df: pd.DataFrame) -> pd.DataFrame:
         eps_df.replace('None', 0, inplace=True)
-        eps_df = eps_df.set_index("fiscalDateEnding")[["estimatedEPS", "surprise", "surprisePercentage"]].astype(float)
+        eps_df = eps_df.set_index("fiscalDateEnding")[["estimatedEPS", "reportedEPS", "surprisePercentage"]].astype(float)
         return eps_df
 
     def get_ticker_balance_df_adj(self, balance_df: pd.DataFrame) -> pd.DataFrame:

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #485561 0%, #152238 100%);
+        }
+
+        .article {
+            background-color: #6d8484;
+            border: #c0c0c0 1px solid;
+            border-style: outset;
+            border-radius: 5%;
+            font-size: 20px;
+            padding: 15px;
+            margin: 15px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .container div {
+            margin: 0 5px; /* Add some space between the inputs */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Start of the form -->
+    <form action="comparedata" method="post">
+        <div class="container">
+            <div>
+                <label for="ticker1">Ticker 1:</label><br />
+                <input type="text" id="ticker1" name="ticker1"/><br />
+            </div>
+            <div>
+                <label for="ticker2">Ticker 2:</label><br>
+                <input type="text" id="ticker2" name="ticker2">
+            </div>
+        </div>
+
+        <!-- The button to submit the form -->
+        <button type="submit">Compare Data</button>
+    <!-- End of the form -->
+
+</body>
+</html>

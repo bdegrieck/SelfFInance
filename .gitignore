@@ -6,3 +6,8 @@ BackEnd/__pycache__/data.cpython-312.pyc
 BackEnd/__pycache__/companyData.cpython-311.pyc
 BackEnd/__pycache__/compare.cpython-311.pyc
 BackEnd/__pycache__/data.cpython-311.pyc
+*.xml
+/.idea
+.idea/misc.xml
+.idea/SelfFInance.iml
+/BackEnd/__pycache__

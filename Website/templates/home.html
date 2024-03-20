@@ -22,6 +22,26 @@
             padding: 15px;
             margin: 15px;
         }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .container div {
+            margin: 0 5px; /* Add some space between the inputs */
+        }
+
+        .compare-button {
+            position: fixed; /* Fixed position relative to the viewport */
+            bottom: 20px; /* 20 pixels from the bottom of the viewport */
+            right: 20px; /* 20 pixels from the right of the viewport */
+            padding: 10px; /* Add padding to make the button larger */
+            background-color: #fff; /* A background color to make the button stand out */
+            color: #000; /* Text color for the button */
+            text-decoration: none; /* Remove underline from the link */
+            border: 1px solid #000; /* Add a border to the button */
+            border-radius: 4px; /* Optional: rounded corners */
+        }
     </style>
 
 </head>
@@ -29,8 +49,13 @@
     <article class="article">
         <h1>Enter Stock Ticker</h1>
         <form action="/submit" method="post">
-            <label for="stockTicker">Stock Ticker:</label><br />
-            <input type="Text" id="stockTicker" name="stockTicker"/><br />
+
+            <div class="container">
+                <div>
+                     <label for="stockTicker">Ticker 1:</label><br />
+                     <input type="Text" id="stockTicker" name="stockTicker"/><br />
+                </div>
+            </div>
 
         </br>
 
@@ -70,7 +95,9 @@
             </br>
 
             <input type="submit" value="Submit"/>
+            <a href="/compare" class="compare-button">Compare</a>
             </form>
+
         </article>
 </body>
 </html>

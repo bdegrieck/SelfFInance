@@ -14,7 +14,8 @@ class User:
     micro_data = MicroData()
 
     user_main_ticker = CompanyData(ticker=user_input_ticker)
-    news = News(ticker=user_input_ticker)
+    second_ticker = CompanyData(ticker="MSFT")
+    comparison_data = Compare(user_main_ticker, second_ticker)
     print("hi")
     #user_second_ticker = CompanyData(ticker=second_input_ticker, api_key=api_key)
     #user_micro = MicroData(ticker=user_input_ticker, api_key=api_key)

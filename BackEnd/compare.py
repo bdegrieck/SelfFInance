@@ -9,20 +9,32 @@ class Compare:
         self.data_comparison = self.compare_financials()
 
     def compare_financials(self) -> pd.DataFrame:
-        main_market_cap = int(self.main_ticker_data.ticker_df_data["ticker_overview_df"]["Market Cap"].iloc[0])
-        second_market_cap = int(self.second_ticker_data.ticker_df_data["ticker_overview_df"]["Market Cap"].iloc[0])
+        main_market_cap = self.main_ticker_data.ticker_df_data["ticker_overview_df"]["Market Cap"].iloc[0]
+        second_market_cap = self.second_ticker_data.ticker_df_data["ticker_overview_df"]["Market Cap"].iloc[0]
         market_cap_diff = abs(main_market_cap - second_market_cap)
 
-        main_reported_EPS = float(self.main_ticker_data.ticker_df_data["ticker_eps_df"]["reportedEPS"].iloc[0])
-        second_reported_EPS = float(self.second_ticker_data.ticker_df_data["ticker_eps_df"]["reportedEPS"].iloc[0])
+        main_ticker_price = self.main_ticker_data.ticker_df_data["ticker_prices_df"]["Adjusted Close"].iloc[0]
+        second_ticker_price = self.second_ticker_data.ticker_df_data["ticker_prices_df"]["Adjusted Close"].iloc[0]
+        ticker_price_dff = abs(main_ticker_price - second_ticker_price)
+
+        main_reported_EPS = self.main_ticker_data.ticker_df_data["ticker_eps_df"]["reportedEPS"].iloc[0]
+        second_reported_EPS = self.second_ticker_data.ticker_df_data["ticker_eps_df"]["reportedEPS"].iloc[0]
         reported_EPS_diff = abs(main_reported_EPS - second_reported_EPS)
 
-        main_profit = int(self.main_ticker_data.ticker_df_data["ticker_balance_df"]["Profit"].iloc[0])
-        second_profit = int(self.second_ticker_data.ticker_df_data["ticker_balance_df"]["Profit"].iloc[0])
+        main_profit = self.main_ticker_data.ticker_df_data["ticker_balance_df"]["Profit"].iloc[0]
+        second_profit = self.second_ticker_data.ticker_df_data["ticker_balance_df"]["Profit"].iloc[0]
         profit_diff = abs(main_profit - second_profit)
 
+        main_price_per_earnings = main_ticker_price/main_reported_EPS
+        second_price_per_earnings = second_ticker_price/second_reported_EPS
+        price_per_earnings_diff = abs(main_price_per_earnings - second_price_per_earnings)
+
         return pd.DataFrame({
-            "Market Cap": [market_cap_diff],
-            "Reported EPS": [reported_EPS_diff],
-            "Profit": [profit_diff]
-        })
+            "Companies": [self.main_ticker_data.ticker, self.second_ticker_data.ticker, "Difference"],
+            "Prices": [main_ticker_price, second_ticker_price, ticker_price_dff],
+            "Market Cap": [main_market_cap, second_market_cap, market_cap_diff],
+            "Reported EPS": [main_reported_EPS, second_reported_EPS, reported_EPS_diff],
+            "Profit": [main_profit, second_profit, profit_diff],
+            "Price Per Earnings": [main_price_per_earnings, second_price_per_earnings, price_per_earnings_diff]
+        }).set_index("Companies")
+

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparison</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <h2>{{ ticker1 }} compared to {{ ticker2 }}</h2>
+        <table border="1" class="dataframe table table-striped">
+            <thead>
+                 <tr>
+                     <th>Index</th>
+                     <th>Prices</th>
+                     <th>Market Cap</th>
+                     <th>Reported EPS</th>
+                     <th>Profit</th>
+                     <th>Price Per Earnings</th>
+                </tr>
+            </thead>
+
+            {% for index, row in comparison_data.iterrows() %}
+            <tr>
+                <td>{{ index }}</td>
+                <td>{{ row['Prices'] | format_currency }}</td>
+                <td>{{ row['Market Cap'] | format_currency }}</td>
+                <td>{{ row['Reported EPS']  | format_currency }}</td>
+                <td>{{ row['Profit'] | format_currency }}</td>
+                <td>{{ row['Price Per Earnings'] | format_currency }}</td>
+            </tr>
+            {% endfor %}
+
+        </table>
+</body>
+
+</html>
