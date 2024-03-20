@@ -2,12 +2,13 @@ import requests
 
 from BackEnd.data import get_raw_api_data, get_html, get_ticker
 import pandas as pd
+from BackEnd import constants
 
 
 class CompanyData:
 
     def __init__(self, ticker: str):
-        self.api_key = "CRU63X7J4COJ46F2"
+        self.api_key = constants.API_KEY
         self.ticker = get_ticker(ticker=ticker, api_key=self.api_key)
         self.ticker_endpoints = self.get_endpoint_company()
         self.ticker_raw_data = get_raw_api_data(endpoints=self.ticker_endpoints)

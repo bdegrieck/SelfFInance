@@ -1,4 +1,6 @@
 import requests
+
+from BackEnd import constants
 from BackEnd.data import get_raw_api_data
 from BackEnd.microData import MicroData
 from BackEnd.companyData import CompanyData
@@ -9,7 +11,7 @@ from BackEnd.news import News
 class User:
 
     user_input_ticker = "AAPL"
-    api_key = "CRU63X7J4COJ46F2"
+    api_key = constants.API_KEY
 
     micro_data = MicroData()
 

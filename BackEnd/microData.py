@@ -1,11 +1,13 @@
 from typing import Optional
+
+from BackEnd import constants
 from BackEnd.data import get_raw_api_data, get_html, get_ticker
 import pandas as pd
 
 
 class MicroData:
     def __init__(self):
-        self.api_key = "CRU63X7J4COJ46F2"
+        self.api_key = constants.API_KEY
         self.ticker = "AAPL"
         self.micro_endpoints = self.get_endpoint_micro()
         self.micro_raw_data = get_raw_api_data(endpoints=self.micro_endpoints)

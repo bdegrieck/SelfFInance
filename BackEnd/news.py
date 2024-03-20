@@ -1,10 +1,12 @@
 import requests
 
+from BackEnd import constants
+
 
 class News:
     def __init__(self, ticker: str):
         self.ticker = ticker
-        self.api_key = "CRU63X7J4COJ46F2"
+        self.api_key = constants.API_KEY
         self.url = f'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={self.ticker}&apikey={self.api_key}'
         self.news = self.get_news()
 
