@@ -57,17 +57,28 @@ def get_input():
 
 
 @views.route("/comparedata", methods=["POST"])
-def get_comparison_datat():
-    ticker1 = request.form.get("ticker1")
-    ticker2 = request.form.get("ticker2")
+def get_comparison_data():
+    user_input = {
+        "Ticker 1": request.form.get("ticker1"),
+        "Ticker 2": request.form.get("ticker2")
+    }
+    error_message = validate_user_input(user_input=user_input)
+    if error_message:
+        flash(error_message)
+        return redirect(url_for("views.home"))
+
+    ticker1 = get_formatted_ticker(user_input["Ticker 1"])
+    ticker2 = get_formatted_ticker(user_input["Ticker 2"])
     ticker1_data = CompanyData(ticker=ticker1)
     ticker2_data = CompanyData(ticker=ticker2)
     comparison_data = Compare(main_ticker_data=ticker1_data, second_ticker_data=ticker2_data)
+
     return render_template(
         template_name_or_list="comparedata.html",
         comparison_data=comparison_data.data_comparison,
         ticker1=ticker1,
-        ticker2=ticker2
+        ticker2=ticker2,
+        error_message = error_message
     )
 
 

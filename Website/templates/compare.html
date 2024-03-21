@@ -33,8 +33,6 @@
     </style>
 </head>
 <body>
-
-    <!-- Start of the form -->
     <form action="comparedata" method="post">
         <div class="container">
             <div>
@@ -46,10 +44,16 @@
                 <input type="text" id="ticker2" name="ticker2">
             </div>
         </div>
-
-        <!-- The button to submit the form -->
         <button type="submit">Compare Data</button>
-    <!-- End of the form -->
-
+    </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashed-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
 </body>
 </html>
