@@ -52,7 +52,9 @@ def get_input():
         micro=user_input["Microeconomic Input"],
         news_input=user_input["News Input"],
         news_link=user_ticker_news.news,
-        error_message=error_message
+        error_message=error_message,
+        dates_chart=[date for date in ticker_data.ticker_df_data["ticker_prices_df"]['Close'][::-1].index],
+        prices_chart=[row for row in ticker_data.ticker_df_data["ticker_prices_df"]['Close'][::-1]]
     )
 
 

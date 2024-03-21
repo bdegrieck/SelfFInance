@@ -18,7 +18,7 @@ class CompanyData:
     # format company endpoints
     def get_endpoint_company(self) -> dict:
         dict_functions_company_urls = {
-            "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={self.api_key}",
+            "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={self.api_key}&outputsize=full",
             "overview": f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={self.ticker}&apikey={self.api_key}",
             "income_statement": f"https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey={self.api_key}",
             "balance_sheet": f"https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey={self.api_key}",
@@ -59,7 +59,7 @@ class CompanyData:
 
     def get_ticker_prices_df_adj(self, prices_df: pd.DataFrame) -> pd.DataFrame:
         prices_df.columns = ["Open", "High", "Low", "Adjusted Close", "Close", "Volume", "Dividends", "Splits"]
-        return prices_df[["Open", "High", "Low", "Adjusted Close", "Volume"]]
+        return prices_df[["Open", "High", "Low", "Close", "Volume"]]
 
     def get_ticker_eps_df_adj(self, eps_df: pd.DataFrame) -> pd.DataFrame:
         eps_df.replace('None', 0, inplace=True)
