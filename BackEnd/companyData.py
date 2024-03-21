@@ -1,6 +1,7 @@
+import numpy as np
 import requests
 
-from BackEnd.data import get_html, get_raw_api_data
+from BackEnd.data import get_html, get_raw_api_data, get_clean_data, remove_empties
 import pandas as pd
 from BackEnd import constants
 
@@ -32,41 +33,34 @@ class CompanyData:
         company_dfs = {}
 
         company_dfs["ticker_prices_df"] = pd.DataFrame(self.ticker_raw_data["times_series_data"]["Time Series (Daily)"]).transpose()
-        company_dfs["ticker_prices_df"] = self.get_ticker_prices_df_adj(prices_df=company_dfs["ticker_prices_df"].astype(float))
+        company_dfs["ticker_prices_df"].columns = ["Open", "High", "Low", "Adjusted Close", "Close", "Volume", "Dividends", "Splits"]
+        company_dfs["ticker_prices_df"] = company_dfs["ticker_prices_df"][["Open", "High", "Low", "Close", "Volume"]]
 
         company_dfs["ticker_overview_df"] = pd.DataFrame({
             "Ticker Symbol": [self.ticker_raw_data["overview"]["Symbol"]],
             "Company Description": self.ticker_raw_data["overview"]["Description"],
-            "Market Cap": float(self.ticker_raw_data["overview"]["MarketCapitalization"]),
-            "52 Week High": float(self.ticker_raw_data["overview"]["52WeekHigh"]),
-            "52 Week Low": float(self.ticker_raw_data["overview"]["52WeekLow"])
+            "Market Cap": self.ticker_raw_data["overview"]["MarketCapitalization"],
+            "52 Week High": self.ticker_raw_data["overview"]["52WeekHigh"],
+            "52 Week Low": self.ticker_raw_data["overview"]["52WeekLow"]
         })
 
-        company_dfs["ticker_eps_df"] = pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"])
-        company_dfs["ticker_eps_df"] = self.get_ticker_eps_df_adj(eps_df=company_dfs["ticker_eps_df"])
+        company_dfs["ticker_eps_df"] = pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"]).set_index("fiscalDateEnding")[["estimatedEPS", "reportedEPS", "surprisePercentage"]]
 
         company_dfs["ticker_balance_df"] = pd.DataFrame({
             "Date": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["fiscalDateEnding"],
-            "Total Revenue": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["totalRevenue"].astype(float),
-            "Profit": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["netIncome"].astype(float),
-            "Operating Cash Flow": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["operatingCashflow"].astype(float),
-            "Cash Flow From Financing": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromFinancing"].astype(float),
-            "Cash Flow From Investment": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromInvestment"].astype(float)
-        })
-        company_dfs["ticker_balance_df"] = self.get_ticker_balance_df_adj(company_dfs["ticker_balance_df"])
+            "Total Revenue": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["totalRevenue"],
+            "Profit": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["netIncome"],
+            "Operating Cash Flow": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["operatingCashflow"],
+            "Cash Flow From Financing": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromFinancing"],
+            "Cash Flow From Investment": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromInvestment"]
+        }).set_index("Date")
 
+        company_dfs = get_clean_data(company_dfs)
+        company_dfs = remove_empties(company_dfs)
+
+        company_dfs["ticker_balance_df"] = self.get_ticker_balance_df_adj(company_dfs["ticker_balance_df"])
         return company_dfs
 
-    def get_ticker_prices_df_adj(self, prices_df: pd.DataFrame) -> pd.DataFrame:
-        prices_df.columns = ["Open", "High", "Low", "Adjusted Close", "Close", "Volume", "Dividends", "Splits"]
-        return prices_df[["Open", "High", "Low", "Close", "Volume"]]
-
-    def get_ticker_eps_df_adj(self, eps_df: pd.DataFrame) -> pd.DataFrame:
-        eps_df.replace('None', 0, inplace=True)
-        eps_df = eps_df.set_index("fiscalDateEnding")[["estimatedEPS", "reportedEPS", "surprisePercentage"]].astype(float)
-        return eps_df
-
     def get_ticker_balance_df_adj(self, balance_df: pd.DataFrame) -> pd.DataFrame:
-        balance_df = balance_df.set_index("Date").fillna(0)
         balance_df["Cash Flow"] = balance_df[["Operating Cash Flow", "Cash Flow From Financing", "Cash Flow From Investment"]].sum(axis=1)
         return balance_df[["Total Revenue", "Profit", "Cash Flow"]]

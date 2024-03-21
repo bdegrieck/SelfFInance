@@ -6,6 +6,8 @@ app = create_app()
 
 # Define your custom filter function
 def format_currency(value):
+    if value == "None":
+        return "0".format(value)
     return "{:,.2f}".format(value)
 
 app.jinja_env.filters['format_currency'] = format_currency
