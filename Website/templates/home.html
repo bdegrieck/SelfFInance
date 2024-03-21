@@ -47,6 +47,7 @@
 </head>
 <body>
     <article class="article">
+
         <h1>Enter Stock Ticker</h1>
         <form action="/submit" method="post">
 
@@ -96,7 +97,18 @@
 
             <input type="submit" value="Submit"/>
             <a href="/compare" class="compare-button">Compare</a>
+
             </form>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashed-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
 
         </article>
 </body>

@@ -1,7 +1,7 @@
 from typing import Optional
 
 from BackEnd import constants
-from BackEnd.data import get_raw_api_data, get_html, get_ticker
+from BackEnd.data import get_raw_api_data, get_html
 import pandas as pd
 
 

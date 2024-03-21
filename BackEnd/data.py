@@ -16,8 +16,3 @@ def get_html(df_data: dict) -> dict:
         html_data[df] = data.to_html(classes="table table-striped")
     return html_data
 
-
-def get_ticker(ticker: str, api_key:str) -> str:
-    url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={ticker}&apikey={api_key}'
-    ticker = requests.get(url).json()["bestMatches"][0]["1. symbol"]
-    return ticker

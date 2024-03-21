@@ -112,7 +112,7 @@
     <div class="container">
         <h1>{{ ticker }}</h1>
 
-        {% if endpoints["Company Overview"] %}
+        {% if endpoints["Company Overview + Price"] %}
 
             <h2>Company Overview</h2>
             <table border="1" class="dataframe table table-striped">
@@ -133,10 +133,6 @@
                     <td>{{ ticker_data.ticker_overview_df['52 Week Low'].iloc[0] | format_currency }}</td>
                 </tr>
             </table>
-
-        {% endif %}
-
-        {% if endpoints["Company Overview"] %}
 
             <h2> Prices </h2>
 
@@ -165,7 +161,7 @@
 
         {% endif %}
 
-        {% if endpoints["priceAndEPS"] %}
+        {% if endpoints["EPS"] %}
 
             <h2>EPS Data</h2>
 
