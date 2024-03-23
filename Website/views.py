@@ -4,7 +4,8 @@ from BackEnd.companyData import CompanyData
 from BackEnd.compare import Compare
 from BackEnd.microData import MicroData
 from BackEnd.news import News
-from BackEnd.errors import get_formatted_ticker, validate_user_input, validate_endpoints, check_same_tickers
+from BackEnd.errors import get_formatted_ticker, validate_user_input, validate_endpoints, check_same_tickers, \
+    valid_ticker_input
 
 views = Blueprint("views", __name__)
 
@@ -29,13 +30,18 @@ def get_input():
     }
 
     # checks user_ticker_main_input and displays error
-    error_message = validate_user_input(user_input=user_ticker_main_input )
+    error_message = validate_user_input(user_input=user_ticker_main_input)
     if error_message:
         flash(error_message)
         return redirect(url_for("views.home"))
 
     # checks endpoints and displays error
     error_message = validate_endpoints(user_input=endpoints_input)
+    if error_message:
+        flash(error_message)
+        return redirect(url_for("views.home"))
+
+    error_message = valid_ticker_input(user_ticker_main_input["Ticker Input"])
     if error_message:
         flash(error_message)
         return redirect(url_for("views.home"))
@@ -61,19 +67,29 @@ def get_input():
 
 @views.route("/comparedata", methods=["POST"])
 def get_comparison_data():
-    user_input = {
+    user_input_tickers = {
         "Ticker 1": request.form.get("ticker1"),
         "Ticker 2": request.form.get("ticker2")
     }
 
     # checks if both ticker fields were entered
-    error_message = validate_user_input(user_input=user_input)
+    error_message = validate_user_input(user_input=user_input_tickers)
     if error_message:
         flash(error_message)
         return redirect(url_for("views.home"))
 
-    ticker1 = get_formatted_ticker(user_input["Ticker 1"])
-    ticker2 = get_formatted_ticker(user_input["Ticker 2"])
+    error_message = valid_ticker_input(user_input_tickers["Ticker 1"])
+    if error_message:
+        flash(error_message)
+        return redirect(url_for("views.home"))
+
+    error_message = valid_ticker_input(user_input_tickers["Ticker 2"])
+    if error_message:
+        flash(error_message)
+        return redirect(url_for("views.home"))
+
+    ticker1 = get_formatted_ticker(user_input_tickers["Ticker 1"])
+    ticker2 = get_formatted_ticker(user_input_tickers["Ticker 2"])
 
     error_message = check_same_tickers(ticker1=ticker1, ticker2=ticker2)
     if error_message:
