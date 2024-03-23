@@ -47,7 +47,7 @@
 
         <canvas id="realgdpchart" width="1100" height="900"> </canvas>
             <script>
-                var ctx = document.getElementById("lineChart").getContext("2d");
+                var ctx = document.getElementById("realgdpchart").getContext("2d");
                 var lineChart = new Chart(ctx, {
                     type: "line",
                     data: {
@@ -110,7 +110,7 @@
                         labels: {{ inflation_dates | safe }},
                         datasets: [
                         {
-                        label: "Inflation",
+                        label: "Inflation Rate",
                         data: {{ inflation_values | safe }},
                         fill: false,
                         borderColor: "rgb(75, 192, 192)",
