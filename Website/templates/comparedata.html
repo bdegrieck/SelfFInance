@@ -17,6 +17,7 @@
                      <th>Prices</th>
                      <th>Market Cap</th>
                      <th>Reported EPS</th>
+                     <th>Revenue</th>
                      <th>Profit</th>
                      <th>Price Per Earnings</th>
                 </tr>
@@ -27,7 +28,8 @@
                 <td>{{ index }}</td>
                 <td>{{ row['Prices'] | format_currency }}</td>
                 <td>{{ row['Market Cap'] | format_currency }}</td>
-                <td>{{ row['Reported EPS']  | format_currency }}</td>
+                <td>{{ row['Reported EPS'] | format_currency }}</td>
+                <td>{{ row['Revenue'] | format_currency }}</td>
                 <td>{{ row['Profit'] | format_currency }}</td>
                 <td>{{ row['Price Per Earnings'] | format_currency }}</td>
             </tr>
