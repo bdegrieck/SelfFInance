@@ -74,56 +74,54 @@
 
         <h1>Enter Stock Ticker</h1>
         <form action="/tickerdata" method="post">
-
+        
             <div class="container">
                 <div>
-                     <label for="stockTicker">Ticker 1:</label><br />
-                     <input type="Text" id="stockTicker" name="stockTicker"/><br />
+                    <label for="stockTicker">Ticker 1:</label><br />
+                    <input type="Text" id="stockTicker" name="stockTicker" /><br />
                 </div>
                 <a href="/compare" class="button">Compare</a>
             </div>
-
-        </br>
-
-            Do you want microeconomic data?
-
-        </br>
-
-            <input type="radio" name = "micro" value="yes"> Yes
-            <input type="radio" name = "micro" value="no"> No 
         
-        </br>
-        </br>
-
+            </br>
+        
+            Do you want microeconomic data?
+        
+            </br>
+        
+            <input type="radio" name="micro" value="yes"> Yes
+            <input type="radio" name="micro" value="no"> No
+        
+            </br>
+            </br>
+        
             Select endpoints:
-
-        <br />
-
+        
+            <br />
+        
             <input type="checkbox" id="companyOverview" name="companyOverview" value="companyOverview">
             <label for="companyOverview"> Company Overview + Price</label><br>
             <input type="checkbox" id="priceAndEPS" name="priceAndEPS" value="priceAndEPS">
             <label for="priceAndEPS"> EPS </label><br>
             <input type="checkbox" id="balanceSheet" name="balanceSheet" value="balanceSheet">
             <label for="balanceSheet"> Balance Sheet </label>
-
-
+        
             </br>
             </br>
-
-                Do you want the most recent News of your ticker?
-
+        
+            Do you want the most recent News of your ticker?
+        
             </br>
-
-                <input type="radio" name = "news" value="yes"> Yes
-                <input type="radio" name = "news" value="no"> No
-
+        
+            <input type="radio" name="news" value="yes"> Yes
+            <input type="radio" name="news" value="no"> No
+        
             </br>
             </br>
-
-            <input type="submit" value="Submit" class="button"/>
-            <!-- <a href="/compare" class="compare-button">Compare</a> -->
-
-            </form>
+        
+            <input type="submit" value="Submit" class="button" />
+        
+        </form>
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}
