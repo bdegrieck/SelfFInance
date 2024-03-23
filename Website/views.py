@@ -72,13 +72,14 @@ def get_comparison_data():
         flash(error_message)
         return redirect(url_for("views.home"))
 
-    error_message = check_same_tickers(ticker1=user_input["Ticker 1"], ticker2=user_input["Ticker 2"])
+    ticker1 = get_formatted_ticker(user_input["Ticker 1"])
+    ticker2 = get_formatted_ticker(user_input["Ticker 2"])
+
+    error_message = check_same_tickers(ticker1=ticker1, ticker2=ticker2)
     if error_message:
         flash(error_message)
         return redirect(url_for("views.home"))
 
-    ticker1 = get_formatted_ticker(user_input["Ticker 1"])
-    ticker2 = get_formatted_ticker(user_input["Ticker 2"])
     ticker1_data = CompanyData(ticker=ticker1)
     ticker2_data = CompanyData(ticker=ticker2)
 
