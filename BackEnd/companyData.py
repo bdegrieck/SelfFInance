@@ -1,6 +1,7 @@
-from BackEnd.data import get_raw_api_data, get_clean_data, remove_empties
 import pandas as pd
+
 from BackEnd import constants
+from BackEnd.data import get_raw_api_data, get_clean_data, remove_empties
 
 
 class CompanyData:
