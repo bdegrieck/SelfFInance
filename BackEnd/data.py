@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import requests
 
 
@@ -10,15 +11,8 @@ def get_raw_api_data(endpoints: dict) -> dict:
     return raw_data
 
 
-# format spec data dfs to html to frontend
-def get_html(df_data: dict) -> dict:
-    html_data = {}
-    for df, data in df_data.items():
-        html_data[df] = data.to_html(classes="table table-striped")
-    return html_data
-
-
-def get_clean_data(df_data: dict):
+# cleans dataframe to remove nan values and 'None'
+def get_clean_data(df_data: dict) -> dict:
     for data_category, df_value in df_data.items():
         for column in df_value.columns:
             df_data[data_category][column] = df_value[column].fillna(0).replace(to_replace=["None", np.nan], value=0)
@@ -29,7 +23,8 @@ def get_clean_data(df_data: dict):
     return df_data
 
 
-def remove_empties(df_data: dict):
+# removes rows of data that have 0 as date
+def remove_empties(df_data: dict) -> dict:
     for data_category, df_value in df_data.items():
         df_data[data_category] = df_value[df_value.index.notna()]
     return df_data

@@ -2,12 +2,14 @@ import pandas as pd
 
 from BackEnd.companyData import CompanyData
 
+
 class Compare:
     def __init__(self, main_ticker_data: type(CompanyData), second_ticker_data: type(CompanyData)):
         self.main_ticker_data = main_ticker_data
         self.second_ticker_data = second_ticker_data
         self.data_comparison = self.compare_financials()
 
+    # compares company financials: ticker prices, market cap, eps, revenue, and profit
     def compare_financials(self) -> pd.DataFrame:
         main_market_cap = self.main_ticker_data.ticker_df_data["ticker_overview_df"]["Market Cap"].iloc[0]
         second_market_cap = self.second_ticker_data.ticker_df_data["ticker_overview_df"]["Market Cap"].iloc[0]

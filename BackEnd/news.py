@@ -10,6 +10,7 @@ class News:
         self.url = f'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={self.ticker}&apikey={self.api_key}'
         self.news = self.get_news()
 
+    # calls api to return most recent news article of ticker
     def get_news(self) -> str:
         news_link = requests.get(url=self.url).json()["feed"][00]["url"]
         return news_link

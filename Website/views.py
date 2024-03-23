@@ -16,7 +16,6 @@ def home():
 
 @views.route("/submit", methods=["POST"])
 def get_input():
-    error_message = None
     user_input = {
         "Ticker Input": request.form.get("stockTicker"),
         "Microeconomic Input": request.form.get("micro"),

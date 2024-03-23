@@ -1,19 +1,17 @@
-from typing import Optional
-
 from BackEnd import constants
-from BackEnd.data import get_raw_api_data, get_html
+from BackEnd.data import get_raw_api_data
 import pandas as pd
 
 
 class MicroData:
     def __init__(self):
         self.api_key = constants.API_KEY
-        self.ticker = "AAPL"
+        self.ticker = "AAPL" # doesn't matter what ticker because micro data the same for all tickers
         self.micro_endpoints = self.get_endpoint_micro()
         self.micro_raw_data = get_raw_api_data(endpoints=self.micro_endpoints)
         self.micro_df_data = self.get_micro_df_data()
-        self.micro_html_data = get_html(self.micro_df_data)
 
+    # formats micro endpoints returns dict of endpoints
     def get_endpoint_micro(self) -> dict:
         dict_functions_micro_urls = {
             "real_gdp": f"https://www.alphavantage.co/query?function=REAL_GDP&symbol={self.ticker}&apikey={self.api_key}",
