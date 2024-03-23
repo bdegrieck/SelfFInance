@@ -14,31 +14,33 @@ def home():
     return render_template("home.html")
 
 
-@views.route("/submit", methods=["POST"])
+@views.route("/tickerdata", methods=["POST"])
 def get_input():
-    user_input = {
+    user_ticker_main_input = {
         "Ticker Input": request.form.get("stockTicker"),
         "Microeconomic Input": request.form.get("micro"),
         "News Input": request.form.get("news")
     }
 
-    endpoints = {
+    endpoints_input = {
         "Company Overview + Price": "companyOverview" in request.form.getlist("companyOverview"),
         "EPS": "priceAndEPS" in request.form.getlist("priceAndEPS"),
         "Balance Sheet": "balanceSheet" in request.form.getlist("balanceSheet")
     }
 
-    error_message = validate_user_input(user_input=user_input)
+    # checks user_ticker_main_input and displays error
+    error_message = validate_user_input(user_input=user_ticker_main_input )
     if error_message:
         flash(error_message)
         return redirect(url_for("views.home"))
 
-    error_message = validate_endpoints(user_input=endpoints)
+    # checks endpoints and displays error
+    error_message = validate_endpoints(user_input=endpoints_input)
     if error_message:
         flash(error_message)
         return redirect(url_for("views.home"))
 
-    ticker_input = get_formatted_ticker(user_input["Ticker Input"])
+    ticker_input = get_formatted_ticker(user_ticker_main_input["Ticker Input"])
 
     ticker_data = CompanyData(ticker=ticker_input)
     user_ticker_news = News(ticker=ticker_input)
@@ -47,13 +49,13 @@ def get_input():
         template_name_or_list="tickerinfo.html",
         ticker=ticker_input,
         ticker_data=ticker_data.ticker_df_data,
-        endpoints=endpoints,
-        micro=user_input["Microeconomic Input"],
-        news_input=user_input["News Input"],
+        endpoints=endpoints_input,
+        micro=user_ticker_main_input["Microeconomic Input"],
+        news_input=user_ticker_main_input["News Input"],
         news_link=user_ticker_news.news,
         error_message=error_message,
-        dates_chart=[date for date in ticker_data.ticker_df_data["ticker_prices_df"]['Close'][::-1].index],
-        prices_chart=[row for row in ticker_data.ticker_df_data["ticker_prices_df"]['Close'][::-1]]
+        prices_dates=[date for date in ticker_data.ticker_df_data["ticker_prices_df"]['Close'][::-1].index],
+        prices_values=[row for row in ticker_data.ticker_df_data["ticker_prices_df"]['Close'][::-1]]
     )
 
 
@@ -63,6 +65,8 @@ def get_comparison_data():
         "Ticker 1": request.form.get("ticker1"),
         "Ticker 2": request.form.get("ticker2")
     }
+
+    # checks if both ticker fields were entered
     error_message = validate_user_input(user_input=user_input)
     if error_message:
         flash(error_message)
@@ -72,6 +76,7 @@ def get_comparison_data():
     ticker2 = get_formatted_ticker(user_input["Ticker 2"])
     ticker1_data = CompanyData(ticker=ticker1)
     ticker2_data = CompanyData(ticker=ticker2)
+
     comparison_data = Compare(main_ticker_data=ticker1_data, second_ticker_data=ticker2_data)
 
     return render_template(
@@ -79,7 +84,7 @@ def get_comparison_data():
         comparison_data=comparison_data.data_comparison,
         ticker1=ticker1,
         ticker2=ticker2,
-        error_message = error_message
+        error_message=error_message
     )
 
 
@@ -93,25 +98,25 @@ def get_comparison_input():
 @views.route("/micro")
 def get_micro():
     micro_data_input = MicroData()
-    micro_dfs = micro_data_input.micro_df_data
+
     return render_template(
         template_name_or_list="micro.html",
 
-        real_gdp_dates=[date for date in micro_dfs["real_gdp_df"][::-1].index],
-        real_gdp_values=[value for value in micro_dfs["real_gdp_df"]["Real GDP"][::-1]],
+        real_gdp_dates=[date for date in micro_data_input.micro_df_data["real_gdp_df"][::-1].index],
+        real_gdp_values=[value for value in micro_data_input.micro_df_data["real_gdp_df"]["Real GDP"][::-1]],
 
-        cpi_dates=[date for date in micro_dfs["cpi_df"][::-1].index],
-        cpi_values=[value for value in micro_dfs["cpi_df"]["CPI"][::-1]],
+        cpi_dates=[date for date in micro_data_input.micro_df_data["cpi_df"][::-1].index],
+        cpi_values=[value for value in micro_data_input.micro_df_data["cpi_df"]["CPI"][::-1]],
 
-        inflation_dates=[date for date in micro_dfs["inflation_df"][::-1].index],
-        inflation_values=[value for value in micro_dfs["inflation_df"]["Inflation Rate"][::-1]],
+        inflation_dates=[date for date in micro_data_input.micro_df_data["inflation_df"][::-1].index],
+        inflation_values=[value for value in micro_data_input.micro_df_data["inflation_df"]["Inflation Rate"][::-1]],
 
-        fed_dates=[date for date in micro_dfs["federal_funds_rate_df"][::-1].index],
-        fed_values=[value for value in micro_dfs["federal_funds_rate_df"]["Federal Funds Rate"][::-1]],
+        fed_dates=[date for date in micro_data_input.micro_df_data["federal_funds_rate_df"][::-1].index],
+        fed_values=[value for value in micro_data_input.micro_df_data["federal_funds_rate_df"]["Federal Funds Rate"][::-1]],
 
-        retail_dates=[date for date in micro_dfs["retail_sales_df"][::-1].index],
-        retail_values=[value for value in micro_dfs["retail_sales_df"]["Retail Sales"][::-1]],
+        retail_dates=[date for date in micro_data_input.micro_df_data["retail_sales_df"][::-1].index],
+        retail_values=[value for value in micro_data_input.micro_df_data["retail_sales_df"]["Retail Sales"][::-1]],
 
-        unemployment_dates=[date for date in micro_dfs["unemployment_rate_df"][::-1].index],
-        unemployment_values=[value for value in micro_dfs["unemployment_rate_df"]["Unemployment Rate"][::-1]],
+        unemployment_dates=[date for date in micro_data_input.micro_df_data["unemployment_rate_df"][::-1].index],
+        unemployment_values=[value for value in micro_data_input.micro_df_data["unemployment_rate_df"]["Unemployment Rate"][::-1]],
     )

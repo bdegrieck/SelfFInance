@@ -4,7 +4,7 @@ from Website import create_app
 
 app = create_app()
 
-# Define your custom filter function
+# Formats float values to strings with commas to look like money
 def format_currency(value):
     if value == "None":
         return "0".format(value)

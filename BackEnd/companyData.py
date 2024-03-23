@@ -1,7 +1,4 @@
-import numpy as np
-import requests
-
-from BackEnd.data import get_html, get_raw_api_data, get_clean_data, remove_empties
+from BackEnd.data import get_raw_api_data, get_clean_data, remove_empties
 import pandas as pd
 from BackEnd import constants
 
