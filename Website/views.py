@@ -4,7 +4,7 @@ from BackEnd.companyData import CompanyData
 from BackEnd.compare import Compare
 from BackEnd.microData import MicroData
 from BackEnd.news import News
-from BackEnd.errors import get_formatted_ticker, validate_user_input, validate_endpoints
+from BackEnd.errors import get_formatted_ticker, validate_user_input, validate_endpoints, check_same_tickers
 
 views = Blueprint("views", __name__)
 
@@ -68,6 +68,11 @@ def get_comparison_data():
 
     # checks if both ticker fields were entered
     error_message = validate_user_input(user_input=user_input)
+    if error_message:
+        flash(error_message)
+        return redirect(url_for("views.home"))
+
+    error_message = check_same_tickers(ticker1=user_input["Ticker 1"], ticker2=user_input["Ticker 2"])
     if error_message:
         flash(error_message)
         return redirect(url_for("views.home"))

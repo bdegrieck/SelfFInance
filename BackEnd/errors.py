@@ -21,3 +21,7 @@ def validate_user_input(user_input: dict) -> str:
 def validate_endpoints(user_input: dict) -> str:
     if not any(user_input.values()):
         return f'Please select at least one options:{list(user_input.keys())}'
+
+def check_same_tickers(ticker1: str, ticker2: str):
+    if ticker1 == ticker2:
+        return f"Please input two different tickers"
