@@ -94,7 +94,25 @@ def get_comparison_input():
 @views.route("/micro")
 def get_micro():
     micro_data_input = MicroData()
+    micro_dfs = micro_data_input.micro_df_data
     return render_template(
         template_name_or_list="micro.html",
-        microdata=micro_data_input.micro_df_data
+
+        real_gdp_dates=[date for date in micro_dfs["real_gdp_df"][::-1].index],
+        real_gdp_values=[value for value in micro_dfs["real_gdp_df"]["Real GDP"][::-1]],
+
+        cpi_dates=[date for date in micro_dfs["cpi_df"][::-1].index],
+        cpi_values=[value for value in micro_dfs["cpi_df"]["CPI"][::-1]],
+
+        inflation_dates=[date for date in micro_dfs["inflation_df"][::-1].index],
+        inflation_values=[value for value in micro_dfs["inflation_df"]["Inflation Rate"][::-1]],
+
+        fed_dates=[date for date in micro_dfs["federal_funds_rate_df"][::-1].index],
+        fed_values=[value for value in micro_dfs["federal_funds_rate_df"]["Federal Funds Rate"][::-1]],
+
+        retail_dates=[date for date in micro_dfs["retail_sales_df"][::-1].index],
+        retail_values=[value for value in micro_dfs["retail_sales_df"]["Retail Sales"][::-1]],
+
+        unemployment_dates=[date for date in micro_dfs["unemployment_rate_df"][::-1].index],
+        unemployment_values=[value for value in micro_dfs["unemployment_rate_df"]["Unemployment Rate"][::-1]],
     )

@@ -30,7 +30,7 @@ class MicroData:
         micro_dfs = {
             "real_gdp_df": pd.DataFrame(self.micro_raw_data["real_gdp"]["data"]).set_index("date").astype(float).rename(columns={"value": "Real GDP"}),
             "cpi_df": pd.DataFrame(self.micro_raw_data["cpi"]["data"]).set_index("date").astype(float).rename(columns={"value": "CPI"}),
-            "inflation_df": pd.DataFrame(self.micro_raw_data["inflation"]["data"]).set_index("date").astype(float).rename(columns={"value": "Inflation"}),
+            "inflation_df": pd.DataFrame(self.micro_raw_data["inflation"]["data"]).set_index("date").astype(float).rename(columns={"value": "Inflation Rate"}),
             "federal_funds_rate_df": pd.DataFrame(self.micro_raw_data["federal_funds_rate"]["data"]).set_index("date").astype(float).rename(columns={"value": "Federal Funds Rate"}),
             "retail_sales_df": pd.DataFrame(self.micro_raw_data["retail_sales"]["data"]).set_index("date").astype(float).rename(columns={"value": "Retail Sales"}),
             "unemployment_rate_df": pd.DataFrame(self.micro_raw_data["unemployment"]["data"]).set_index("date").astype(float).rename(columns={"value": "Unemployment Rate"}),
