@@ -31,16 +31,40 @@
             margin: 0 5px; /* Add some space between the inputs */
         }
 
-        .compare-button {
-            position: fixed; /* Fixed position relative to the viewport */
-            bottom: 20px; /* 20 pixels from the bottom of the viewport */
-            right: 20px; /* 20 pixels from the right of the viewport */
-            padding: 10px; /* Add padding to make the button larger */
-            background-color: #fff; /* A background color to make the button stand out */
-            color: #000; /* Text color for the button */
-            text-decoration: none; /* Remove underline from the link */
-            border: 1px solid #000; /* Add a border to the button */
-            border-radius: 4px; /* Optional: rounded corners */
+        /* .compare-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: #fff;
+            color: #000;
+            text-decoration: none;
+            border: 1px solid #000;
+            border-radius: 4px;
+        } */
+
+        .button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5%;
+
+            /* transition */
+            transition-duration: 0.4s;
+            transition-timing-function: ease;
+        }
+        
+        .button:hover {
+            background-color: #04AA6D; /* Green */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
         }
     </style>
 
@@ -50,55 +74,54 @@
 
         <h1>Enter Stock Ticker</h1>
         <form action="/tickerdata" method="post">
-
+        
             <div class="container">
                 <div>
-                     <label for="stockTicker">Ticker 1:</label><br />
-                     <input type="Text" id="stockTicker" name="stockTicker"/><br />
+                    <label for="stockTicker">Ticker 1:</label><br />
+                    <input type="Text" id="stockTicker" name="stockTicker" /><br />
                 </div>
+                <a href="/compare" class="button">Compare</a>
             </div>
-
-        </br>
-
-            Do you want microeconomic data?
-
-        </br>
-
-            <input type="radio" name = "micro" value="yes"> Yes
-            <input type="radio" name = "micro" value="no"> No 
         
-        </br>
-        </br>
-
+            </br>
+        
+            Do you want microeconomic data?
+        
+            </br>
+        
+            <input type="radio" name="micro" value="yes"> Yes
+            <input type="radio" name="micro" value="no"> No
+        
+            </br>
+            </br>
+        
             Select endpoints:
-
-        <br />
-
+        
+            <br />
+        
             <input type="checkbox" id="companyOverview" name="companyOverview" value="companyOverview">
             <label for="companyOverview"> Company Overview + Price</label><br>
             <input type="checkbox" id="priceAndEPS" name="priceAndEPS" value="priceAndEPS">
             <label for="priceAndEPS"> EPS </label><br>
             <input type="checkbox" id="balanceSheet" name="balanceSheet" value="balanceSheet">
             <label for="balanceSheet"> Balance Sheet </label>
-
-
+        
             </br>
             </br>
-
-                Do you want the most recent News of your ticker?
-
+        
+            Do you want the most recent News of your ticker?
+        
             </br>
-
-                <input type="radio" name = "news" value="yes"> Yes
-                <input type="radio" name = "news" value="no"> No
-
+        
+            <input type="radio" name="news" value="yes"> Yes
+            <input type="radio" name="news" value="no"> No
+        
             </br>
             </br>
-
-            <input type="submit" value="Submit"/>
-            <a href="/compare" class="compare-button">Compare</a>
-
-            </form>
+        
+            <input type="submit" value="Submit" class="button" />
+        
+        </form>
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}

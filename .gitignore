@@ -11,3 +11,6 @@ BackEnd/__pycache__/data.cpython-311.pyc
 .idea/misc.xml
 .idea/SelfFInance.iml
 /BackEnd/__pycache__
+
+__pycache__/
+Website/__pycache__
