@@ -48,6 +48,10 @@ def get_input():
 
     ticker_input = get_formatted_ticker(user_ticker_main_input["Ticker Input"])
 
+    if ticker_input == f'Enter ticker instead of "{user_ticker_main_input["Ticker Input"]}"':
+        flash(ticker_input)
+        return redirect(url_for("views.home"))
+
     ticker_data = CompanyData(ticker=ticker_input)
     user_ticker_news = News(ticker=ticker_input)
 
@@ -80,6 +84,14 @@ def get_comparison_data():
 
     ticker1 = get_formatted_ticker(user_input_tickers["Ticker 1"])
     ticker2 = get_formatted_ticker(user_input_tickers["Ticker 2"])
+
+    if ticker1 == f'Enter ticker instead of "{user_input_tickers["Ticker 1"]}"':
+        flash(ticker1)
+        return redirect(url_for("views.home"))
+
+    if ticker2 == f'Enter ticker instead of "{user_input_tickers["Ticker 2"]}"':
+        flash(ticker2)
+        return redirect(url_for("views.home"))
 
     error_message = check_same_tickers(ticker1=ticker1, ticker2=ticker2)
 

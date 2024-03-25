@@ -7,7 +7,8 @@ def check_extraneous_tickers(input_name: str):
     extraneous_tickers = {
         "microsoft": "MSFT",
         "apple": "AAPL",
-        "tesla": "TSLA"
+        "tesla": "TSLA",
+        "target": "TGT"
     }
     for name, ticker in extraneous_tickers.items():
         if input_name == name:
@@ -21,6 +22,8 @@ def get_formatted_ticker(ticker: str) -> str:
     name_input = check_extraneous_tickers(input_name=ticker.lower().strip())
     if name_input:
         return name_input
+    elif len(ticker_list["bestMatches"][0]["1. symbol"]) > 4:
+        return f'Enter ticker instead of "{ticker}"'
     else:
         return ticker_list["bestMatches"][0]["1. symbol"]
 
