@@ -4,6 +4,11 @@ from BackEnd import constants
 from BackEnd.data import get_raw_api_data, get_clean_data, remove_empties
 
 
+def get_ticker_balance_df_adj(balance_df: pd.DataFrame) -> pd.DataFrame:
+    balance_df["Cash Flow"] = balance_df[["Operating Cash Flow", "Cash Flow From Financing", "Cash Flow From Investment"]].sum(axis=1)
+    return balance_df[["Total Revenue", "Profit", "Cash Flow"]]
+
+
 class CompanyData:
 
     def __init__(self, ticker: str):
@@ -57,11 +62,6 @@ class CompanyData:
         company_dfs = get_clean_data(company_dfs)
         company_dfs = remove_empties(company_dfs)
 
-        company_dfs["ticker_balance_df"] = self.get_ticker_balance_df_adj(company_dfs["ticker_balance_df"])
+        company_dfs["ticker_balance_df"] = get_ticker_balance_df_adj(company_dfs["ticker_balance_df"])
 
         return company_dfs
-
-    # method to calculate cash flow and returns filtered ticker balance data
-    def get_ticker_balance_df_adj(self, balance_df: pd.DataFrame) -> pd.DataFrame:
-        balance_df["Cash Flow"] = balance_df[["Operating Cash Flow", "Cash Flow From Financing", "Cash Flow From Investment"]].sum(axis=1)
-        return balance_df[["Total Revenue", "Profit", "Cash Flow"]]

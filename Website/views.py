@@ -78,20 +78,11 @@ def get_comparison_data():
         flash(error_message)
         return redirect(url_for("views.home"))
 
-    error_message = valid_ticker_input(user_input_tickers["Ticker 1"])
-    if error_message:
-        flash(error_message)
-        return redirect(url_for("views.home"))
-
-    error_message = valid_ticker_input(user_input_tickers["Ticker 2"])
-    if error_message:
-        flash(error_message)
-        return redirect(url_for("views.home"))
-
     ticker1 = get_formatted_ticker(user_input_tickers["Ticker 1"])
     ticker2 = get_formatted_ticker(user_input_tickers["Ticker 2"])
 
     error_message = check_same_tickers(ticker1=ticker1, ticker2=ticker2)
+
     if error_message:
         flash(error_message)
         return redirect(url_for("views.home"))

@@ -3,11 +3,26 @@ import requests
 from BackEnd import constants
 
 
+def check_extraneous_tickers(input_name: str):
+    extraneous_tickers = {
+        "microsoft": "MSFT",
+        "apple": "AAPL",
+        "tesla": "TSLA"
+    }
+    for name, ticker in extraneous_tickers.items():
+        if input_name == name:
+            return ticker
+
+
 # formats user inputted ticker to most relevant search done by api
 def get_formatted_ticker(ticker: str) -> str:
     url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={ticker}&apikey={constants.API_KEY}'
-    ticker = requests.get(url).json()
-    return ticker["bestMatches"][0]["1. symbol"]
+    ticker_list = requests.get(url).json()
+    name_input = check_extraneous_tickers(input_name=ticker.lower().strip())
+    if name_input:
+        return name_input
+    else:
+        return ticker_list["bestMatches"][0]["1. symbol"]
 
 
 # checks user input for a valid ticker that api can detect
@@ -34,4 +49,4 @@ def validate_endpoints(user_input: dict) -> str:
 # checks if two tickers are the same for comparison
 def check_same_tickers(ticker1: str, ticker2: str):
     if ticker1 == ticker2:
-        return f"Please input two different tickers"
+        return "Please input two different tickers"
