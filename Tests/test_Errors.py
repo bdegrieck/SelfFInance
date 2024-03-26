@@ -35,6 +35,11 @@ class TestErrors:
         assert valid_ticker_input(ticker=ticker) is None
         assert get_formatted_ticker(ticker=ticker) == "QQQ"
 
+        # test company that just went public reddit
+        ticker = "reddit"
+        assert valid_ticker_input(ticker=ticker) is None
+        assert get_formatted_ticker(ticker=ticker) == "RDDT"
+
     def test_check_same_tickers_input(self):
         # test if user enters two of the same tickers which informs user to re enter a new ticker
         ticker1 = "AAPL"

@@ -17,43 +17,48 @@ def home():
 
 @views.route("/tickerdata", methods=["POST"])
 def get_input():
-    user_ticker_main_input = {
-        "Ticker Input": request.form.get("stockTicker"),
-        "Microeconomic Input": request.form.get("micro"),
-        "News Input": request.form.get("news")
-    }
+    try:
+        user_ticker_main_input = {
+            "Ticker Input": request.form.get("stockTicker"),
+            "Microeconomic Input": request.form.get("micro"),
+            "News Input": request.form.get("news")
+        }
 
-    endpoints_input = {
-        "Company Overview + Price": "companyOverview" in request.form.getlist("companyOverview"),
-        "EPS": "priceAndEPS" in request.form.getlist("priceAndEPS"),
-        "Balance Sheet": "balanceSheet" in request.form.getlist("balanceSheet")
-    }
+        endpoints_input = {
+            "Company Overview + Price": "companyOverview" in request.form.getlist("companyOverview"),
+            "EPS": "priceAndEPS" in request.form.getlist("priceAndEPS"),
+            "Balance Sheet": "balanceSheet" in request.form.getlist("balanceSheet")
+        }
 
-    # checks user_ticker_main_input and displays error
-    error_message = validate_user_input(user_input=user_ticker_main_input)
-    if error_message:
-        flash(error_message)
+        # checks user_ticker_main_input and displays error
+        error_message = validate_user_input(user_input=user_ticker_main_input)
+        if error_message:
+            flash(error_message)
+            return redirect(url_for("views.home"))
+
+        # checks endpoints and displays error
+        error_message = validate_endpoints(user_input=endpoints_input)
+        if error_message:
+            flash(error_message)
+            return redirect(url_for("views.home"))
+
+        error_message = valid_ticker_input(user_ticker_main_input["Ticker Input"])
+        if error_message:
+            flash(error_message)
+            return redirect(url_for("views.home"))
+
+        ticker_input = get_formatted_ticker(user_ticker_main_input["Ticker Input"])
+
+        if ticker_input == f'Enter ticker instead of "{user_ticker_main_input["Ticker Input"]}"':
+            flash(ticker_input)
+            return redirect(url_for("views.home"))
+
+        ticker_data = CompanyData(ticker=ticker_input)
+        user_ticker_news = News(ticker=ticker_input)
+
+    except Exception as e:
+        flash(f'Your ticker "{ticker_input}" does not have enough data please choose another ticker')
         return redirect(url_for("views.home"))
-
-    # checks endpoints and displays error
-    error_message = validate_endpoints(user_input=endpoints_input)
-    if error_message:
-        flash(error_message)
-        return redirect(url_for("views.home"))
-
-    error_message = valid_ticker_input(user_ticker_main_input["Ticker Input"])
-    if error_message:
-        flash(error_message)
-        return redirect(url_for("views.home"))
-
-    ticker_input = get_formatted_ticker(user_ticker_main_input["Ticker Input"])
-
-    if ticker_input == f'Enter ticker instead of "{user_ticker_main_input["Ticker Input"]}"':
-        flash(ticker_input)
-        return redirect(url_for("views.home"))
-
-    ticker_data = CompanyData(ticker=ticker_input)
-    user_ticker_news = News(ticker=ticker_input)
 
     return render_template(
         template_name_or_list="tickerinfo.html",

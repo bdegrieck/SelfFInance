@@ -1,5 +1,6 @@
 import pandas as pd
 from BackEnd.companyData import get_ticker_balance_df_adj, CompanyData
+from BackEnd.errors import valid_ticker_input, get_formatted_ticker
 
 
 class TestCompanyData:
@@ -17,7 +18,9 @@ class TestCompanyData:
         assert balance_sheet["Cash Flow"].iloc[0] == 75
 
     def test_company_data_grab(self):
-        ticker = "NVDA"
+        ticker = "google"
+        assert valid_ticker_input(ticker=ticker) is None
+        ticker = get_formatted_ticker(ticker=ticker)
         nvidia_data = CompanyData(ticker=ticker)
 
         nvidia_data_dfs = nvidia_data.ticker_df_data
@@ -32,6 +35,7 @@ class TestCompanyData:
         assert ticker_overview["Market Cap"].iloc[0] > 0
         assert ticker_overview["52 Week High"].iloc[0] > 0
         assert ticker_overview["52 Week Low"].iloc[0] > 0
+
 
     def test_company_data_grab_filtration(self):
         ticker = "LULU"
