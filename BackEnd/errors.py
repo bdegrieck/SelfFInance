@@ -11,9 +11,8 @@ def check_extraneous_tickers(input_name: str):
         "target": "TGT",
         "google": "GOOGL",
     }
-    for name, ticker in extraneous_tickers.items():
-        if input_name == name:
-            return ticker
+    if input_name in extraneous_tickers.keys():
+        return extraneous_tickers[input_name]
 
 
 # formats user inputted ticker to most relevant search done by api

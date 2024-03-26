@@ -56,8 +56,13 @@ def get_input():
         ticker_data = CompanyData(ticker=ticker_input)
         user_ticker_news = News(ticker=ticker_input)
 
+        if user_ticker_news.news == f'There are no relevant news for your ticker: "{ticker_input}"' and user_ticker_main_input["News Input"] == "yes":
+            flash(user_ticker_news.news)
+            return redirect(url_for("views.home"))
+
     except Exception as e:
         flash(f'Your ticker "{ticker_input}" does not have enough data please choose another ticker')
+        print(e)
         return redirect(url_for("views.home"))
 
     return render_template(
