@@ -2,7 +2,7 @@ import requests
 
 from BackEnd import constants
 
-
+# tickers that the api cannot understand when inputting full company name instead of ticker
 def check_extraneous_tickers(input_name: str):
     extraneous_tickers = {
         "microsoft": "MSFT",
@@ -10,6 +10,14 @@ def check_extraneous_tickers(input_name: str):
         "tesla": "TSLA",
         "target": "TGT",
         "google": "GOOGL",
+        "disney": "DIS",
+        "snowflake": "SNOW",
+        "crowdstrike": "CRWD",
+        "netflix": "NFLX",
+        "at&t": "T",
+        "gamestop": "GME",
+        "draftkings": "DKNG",
+
     }
     if input_name in extraneous_tickers.keys():
         return extraneous_tickers[input_name]
