@@ -1,5 +1,6 @@
 import numpy as np
 import requests
+from BackEnd.errors import check_raw_data
 
 
 # get raw data endpoints are passed in
@@ -7,6 +8,7 @@ def get_raw_api_data(endpoints: dict) -> dict:
     raw_data = {}
     for data_description, endpoint_url in endpoints.items():
         raw_data[data_description] = requests.get(url=endpoint_url).json()
+    check_raw_data(ticker_raw_data=raw_data)
     return raw_data
 
 

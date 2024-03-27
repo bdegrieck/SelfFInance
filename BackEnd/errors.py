@@ -2,17 +2,25 @@ import requests
 
 from BackEnd import constants
 
-
+# tickers that the api cannot understand when inputting full company name instead of ticker
 def check_extraneous_tickers(input_name: str):
     extraneous_tickers = {
         "microsoft": "MSFT",
         "apple": "AAPL",
         "tesla": "TSLA",
-        "target": "TGT"
+        "target": "TGT",
+        "google": "GOOGL",
+        "disney": "DIS",
+        "snowflake": "SNOW",
+        "crowdstrike": "CRWD",
+        "netflix": "NFLX",
+        "at&t": "T",
+        "gamestop": "GME",
+        "draftkings": "DKNG",
+
     }
-    for name, ticker in extraneous_tickers.items():
-        if input_name == name:
-            return ticker
+    if input_name in extraneous_tickers.keys():
+        return extraneous_tickers[input_name]
 
 
 # formats user inputted ticker to most relevant search done by api
@@ -22,7 +30,7 @@ def get_formatted_ticker(ticker: str) -> str:
     name_input = check_extraneous_tickers(input_name=ticker.lower().strip())
     if name_input:
         return name_input
-    elif len(ticker_list["bestMatches"][0]["1. symbol"]) > 4:
+    elif len(ticker_list["bestMatches"][0]["1. symbol"]) > 5:
         return f'Enter ticker instead of "{ticker}"'
     else:
         return ticker_list["bestMatches"][0]["1. symbol"]
@@ -32,7 +40,8 @@ def get_formatted_ticker(ticker: str) -> str:
 def valid_ticker_input(ticker: str) -> str:
     url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={ticker}&apikey={constants.API_KEY}'
     best_matches = requests.get(url).json()
-    if len(best_matches["bestMatches"]) == 0:
+    check_extraneous = check_extraneous_tickers(input_name=ticker)
+    if len(best_matches["bestMatches"]) == 0 and check_extraneous is None:
         return "Your inputted Ticker does not exist"
 
 
@@ -53,3 +62,9 @@ def validate_endpoints(user_input: dict) -> str:
 def check_same_tickers(ticker1: str, ticker2: str):
     if ticker1 == ticker2:
         return "Please input two different tickers"
+
+
+def check_raw_data(ticker_raw_data: dict) -> str:
+    for raw_data_dict in ticker_raw_data:
+        if not raw_data_dict:
+            return "Inputted ticker does not have enough data to display"
