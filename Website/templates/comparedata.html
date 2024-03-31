@@ -5,37 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comparison</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            margin-top: 20px; /* Margin from the top */
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #051018;
+            color: #ffffff
+        }
+
+        .table-responsive>tbody>tr:nth-child(odd)>td,
+        .table-responsive>tbody>tr:nth-child(odd)>th {
+            background-color: #0A2333;
+            color: #ffffff
+        }
+
+        .table-responsive>tbody>tr:nth-child(even)>td,
+        .table-responsive>tbody>tr:nth-child(even)>th {
+            background-color: #0D2F44;
+            color: #ffffff
+        }
+
+        table {
+            color: #AEECEF; /* Gold color for table headers */
+        }
+    </style>
+
 </head>
 
 <body>
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <h2>{{ ticker1 }} compared to {{ ticker2 }}</h2>
+                <!--<table border="1" class="dataframe table table-striped"> -->
+                <table class="table table-responsive">
+                    <thead>
+                        <tr class = "">
+                            <th>Index</th>
+                            <th>Prices</th>
+                            <th>Market Cap</th>
+                            <th>Reported EPS</th>
+                            <th>Revenue</th>
+                            <th>Profit</th>
+                            <th>Price Per Earnings</th>
+                        </tr>
+                    </thead>
 
-    <h2>{{ ticker1 }} compared to {{ ticker2 }}</h2>
-        <table border="1" class="dataframe table table-striped">
-            <thead>
-                 <tr>
-                     <th>Index</th>
-                     <th>Prices</th>
-                     <th>Market Cap</th>
-                     <th>Reported EPS</th>
-                     <th>Revenue</th>
-                     <th>Profit</th>
-                     <th>Price Per Earnings</th>
-                </tr>
-            </thead>
-
-            {% for index, row in comparison_data.iterrows() %}
-            <tr>
-                <td>{{ index }}</td>
-                <td>{{ row['Prices'] | format_currency }}</td>
-                <td>{{ row['Market Cap'] | format_currency }}</td>
-                <td>{{ row['Reported EPS'] | format_currency }}</td>
-                <td>{{ row['Revenue'] | format_currency }}</td>
-                <td>{{ row['Profit'] | format_currency }}</td>
-                <td>{{ row['Price Per Earnings'] | format_currency }}</td>
-            </tr>
-            {% endfor %}
-
-        </table>
+                    {% for index, row in comparison_data.iterrows() %}
+                    <tr>
+                        <td>{{ index }}</td>
+                        <td>{{ row['Prices'] | format_currency }}</td>
+                        <td>{{ row['Market Cap'] | format_currency }}</td>
+                        <td>{{ row['Reported EPS'] | format_currency }}</td>
+                        <td>{{ row['Revenue'] | format_currency }}</td>
+                        <td>{{ row['Profit'] | format_currency }}</td>
+                        <td>{{ row['Price Per Earnings'] | format_currency }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
 </body>
 
 </html>
