@@ -11,6 +11,30 @@
 
 <head>
     <style>
+
+        body {
+            margin-top: 20px; 
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #051018;
+            color: #ffffff
+        }   
+
+        .table-striped>tbody>tr:nth-child(even)>td,
+        .table-striped>tbody>tr:nth-child(even)>th {
+            background-color: #0D2F44;
+        }
+        
+        .table-striped>tbody>tr:nth-child(odd)>td,
+        .table-striped>tbody>tr:nth-child(odd)>th {
+            background-color: #0A2333;
+        }
+
+        table, th, td {
+            border: 1px solid #ffffff1f; /* Border color for the table and cells */
+            color: #ffffff; /* White text color */
+        }
+        
         .back-button {
             display: inline-block;
             padding: 10px 20px;
@@ -20,79 +44,82 @@
             text-align: center;
             text-decoration: none;
             outline: none;
-            color: #fff;
-            background-color: #4CAF50;
+            color: #000000;
+            background-color: #AEECEF;
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 9px #999;
+            border-radius: 5%;
+
+            /* transition */
+            transition-duration: 0.4s;
+            transition-timing-function: ease;
         }
-
-        .back-button:hover {background-color: #3e8e41}
-
-        .back-button:active {
-            background-color: #3e8e41;
-            box-shadow: 0 5px #666;
-            transform: translateY(4px);
+                
+        .back-button:hover {
+            background-color: #000000; /* Black */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(174,236,239,0.24), 0 17px 50px 0 rgba(174,236,239,0.24);
         }
 
         .micro-button {
-                display: inline-block;
-                padding: 10px 20px;
-                margin: 10px;
-                font-size: 16px;
-                cursor: pointer;
-                text-align: center;
-                text-decoration: none;
-                outline: none;
-                color: #fff;
-                background-color: #4CAF50;
-                border: none;
-                border-radius: 15px;
-                box-shadow: 0 9px #999;
-                position: absolute;
-                top: 10px;
-                right: 10px;
-            }
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #AEECEF;
+            border: none;
+            border-radius: 5%;
+            position: absolute;
+            top: 10px;
+            right: 10px;
 
-            .micro-button:hover { background-color: #3e8e41; }
+            /* transition */
+            transition-duration: 0.4s;
+            transition-timing-function: ease;
+        }
 
-            .micro-button:active {
-                background-color: #3e8e41;
-                box-shadow: 0 5px #666;
-                transform: translateY(4px);
-            }
+        .micro-button:hover{  
+            background-color: #000000; /* Black */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(174,236,239,0.24), 0 17px 50px 0 rgba(174,236,239,0.24);
+        }
 
         .news-button {
-                display: inline-block;
-                padding: 10px 20px;
-                margin: 10px;
-                font-size: 16px;
-                cursor: pointer;
-                text-align: center;
-                text-decoration: none;
-                outline: none;
-                color: #fff;
-                background-color: #4CAF50;
-                border: none;
-                border-radius: 15px;
-                box-shadow: 0 9px #999;
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #AEECEF;
+            border: none;
+            border-radius: 5%;
 
-                /* Updated positioning */
-                position: absolute;
-                top: 10px;
-                left: 50%;           /* Center horizontally */
-                transform: translateX(-50%); /* Adjust for the button's width */
-            }
+            /* Updated positioning */
+            position: absolute;
+            top: 10px;
+            left: 50%;           /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for the button's width */
 
-            .news-button:hover {
-                background-color: #3e8e41;
-            }
+            
+            /* transition */
+            transition-duration: 0.4s;
+            transition-timing-function: ease;
+        }
 
-            .news-button:active {
-                background-color: #3e8e41;
-                box-shadow: 0 5px #666;
-                transform: translateY(4px) translateX(-50%);
-            }
+        .news-button:hover {
+            background-color: #000000; /* Black */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(174,236,239,0.24), 0 17px 50px 0 rgba(174,236,239,0.24);
+        }
+
 
     </style>
 </head>
@@ -147,7 +174,7 @@
                         label: "{{ ticker }} Prices",
                         data: {{ prices_values | safe }},
                         fill: false,
-                        borderColor: "rgb(75, 192, 192)",
+                        borderColor: "rgb(252, 188, 81)",
                         lineTension: 0.1
                     }
                   ]
@@ -155,10 +182,27 @@
                 options: {
                     responsive: false,
                     scales: {
-                    x: {
-                        display: false
+                        x: {
+                            display: true,
+                            grid: {
+                                color: "rgba(0, 0, 0, 0.0)",        // Change X axis grid lines color
+                                borderColor: "rgba(0, 0, 0, 0.0)",  // Change X axis border color
+                            },
+                            ticks: {
+                                color: "rgba(0, 0, 0, 0.0)"         // Change X axis tick color
+                            }
+                        },
+                        y: {
+                            display: true,
+                            grid: {
+                                color: "rgba(255, 255, 255, 0.5)",          // Change Y axis grid lines color
+                                borderColor: "rgba(255, 255, 255, 0.5)",    // Change Y axis border color
+                            },
+                            ticks: {
+                                color: "rgba(255, 255, 255, 0.5)"           // Change Y axis tick  color
+                            }
+                        }
                     }
-                   }
                 }
             });
             </script>
