@@ -71,8 +71,46 @@
             box-shadow: 0 12px 16px 0 rgba(174, 236, 239, 0.24), 0 17px 50px 0 rgba(174, 236, 239, 0.19);
         }
 
+          .back-button {
+                display: inline-block;
+                padding: 10px 20px;
+                margin: 10px;
+                font-size: 16px;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                outline: none;
+                color: #000000;
+                background-color: #AEECEF;
+                border: none;
+                border-radius: 5%;
+
+                /* Positioning */
+                position: absolute; /* or 'fixed' if you want it to stay in place when scrolling */
+                top: 0;
+                left: 0;
+
+                /* Transition */
+                transition-duration: 0.4s;
+                transition-timing-function: ease;
+
+                /* Optional: Z-Index */
+                z-index: 1000;
+            }
+
+        .back-button:hover {
+            background-color: #000000; /* Black */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(174,236,239,0.24), 0 17px 50px 0 rgba(174,236,239,0.24);
+        }
+
     </style>
 </head>
+
+<body>
+    <a href="/" class="back-button">Back to Home</a>
+</body>
+
 <body>
     <form action="comparedata" method="post">
         <div class="container">

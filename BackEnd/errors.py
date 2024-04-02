@@ -17,7 +17,8 @@ def check_extraneous_tickers(input_name: str):
         "at&t": "T",
         "gamestop": "GME",
         "draftkings": "DKNG",
-
+        "berkshire hathaway": "BRK",
+        "visa": "V",
     }
     if input_name in extraneous_tickers.keys():
         return extraneous_tickers[input_name]
