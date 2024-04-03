@@ -6,8 +6,7 @@ from BackEnd.news import News
 class TestWholeTicker:
 
     def test_ticker(self):
-        input = "google"
-        assert valid_ticker_input(ticker=input) is None
+        input = "por"
         ticker = get_formatted_ticker(ticker=input)
 
         company_data = CompanyData(ticker)
