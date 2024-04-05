@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SelfFinance</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #051018;
+        }
+
+        .article {
+            color: #AEECEF; /* Note: changes the look of the text */
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            background: linear-gradient(to bottom, #051018 0%, #163B47 100%);
+            border: 1px solid rgba(174, 236, 239, 0.25);
+            border-radius: 5%;
+            padding: 35px;
+            margin: 15px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .container div {
+            margin: 0 5px; /* Add some space between the inputs */
+        }
+        .button {
+            background-color: #AEECEF;
+            border: none;
+            color: rgb(0, 0, 0);
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5%;
+
+            /* transition */
+            transition-duration: 0.4s;
+            transition-timing-function: ease;
+        }
+        
+        .button:hover {
+            background-color: #000000;
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(174,236,239,0.24), 0 17px 50px 0 rgba(174,236,239,0.24);
+        }
+    </style>
+
+</head>
+<body>
+    <article class="article">
+
+        <h1>Enter Stock Ticker</h1>
+        <form action="/tickerdata" method="post">
+        
+            <div class="container">
+                <div>
+                    <label for="stockTicker">Ticker or Company:</label><br />
+                    <input type="Text" id="stockTicker" name="stockTicker" /><br />
+                </div>
+                
+            </div>
+        
+            </br>
+        
+            Do you want microeconomic data?
+        
+            </br>
+        
+            <input type="radio" name="micro" value="yes"> Yes
+            <input type="radio" name="micro" value="no"> No
+        
+            </br>
+            </br>
+        
+            Select endpoints:
+        
+            <br />
+        
+            <input type="checkbox" id="companyOverview" name="companyOverview" value="companyOverview">
+            <label for="companyOverview"> Company Overview + Price</label><br>
+            <input type="checkbox" id="priceAndEPS" name="priceAndEPS" value="priceAndEPS">
+            <label for="priceAndEPS"> EPS </label><br>
+            <input type="checkbox" id="balanceSheet" name="balanceSheet" value="balanceSheet">
+            <label for="balanceSheet"> Balance Sheet </label>
+        
+            </br>
+            </br>
+        
+            Do you want the most recent News of your ticker?
+        
+            </br>
+        
+            <input type="radio" name="news" value="yes"> Yes
+            <input type="radio" name="news" value="no"> No
+        
+            </br>
+            </br>
+        
+            <input type="submit" value="Submit" class="button" />
+            <a href="/compare" class="button">Compare</a>
+        
+        </form>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashed-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        </article>
+</body>
+</html>
