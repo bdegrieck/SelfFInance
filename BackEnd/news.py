@@ -13,7 +13,13 @@ class News:
     # calls api to return most recent news article of ticker
     def get_news(self) -> str:
         news_link = requests.get(url=self.url).json()
-        if len(news_link["feed"]) == 0:
+        news_feed = news_link["feed"]
+        if len(news_feed) == 0:
             return f'There are no relevant news for your ticker: "{self.ticker}"'
-        else:
-            return news_link["feed"][00]["url"]
+
+        # checks for a more relevant article with ticker in title
+        for news_index in range(len(news_feed)):
+            if self.ticker in news_feed[news_index]["title"] or self.ticker in news_feed[news_index]["url"]:
+                return news_feed[news_index]["url"]
+
+        return news_feed[00]["url"]
