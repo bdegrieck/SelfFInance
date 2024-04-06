@@ -22,7 +22,6 @@ def check_extraneous_tickers(input_name: str):
         "johnson and johnson": "JNJ",
         "coca cola": "KO",
         "mcdonalds": "MCD",
-
     }
     if input_name in extraneous_tickers.keys():
         return extraneous_tickers[input_name]
@@ -34,12 +33,12 @@ def get_formatted_ticker(ticker: str) -> str:
     url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={ticker}&apikey={constants.API_KEY}'
     ticker_list = requests.get(url).json()
 
-    if len(ticker_list["bestMatches"]) == 0:
-        return f'Your input "{ticker}" does not exist'
-
     name_input = check_extraneous_tickers(input_name=ticker.lower().strip())
     if name_input:
         return name_input
+
+    if len(ticker_list["bestMatches"]) == 0:
+        return f'Your input "{ticker}" does not exist'
 
     # filter out invalid tickers
     better_matches = []
