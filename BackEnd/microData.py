@@ -1,7 +1,7 @@
 import pandas as pd
 
 from BackEnd import constants
-from BackEnd.data import get_raw_api_data
+from BackEnd.api import get_raw_api_data
 
 
 class MicroData:

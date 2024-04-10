@@ -1,6 +1,6 @@
 import numpy as np
 import requests
-from BackEnd.errors import check_raw_data
+from BackEnd.error import check_raw_data
 
 
 # get raw data endpoints are passed in

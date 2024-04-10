@@ -1,6 +1,6 @@
 import pandas as pd
 from BackEnd.companyData import get_ticker_balance_df_adj, CompanyData
-from BackEnd.errors import valid_ticker_input, get_formatted_ticker
+from BackEnd.error import valid_ticker_input, get_formatted_ticker
 
 
 class TestCompanyData:
@@ -35,7 +35,6 @@ class TestCompanyData:
         assert ticker_overview["Market Cap"].iloc[0] > 0
         assert ticker_overview["52 Week High"].iloc[0] > 0
         assert ticker_overview["52 Week Low"].iloc[0] > 0
-
 
     def test_company_data_grab_filtration(self):
         ticker = "LULU"
