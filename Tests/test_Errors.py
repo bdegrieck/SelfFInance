@@ -1,4 +1,4 @@
-from BackEnd.errors import get_formatted_ticker, valid_ticker_input, check_same_tickers
+from BackEnd.error import get_formatted_ticker, valid_ticker_input, check_same_tickers
 
 
 class TestErrors:

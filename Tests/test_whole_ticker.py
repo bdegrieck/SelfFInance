@@ -1,18 +1,22 @@
 from BackEnd.companyData import CompanyData
-from BackEnd.errors import valid_ticker_input, get_formatted_ticker
+from BackEnd.tickercomparison import TickerComparison
+from BackEnd.error import valid_ticker_input, get_formatted_ticker, validate_user_input
 from BackEnd.news import News
 
 
 class TestWholeTicker:
-
-    # purpose of this method is to test random instances of user input to debug issues
+    # purpose of this test is to test random instances for debugging not part of phase 4
     def test_ticker(self):
-        input = "kroger"
-        ticker = get_formatted_ticker(ticker=input)
-        #
-        # company_data = CompanyData(ticker)
-        # company_df = company_data.ticker_df_data
-        company_news = News(ticker=ticker)
-        print(company_news)
+        user_input = {
+            "Ticker1": "nvdy",
+            "Ticker2": "reddit",
+        }
+        assert validate_user_input(user_input=user_input) is None
+
+        ticker1 = get_formatted_ticker(ticker=user_input["Ticker1"])
+        ticker2 = get_formatted_ticker(ticker=user_input["Ticker2"])
+
+        comparison = TickerComparison(ticker1, ticker2)
+        print("hi")
 
 

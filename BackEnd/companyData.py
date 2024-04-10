@@ -1,7 +1,7 @@
 import pandas as pd
 
 from BackEnd import constants
-from BackEnd.data import get_raw_api_data, get_clean_data, remove_empties
+from BackEnd.api import get_raw_api_data, get_clean_data, remove_empties
 
 
 def get_ticker_balance_df_adj(balance_df: pd.DataFrame) -> pd.DataFrame:

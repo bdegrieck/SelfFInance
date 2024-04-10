@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from BackEnd.companyData import CompanyData
-from BackEnd.compare import Compare
+from BackEnd.tickercomparison import TickerComparison
 from BackEnd.microData import MicroData
 from BackEnd.news import News
-from BackEnd.errors import get_formatted_ticker, validate_user_input, validate_endpoints, check_same_tickers, \
+from BackEnd.error import get_formatted_ticker, validate_user_input, validate_endpoints, check_same_tickers, \
     valid_ticker_input
 
 views = Blueprint("views", __name__)
@@ -81,38 +81,44 @@ def get_input():
 
 @views.route("/comparedata", methods=["POST"])
 def get_comparison_data():
-    user_input_tickers = {
-        "Ticker 1": request.form.get("ticker1"),
-        "Ticker 2": request.form.get("ticker2")
-    }
+    try:
+        user_input_tickers = {
+            "Ticker 1": request.form.get("ticker1"),
+            "Ticker 2": request.form.get("ticker2")
+        }
 
-    # checks if both ticker fields were entered
-    error_message = validate_user_input(user_input=user_input_tickers)
-    if error_message:
-        flash(error_message)
+        # checks if both ticker fields were entered
+        error_message = validate_user_input(user_input=user_input_tickers)
+        if error_message:
+            flash(error_message)
+            return redirect(url_for("views.home"))
+
+        ticker1 = get_formatted_ticker(user_input_tickers["Ticker 1"])
+        ticker2 = get_formatted_ticker(user_input_tickers["Ticker 2"])
+
+        if ticker1 == f'Enter ticker instead of "{user_input_tickers["Ticker 1"]}"':
+            flash(ticker1)
+            return redirect(url_for("views.home"))
+
+        if ticker2 == f'Enter ticker instead of "{user_input_tickers["Ticker 2"]}"':
+            flash(ticker2)
+            return redirect(url_for("views.home"))
+
+        error_message = check_same_tickers(ticker1=ticker1, ticker2=ticker2)
+
+        if error_message:
+            flash(error_message)
+            return redirect(url_for("views.home"))
+
+        ticker1_data = CompanyData(ticker=ticker1)
+        ticker2_data = CompanyData(ticker=ticker2)
+
+        comparison_data = TickerComparison(main_ticker_data=ticker1_data, second_ticker_data=ticker2_data)
+
+    except Exception as e:
+        flash(f'Your ticker "{user_input_tickers}" does not have enough data please choose another ticker')
+        print(e)
         return redirect(url_for("views.home"))
-
-    ticker1 = get_formatted_ticker(user_input_tickers["Ticker 1"])
-    ticker2 = get_formatted_ticker(user_input_tickers["Ticker 2"])
-
-    if ticker1 == f'Enter ticker instead of "{user_input_tickers["Ticker 1"]}"':
-        flash(ticker1)
-        return redirect(url_for("views.home"))
-
-    if ticker2 == f'Enter ticker instead of "{user_input_tickers["Ticker 2"]}"':
-        flash(ticker2)
-        return redirect(url_for("views.home"))
-
-    error_message = check_same_tickers(ticker1=ticker1, ticker2=ticker2)
-
-    if error_message:
-        flash(error_message)
-        return redirect(url_for("views.home"))
-
-    ticker1_data = CompanyData(ticker=ticker1)
-    ticker2_data = CompanyData(ticker=ticker2)
-
-    comparison_data = Compare(main_ticker_data=ticker1_data, second_ticker_data=ticker2_data)
 
     return render_template(
         template_name_or_list="comparedata.html",
