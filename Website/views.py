@@ -4,8 +4,7 @@ from BackEnd.companyData import CompanyData
 from BackEnd.tickercomparison import TickerComparison
 from BackEnd.microData import MicroData
 from BackEnd.news import News
-from BackEnd.error import get_formatted_ticker, validate_user_input, validate_endpoints, check_same_tickers, \
-    valid_ticker_input
+from BackEnd.error import Error
 
 views = Blueprint("views", __name__)
 
@@ -18,10 +17,9 @@ def home():
 @views.route("/tickerdata", methods=["POST"])
 def get_input():
     try:
-        user_ticker_main_input = {
-            "Ticker Input": request.form.get("stockTicker"),
-            "Microeconomic Input": request.form.get("micro"),
-            "News Input": request.form.get("news")
+
+        ticker_input = {
+            "Ticker": [request.form.get("stockTicker")]
         }
 
         endpoints_input = {
@@ -30,24 +28,16 @@ def get_input():
             "Balance Sheet": "balanceSheet" in request.form.getlist("balanceSheet")
         }
 
-        # checks user_ticker_main_input and displays error
-        error_message = validate_user_input(user_input=user_ticker_main_input)
-        if error_message:
-            flash(error_message)
-            return redirect(url_for("views.home"))
+        user_input = {
+            "Ticker Input": ticker_input,
+            "Microeconomic Input": request.form.get("micro"),
+            "News Input": request.form.get("news"),
+            "Endpoints": endpoints_input
+        }
 
-        # checks endpoints and displays error
-        error_message = validate_endpoints(user_input=endpoints_input)
-        if error_message:
-            flash(error_message)
-            return redirect(url_for("views.home"))
+        user_formatted_input = Error(user_input=user_input)
 
-        error_message = valid_ticker_input(user_ticker_main_input["Ticker Input"])
-        if error_message:
-            flash(error_message)
-            return redirect(url_for("views.home"))
-
-        ticker_input = get_formatted_ticker(user_ticker_main_input["Ticker Input"])
+        ticker_input = format_ticker_input(user_ticker_main_input["Ticker Input"])
 
         if ticker_input == f'Enter ticker instead of "{user_ticker_main_input["Ticker Input"]}"':
             flash(ticker_input)
@@ -61,9 +51,9 @@ def get_input():
             return redirect(url_for("views.home"))
 
     except Exception as e:
-        flash(f'Your ticker "{ticker_input}" does not have enough data please choose another ticker')
-        print(e)
-        return redirect(url_for("views.home"))
+        if user_formatted_input.error_message:
+            flash(user_formatted_input.error_message)
+            return redirect(url_for("views.home"))
 
     return render_template(
         template_name_or_list="tickerinfo.html",
@@ -82,9 +72,8 @@ def get_input():
 @views.route("/comparedata", methods=["POST"])
 def get_comparison_data():
     try:
-        user_input_tickers = {
-            "Ticker 1": request.form.get("ticker1"),
-            "Ticker 2": request.form.get("ticker2")
+        user_input = {
+            "Ticker Input": [request.form.get("ticker1"), request.form.get("ticker2")]
         }
 
         # checks if both ticker fields were entered
