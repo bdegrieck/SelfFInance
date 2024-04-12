@@ -73,4 +73,5 @@ def format_ticker_input(user_input_tickers: list) -> list:
     # checks if tickers are the same for comparison
     if len(user_input_tickers) > 1 and user_input_tickers[0] == user_input_tickers[1]:
         raise SameTickers("Please input two different tickers")
+
     return user_input_tickers
