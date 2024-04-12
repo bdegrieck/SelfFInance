@@ -32,7 +32,7 @@ def check_extraneous_tickers(input_name: str):
 def check_for_blank_ticker_input(user_input_tickers: list):
     for ticker_number in range(len(user_input_tickers)):
         if user_input_tickers[ticker_number] is None or user_input_tickers[ticker_number] == "":
-            raise EmptyInput(f"Ticker: {ticker_number} is empty")
+            raise EmptyInput(f"Ticker: {ticker_number + 1} is empty")
 
 
 class UserInput:
