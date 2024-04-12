@@ -1,7 +1,27 @@
+import numpy as np
 import pandas as pd
 
 from BackEnd import constants
-from BackEnd.api import get_raw_api_data, get_clean_data, remove_empties
+from BackEnd.api import API
+
+
+# cleans dataframe to remove nan values and 'None'
+def get_clean_data(df_data: dict) -> dict:
+    for data_category, df_value in df_data.items():
+        for column in df_value.columns:
+            df_data[data_category][column] = df_value[column].fillna(0).replace(to_replace=["None", np.nan], value=0)
+            try:
+                df_data[data_category][column] = df_data[data_category][column].astype(float)
+            except:
+                pass
+    return df_data
+
+
+# removes rows of data that have 0 as date
+def remove_empties(df_data: dict) -> dict:
+    for data_category, df_value in df_data.items():
+        df_data[data_category] = df_value[df_value.index.notna()]
+    return df_data
 
 
 def get_ticker_balance_df_adj(balance_df: pd.DataFrame) -> pd.DataFrame:
@@ -12,21 +32,20 @@ def get_ticker_balance_df_adj(balance_df: pd.DataFrame) -> pd.DataFrame:
 class CompanyData:
 
     def __init__(self, ticker: str):
-        self.api_key = constants.API_KEY
         self.ticker = ticker
         self.ticker_endpoints = self.get_endpoint_company()
-        self.ticker_raw_data = get_raw_api_data(endpoints=self.ticker_endpoints)
+        self.ticker_raw_data = API(endpoints=self.ticker_endpoints, ticker=self.ticker).raw_data
         self.ticker_df_data = self.get_company_df_data()
 
     # format company endpoints
     def get_endpoint_company(self) -> dict:
         dict_functions_company_urls = {
-            "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={self.api_key}&outputsize=full",
-            "overview": f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={self.ticker}&apikey={self.api_key}",
-            "income_statement": f"https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey={self.api_key}",
-            "balance_sheet": f"https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey={self.api_key}",
-            "cash_flow": f"https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey={self.api_key}",
-            "earnings": f"https://www.alphavantage.co/query?function=EARNINGS&symbol={self.ticker}&apikey={self.api_key}"
+            "times_series_data": f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={self.ticker}&apikey={constants.API_KEY}&outputsize=full",
+            "overview": f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "income_statement": f"https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "balance_sheet": f"https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "cash_flow": f"https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "earnings": f"https://www.alphavantage.co/query?function=EARNINGS&symbol={self.ticker}&apikey={constants.API_KEY}"
         }
 
         return dict_functions_company_urls

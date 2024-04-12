@@ -1,26 +1,25 @@
 import pandas as pd
 
 from BackEnd import constants
-from BackEnd.api import get_raw_api_data
+from BackEnd.api import API
 
 
 class MicroData:
     def __init__(self):
-        self.api_key = constants.API_KEY
         self.ticker = "AAPL" # doesn't matter what ticker because micro data the same for all tickers
         self.micro_endpoints = self.get_endpoint_micro()
-        self.micro_raw_data = get_raw_api_data(endpoints=self.micro_endpoints)
+        self.micro_raw_data = API(endpoints=self.micro_endpoints).raw_data
         self.micro_df_data = self.get_micro_df_data()
 
     # formats micro endpoints returns dict of endpoints
     def get_endpoint_micro(self) -> dict:
         dict_functions_micro_urls = {
-            "real_gdp": f"https://www.alphavantage.co/query?function=REAL_GDP&symbol={self.ticker}&apikey={self.api_key}",
-            "cpi": f"https://www.alphavantage.co/query?function=CPI&symbol={self.ticker}&apikey={self.api_key}",
-            "inflation": f"https://www.alphavantage.co/query?function=INFLATION&symbol={self.ticker}&apikey={self.api_key}",
-            "federal_funds_rate": f"https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&symbol={self.ticker}&apikey={self.api_key}",
-            "retail_sales": f"https://www.alphavantage.co/query?function=RETAIL_SALES&symbol={self.ticker}&apikey={self.api_key}",
-            "unemployment": f"https://www.alphavantage.co/query?function=UNEMPLOYMENT&symbol={self.ticker}&apikey={self.api_key}"
+            "real_gdp": f"https://www.alphavantage.co/query?function=REAL_GDP&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "cpi": f"https://www.alphavantage.co/query?function=CPI&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "inflation": f"https://www.alphavantage.co/query?function=INFLATION&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "federal_funds_rate": f"https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "retail_sales": f"https://www.alphavantage.co/query?function=RETAIL_SALES&symbol={self.ticker}&apikey={constants.API_KEY}",
+            "unemployment": f"https://www.alphavantage.co/query?function=UNEMPLOYMENT&symbol={self.ticker}&apikey={constants.API_KEY}"
         }
         return dict_functions_micro_urls
 

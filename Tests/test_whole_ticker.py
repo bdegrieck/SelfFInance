@@ -1,22 +1,27 @@
-from BackEnd.companyData import CompanyData
-from BackEnd.tickercomparison import TickerComparison
-from BackEnd.error import valid_ticker_input, get_formatted_ticker, validate_user_input
-from BackEnd.news import News
+from BackEnd.error import TickerDoesNotExist, EnterTickerInstead, SameTickers
+from BackEnd.formatinput import UserInput
+from BackEnd.user import User
 
 
 class TestWholeTicker:
     # purpose of this test is to test random instances for debugging not part of phase 4
     def test_ticker(self):
-        user_input = {
-            "Ticker1": "nvdy",
-            "Ticker2": "reddit",
-        }
-        assert validate_user_input(user_input=user_input) is None
+        try:
+            user_input = UserInput(raw_user_input={
+                "Ticker Input": ["apple"],
+                "Microeconomic Input": "yes",
+                "News Input": "yes",
+                "Endpoints Input": {
+                    "Company Overview + Price": "yes",
+                    "EPS": "no",
+                    "Balance Sheet": None
+                }
+            })
+            user_data = User(user_input=user_input)
+            print(user_data)
 
-        ticker1 = get_formatted_ticker(ticker=user_input["Ticker1"])
-        ticker2 = get_formatted_ticker(ticker=user_input["Ticker2"])
+        except (TickerDoesNotExist, EnterTickerInstead, SameTickers) as error:
+            print(error)
 
-        comparison = TickerComparison(ticker1, ticker2)
-        print("hi")
 
 

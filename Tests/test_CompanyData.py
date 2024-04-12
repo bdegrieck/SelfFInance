@@ -1,6 +1,5 @@
 import pandas as pd
-from BackEnd.companyData import get_ticker_balance_df_adj, CompanyData
-from BackEnd.error import valid_ticker_input, get_formatted_ticker
+from BackEnd.companydata import get_ticker_balance_df_adj, CompanyData
 
 
 class TestCompanyData:

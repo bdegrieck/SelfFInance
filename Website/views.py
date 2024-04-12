@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 
-from BackEnd.companyData import CompanyData
+from BackEnd.error import TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, NoNews, EmptyInput
+from BackEnd.user import User
+from BackEnd.companydata import CompanyData
+from BackEnd.formatinput import UserInput
 from BackEnd.tickercomparison import TickerComparison
-from BackEnd.microData import MicroData
-from BackEnd.news import News
-from BackEnd.error import Error
+from BackEnd.microdata import MicroData
 
 views = Blueprint("views", __name__)
 
@@ -17,105 +18,64 @@ def home():
 @views.route("/tickerdata", methods=["POST"])
 def get_input():
     try:
-
-        ticker_input = {
-            "Ticker": [request.form.get("stockTicker")]
-        }
-
-        endpoints_input = {
-            "Company Overview + Price": "companyOverview" in request.form.getlist("companyOverview"),
-            "EPS": "priceAndEPS" in request.form.getlist("priceAndEPS"),
-            "Balance Sheet": "balanceSheet" in request.form.getlist("balanceSheet")
-        }
-
-        user_input = {
-            "Ticker Input": ticker_input,
+        user_input = UserInput({
+            "Ticker Input": [request.form.get("stockTicker")],
             "Microeconomic Input": request.form.get("micro"),
             "News Input": request.form.get("news"),
-            "Endpoints": endpoints_input
-        }
+            "Endpoints Input": {
+                "Company Overview + Price": "companyOverview" in request.form.getlist("companyOverview"),
+                "EPS": "priceAndEPS" in request.form.getlist("priceAndEPS"),
+                "Balance Sheet": "balanceSheet" in request.form.getlist("balanceSheet")
+            }
+        })
 
-        user_formatted_input = Error(user_input=user_input)
+        user_data = User(user_input)
 
-        ticker_input = format_ticker_input(user_ticker_main_input["Ticker Input"])
+        return render_template(
+            template_name_or_list="tickerinfo.html",
+            ticker=user_data.formatted_tickers[0],
+            ticker_data=user_data.company_data[0].ticker_df_data,
+            endpoints=user_input.endpoints_input,
+            micro=user_input.micro_input,
+            news_input=user_input.news_input,
+            news_link=user_data.news_data.news,
+            prices_dates=[date for date in user_data.company_data[0].ticker_df_data["ticker_prices_df"]['Close'][::-1].index],
+            prices_values=[row for row in user_data.company_data[0].ticker_df_data["ticker_prices_df"]['Close'][::-1]]
+        )
 
-        if ticker_input == f'Enter ticker instead of "{user_ticker_main_input["Ticker Input"]}"':
-            flash(ticker_input)
-            return redirect(url_for("views.home"))
-
-        ticker_data = CompanyData(ticker=ticker_input)
-        user_ticker_news = News(ticker=ticker_input)
-
-        if user_ticker_news.news == f'There are no relevant news for your ticker: "{ticker_input}"' and user_ticker_main_input["News Input"] == "yes":
-            flash(user_ticker_news.news)
-            return redirect(url_for("views.home"))
-
-    except Exception as e:
-        if user_formatted_input.error_message:
-            flash(user_formatted_input.error_message)
-            return redirect(url_for("views.home"))
-
-    return render_template(
-        template_name_or_list="tickerinfo.html",
-        ticker=ticker_input,
-        ticker_data=ticker_data.ticker_df_data,
-        endpoints=endpoints_input,
-        micro=user_ticker_main_input["Microeconomic Input"],
-        news_input=user_ticker_main_input["News Input"],
-        news_link=user_ticker_news.news,
-        error_message=error_message,
-        prices_dates=[date for date in ticker_data.ticker_df_data["ticker_prices_df"]['Close'][::-1].index],
-        prices_values=[row for row in ticker_data.ticker_df_data["ticker_prices_df"]['Close'][::-1]]
-    )
+    except (TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, NoNews, EmptyInput) as error:
+        flash(str(error))
+        return redirect(url_for("views.home"))
 
 
 @views.route("/comparedata", methods=["POST"])
 def get_comparison_data():
     try:
-        user_input = {
-            "Ticker Input": [request.form.get("ticker1"), request.form.get("ticker2")]
-        }
+        user_input = UserInput({
+            "Ticker Input": [request.form.get("ticker1"), request.form.get("ticker2")],
+            "Microeconomic Input": "Empty",
+            "News Input": "Empty",
+            "Endpoints Input": {
+                "Company Overview + Price": "Empty",
+                "EPS": "Empty",
+                "Balance Sheet": "Empty"
+            }
+        })
 
-        # checks if both ticker fields were entered
-        error_message = validate_user_input(user_input=user_input_tickers)
-        if error_message:
-            flash(error_message)
-            return redirect(url_for("views.home"))
+        user_data = User(user_input=user_input)
 
-        ticker1 = get_formatted_ticker(user_input_tickers["Ticker 1"])
-        ticker2 = get_formatted_ticker(user_input_tickers["Ticker 2"])
+        comparison_data = TickerComparison(main_ticker_data=user_data.company_data[0], second_ticker_data=user_data.company_data[1])
 
-        if ticker1 == f'Enter ticker instead of "{user_input_tickers["Ticker 1"]}"':
-            flash(ticker1)
-            return redirect(url_for("views.home"))
+        return render_template(
+            template_name_or_list="comparedata.html",
+            comparison_data=comparison_data.data_comparison,
+            ticker1=user_data.formatted_tickers[0],
+            ticker2=user_data.formatted_tickers[1],
+        )
 
-        if ticker2 == f'Enter ticker instead of "{user_input_tickers["Ticker 2"]}"':
-            flash(ticker2)
-            return redirect(url_for("views.home"))
-
-        error_message = check_same_tickers(ticker1=ticker1, ticker2=ticker2)
-
-        if error_message:
-            flash(error_message)
-            return redirect(url_for("views.home"))
-
-        ticker1_data = CompanyData(ticker=ticker1)
-        ticker2_data = CompanyData(ticker=ticker2)
-
-        comparison_data = TickerComparison(main_ticker_data=ticker1_data, second_ticker_data=ticker2_data)
-
-    except Exception as e:
-        flash(f'Your ticker "{user_input_tickers}" does not have enough data please choose another ticker')
-        print(e)
+    except (TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, NoNews, EmptyInput) as error:
+        flash(str(error))
         return redirect(url_for("views.home"))
-
-    return render_template(
-        template_name_or_list="comparedata.html",
-        comparison_data=comparison_data.data_comparison,
-        ticker1=ticker1,
-        ticker2=ticker2,
-        error_message=error_message
-    )
 
 
 @views.route("/compare")

@@ -1,13 +1,13 @@
 import requests
 
 from BackEnd import constants
+from BackEnd.error import NoNews
 
 
 class News:
     def __init__(self, ticker: str):
         self.ticker = ticker
-        self.api_key = constants.API_KEY
-        self.url = f'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={self.ticker}&apikey={self.api_key}'
+        self.url = f'https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={self.ticker}&apikey={constants.API_KEY}'
         self.news = self.get_news()
 
     # calls api to return most recent news article of ticker
@@ -15,7 +15,7 @@ class News:
         news_link = requests.get(url=self.url).json()
         news_feed = news_link["feed"]
         if len(news_feed) == 0:
-            return f'There are no relevant news for your ticker: "{self.ticker}"'
+            raise NoNews(f'There are no relevant news for your ticker: "{self.ticker}"')
 
         # checks for a more relevant article with ticker in title
         for news_index in range(len(news_feed)):
