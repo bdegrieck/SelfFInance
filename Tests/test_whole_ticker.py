@@ -8,9 +8,9 @@ class TestWholeTicker:
     def test_ticker(self):
         try:
             user_input = UserInput(raw_user_input={
-                "Ticker Input": ["apple"],
+                "Ticker Input": ["jpm"],
                 "Microeconomic Input": "yes",
-                "News Input": "yes",
+                "News Input": "no",
                 "Endpoints Input": {
                     "Company Overview + Price": "yes",
                     "EPS": "no",

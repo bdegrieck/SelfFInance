@@ -1,10 +1,10 @@
 import pandas as pd
 
-from BackEnd.companydata import CompanyData
+from BackEnd.companydata import APICompanyData
 
 
 class TickerComparison:
-    def __init__(self, main_ticker_data: type(CompanyData), second_ticker_data: type(CompanyData)):
+    def __init__(self, main_ticker_data: type(APICompanyData), second_ticker_data: type(APICompanyData)):
         self.main_ticker_data = main_ticker_data
         self.second_ticker_data = second_ticker_data
         self.data_comparison = self.compare_financials()

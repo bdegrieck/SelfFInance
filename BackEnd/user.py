@@ -1,6 +1,5 @@
 from BackEnd.companydata import CompanyData
 from BackEnd.formatinput import UserInput, format_ticker_input
-from BackEnd.microdata import MicroData
 from BackEnd.news import News
 
 

@@ -1,5 +1,5 @@
 import pandas as pd
-from BackEnd.companydata import get_ticker_balance_df_adj, CompanyData
+from BackEnd.companydata import get_ticker_balance_df_adj, APICompanyData
 
 
 class TestCompanyData:
@@ -20,7 +20,7 @@ class TestCompanyData:
         ticker = "google"
         assert valid_ticker_input(ticker=ticker) is None
         ticker = get_formatted_ticker(ticker=ticker)
-        nvidia_data = CompanyData(ticker=ticker)
+        nvidia_data = APICompanyData(ticker=ticker)
 
         nvidia_data_dfs = nvidia_data.ticker_df_data
 
@@ -37,7 +37,7 @@ class TestCompanyData:
 
     def test_company_data_grab_filtration(self):
         ticker = "LULU"
-        lulu_data = CompanyData(ticker=ticker).ticker_df_data
+        lulu_data = APICompanyData(ticker=ticker).ticker_df_data
 
         # checks if values are not null or 'None'
         for df_name, df in lulu_data.items():
