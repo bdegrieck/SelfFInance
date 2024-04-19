@@ -73,7 +73,7 @@ class API:
         company_dfs["ticker_prices_df"] = pd.DataFrame(self.ticker_raw_data["times_series_data"]["Time Series (Daily)"]).transpose()
         company_dfs["ticker_prices_df"].columns = ["Open", "High", "Low", "Adjusted Close", "Close", "Volume", "Dividends", "Splits"]
         company_dfs["ticker_prices_df"] = company_dfs["ticker_prices_df"][["Open", "High", "Low", "Close", "Volume"]]
-        company_dfs["ticker_prices_df"].index = pd.to_datetime(company_dfs["ticker_prices_df"].index).date
+        company_dfs["ticker_prices_df"].index = pd.DatetimeIndex(company_dfs["ticker_prices_df"].index)
 
         company_dfs["ticker_overview_df"] = pd.DataFrame({
             "Ticker Symbol": [self.ticker_raw_data["overview"]["Symbol"]],
@@ -84,7 +84,7 @@ class API:
         })
 
         company_dfs["ticker_eps_df"] = pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"]).set_index("fiscalDateEnding")[["estimatedEPS", "reportedEPS", "surprisePercentage"]]
-        company_dfs["ticker_eps_df"].index = pd.DatetimeIndex(company_dfs["ticker_eps_df"].index.date)
+        company_dfs["ticker_eps_df"].index = pd.DatetimeIndex(company_dfs["ticker_eps_df"].index)
 
         company_dfs["ticker_balance_df"] = pd.DataFrame({
             "Date": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["fiscalDateEnding"],
@@ -95,7 +95,7 @@ class API:
             "Cash Flow From Investment": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromInvestment"]
         }).set_index("Date")
 
-        company_dfs["ticker_balance_df"].index = pd.DatetimeIndex(company_dfs["ticker_balance_df"].index.date)
+        company_dfs["ticker_balance_df"].index = pd.DatetimeIndex(company_dfs["ticker_balance_df"].index)
 
         # data cleanse
         company_dfs = get_clean_data(company_dfs)
