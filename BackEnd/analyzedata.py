@@ -1,5 +1,6 @@
 import datetime
 
+import numpy as np
 import pandas as pd
 
 from BackEnd.companydata import CompanyData
@@ -26,13 +27,10 @@ class AnalyzeData:
         self.company_eps = company.company_eps
         self.company_balance_sheet = company.company_balance_sheet
         self.company_overview = company.company_overview
-        self.quarter_dates = self.get_prices_near_earnings(company_df_prices=self.company_prices, company_reports=self.company_balance_sheet)
+        self.report_prices_df = self.get_prices_near_earnings(company_df_prices=self.company_prices)
 
-    def get_prices_near_earnings(self, company_df_prices: pd.DataFrame, company_reports: pd.DataFrame):
+    def get_prices_near_earnings(self, company_df_prices: pd.DataFrame):
         years = list(set(company_df_prices.index.year))
-        before_dates = []
-        after_dates = []
-
         start_year = years[1]
         recent_year = years[-2]
 
@@ -41,11 +39,21 @@ class AnalyzeData:
                         set(pd.date_range(start=f"{start_year}-09-30", end=f"{recent_year}-09-30", freq="A-SEP")) |
                         set(pd.date_range(start=f"{start_year}-12-31", end=f"{recent_year}-12-31", freq="A-DEC"))))
 
+        before_dates = []
+        after_dates = []
         for date in report_dates:
             before_dates.append(find_closest_dates_before(date, company_df_prices))
             after_dates.append(find_closest_dates_after(date, company_df_prices))
 
-        prices_report_dates = company_df_prices[(company_df_prices.index.isin(before_dates)) | (company_df_prices.index.isin(report_dates)) | (company_df_prices.index.isin(after_dates))]
-        return recent_year
+        prices_report_dates_df = company_df_prices[(company_df_prices.index.isin(before_dates)) | (company_df_prices.index.isin(report_dates)) | (company_df_prices.index.isin(after_dates))]
+        prices_report_dates_df["Report"] = np.select(condlist=[
+            prices_report_dates_df.index.isin(before_dates),
+            prices_report_dates_df.index.isin(after_dates),
+            prices_report_dates_df.index.isin(report_dates)],
+            choicelist=["before", "after", "report"],
+            default=0
+        )
+
+        return prices_report_dates_df
 
 
