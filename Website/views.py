@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from BackEnd.error import TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, NoNews, EmptyInput
 from BackEnd.user import User
-from BackEnd.companydata import APICompanyData
 from BackEnd.formatinput import UserInput
 from BackEnd.tickercomparison import TickerComparison
 from BackEnd.microdata import MicroData
