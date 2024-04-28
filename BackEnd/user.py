@@ -1,6 +1,6 @@
-from BackEnd.companydata import CompanyData
+from BackEnd.Data.companydata import CompanyData
 from BackEnd.formatinput import UserInput, format_ticker_input
-from BackEnd.news import News
+from BackEnd.Data.news import News
 
 
 class User:

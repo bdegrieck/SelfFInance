@@ -1,6 +1,5 @@
-from BackEnd.datadifferentials import DataDifferentials
-from BackEnd.companydata import CompanyData
-import pandas as pd
+from BackEnd.Data.datadifferentials import DataDifferentials
+from BackEnd.Data.companydata import CompanyData
 
 
 class TestAnaylzeData:

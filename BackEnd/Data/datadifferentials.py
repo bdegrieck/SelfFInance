@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from BackEnd.companydata import CompanyData
+from BackEnd.Data.companydata import CompanyData
 
 
 def find_closest_dates_before(date, prices_df):
@@ -57,7 +57,7 @@ class DataDifferentials:
         report_price_differentials = pd.DataFrame({
             "Before Report Price": before_report,
             "After Report Price": after_report,
-            "Diff Percentage Reports": report_differentials
+            "Diff Price Percentage": report_differentials
         })
 
         report_price_differentials.index = report_dates[::-1]
@@ -66,7 +66,7 @@ class DataDifferentials:
     def get_eps_differentials(self, company_prices_df: pd.DataFrame, company_eps_df: pd.DataFrame):
         company_eps_df = company_eps_df[company_eps_df.index.isin(company_prices_df.index)]
         company_eps_reports = pd.merge(company_prices_df, company_eps_df, right_index=True, left_index=True)
-        return company_eps_reports[["Diff Percentage Reports", "surprisePercentage"]]
+        return company_eps_reports[["Diff Price Percentage", "surprisePercentage"]]
 
     def get_balance_sheet_differentials(self, company_prices_df, company_balance_sheet_df: pd.DataFrame):
         company_prices_df = company_prices_df[company_prices_df.index.isin(company_balance_sheet_df.index)]

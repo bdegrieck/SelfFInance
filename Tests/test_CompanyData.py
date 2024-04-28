@@ -1,5 +1,5 @@
 import pandas as pd
-from BackEnd.companydata import get_ticker_balance_df_adj, APICompanyData
+from BackEnd.Data.companydata import get_ticker_balance_df_adj, APICompanyData
 
 
 class TestCompanyData:

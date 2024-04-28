@@ -3,8 +3,8 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from BackEnd.error import TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, NoNews, EmptyInput
 from BackEnd.user import User
 from BackEnd.formatinput import UserInput
-from BackEnd.tickercomparison import TickerComparison
-from BackEnd.microdata import MicroData
+from BackEnd.Data.tickercomparison import TickerComparison
+from BackEnd.Data.microdata import MicroData
 
 views = Blueprint("views", __name__)
 

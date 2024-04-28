@@ -1,6 +1,6 @@
 import pandas as pd
 
-from BackEnd.companydata import CompanyData
+from BackEnd.Data.companydata import CompanyData
 
 
 class TickerComparison:
