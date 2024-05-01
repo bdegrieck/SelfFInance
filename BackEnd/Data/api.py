@@ -33,8 +33,8 @@ def remove_empties(df_data: dict) -> dict:
 
 
 def get_ticker_balance_df_adj(balance_df: pd.DataFrame) -> pd.DataFrame:
-    balance_df["Cash Flow"] = balance_df[["Operating Cash Flow", "Cash Flow From Financing", "Cash Flow From Investment"]].sum(axis=1)
-    return balance_df[["Total Revenue", "Profit", "Cash Flow"]]
+    balance_df["cashFlow"] = balance_df[["operatingCashFlow", "cashFlowFromFinancing", "cashFlowFromInvestment"]].sum(axis=1)
+    return balance_df[["totalRevenue", "profit", "cashFlow", "reportedDate"]]
 
 
 class API:
@@ -71,29 +71,30 @@ class API:
         company_dfs = {}
 
         company_dfs["ticker_prices_df"] = pd.DataFrame(self.ticker_raw_data["times_series_data"]["Time Series (Daily)"]).transpose()
-        company_dfs["ticker_prices_df"].columns = ["Open", "High", "Low", "Adjusted Close", "Close", "Volume", "Dividends", "Splits"]
-        company_dfs["ticker_prices_df"] = company_dfs["ticker_prices_df"][["Open", "High", "Low", "Close", "Volume"]]
+        company_dfs["ticker_prices_df"].columns = ["open", "high", "low", "adjustedClose", "close", "volume", "dividends", "splits"]
+        company_dfs["ticker_prices_df"] = company_dfs["ticker_prices_df"][["open", "high", "low", "close", "volume"]]
         company_dfs["ticker_prices_df"].index = pd.DatetimeIndex(company_dfs["ticker_prices_df"].index)
 
         company_dfs["ticker_overview_df"] = pd.DataFrame({
-            "Ticker Symbol": [self.ticker_raw_data["overview"]["Symbol"]],
-            "Company Description": self.ticker_raw_data["overview"]["Description"],
-            "Market Cap": self.ticker_raw_data["overview"]["MarketCapitalization"],
-            "52 Week High": self.ticker_raw_data["overview"]["52WeekHigh"],
-            "52 Week Low": self.ticker_raw_data["overview"]["52WeekLow"]
+            "tickerSymbol": [self.ticker_raw_data["overview"]["Symbol"]],
+            "companyDescription": self.ticker_raw_data["overview"]["Description"],
+            "marketCap": self.ticker_raw_data["overview"]["MarketCapitalization"],
+            "52weekHigh": self.ticker_raw_data["overview"]["52WeekHigh"],
+            "52weekLow": self.ticker_raw_data["overview"]["52WeekLow"]
         })
 
-        company_dfs["ticker_eps_df"] = pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"]).set_index("fiscalDateEnding")[["estimatedEPS", "reportedEPS", "surprisePercentage"]]
+        company_dfs["ticker_eps_df"] = pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"]).set_index("fiscalDateEnding")[["estimatedEPS", "reportedEPS", "surprisePercentage", "reportedDate"]]
         company_dfs["ticker_eps_df"].index = pd.DatetimeIndex(company_dfs["ticker_eps_df"].index)
 
         company_dfs["ticker_balance_df"] = pd.DataFrame({
-            "Date": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["fiscalDateEnding"],
-            "Total Revenue": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["totalRevenue"],
-            "Profit": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["netIncome"],
-            "Operating Cash Flow": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["operatingCashflow"],
-            "Cash Flow From Financing": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromFinancing"],
-            "Cash Flow From Investment": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromInvestment"]
-        }).set_index("Date")
+            "date": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["fiscalDateEnding"],
+            "totalRevenue": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["totalRevenue"],
+            "profit": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["netIncome"],
+            "operatingCashFlow": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["operatingCashflow"],
+            "cashFlowFromFinancing": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromFinancing"],
+            "cashFlowFromInvestment": pd.DataFrame(self.ticker_raw_data["cash_flow"]["quarterlyReports"])["cashflowFromInvestment"],
+            "reportedDate": pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"])["reportedDate"]
+        }).set_index("date")
 
         company_dfs["ticker_balance_df"].index = pd.DatetimeIndex(company_dfs["ticker_balance_df"].index)
 

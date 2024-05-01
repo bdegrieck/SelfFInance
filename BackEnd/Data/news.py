@@ -14,8 +14,6 @@ class News:
     def get_news(self) -> str:
         try:
             news_link = requests.get(url=self.url).json()
-            if news_link["Information"]:
-                return " "
             news_feed = news_link["feed"]
             # checks for a more relevant article with ticker in title
             for news_index in range(len(news_feed)):

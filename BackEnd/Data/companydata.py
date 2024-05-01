@@ -1,4 +1,5 @@
 from BackEnd.Data.api import API
+from BackEnd.Data.reportdifferences import ReportDifferences
 
 
 class CompanyData:
@@ -9,6 +10,7 @@ class CompanyData:
         self.company_overview = self.raw_data.ticker_df_data["ticker_overview_df"]
         self.company_eps = self.raw_data.ticker_df_data["ticker_eps_df"]
         self.company_balance_sheet = self.raw_data.ticker_df_data["ticker_balance_df"]
+        self.company_report_differences = ReportDifferences(company_balance_sheet=self.company_balance_sheet, company_eps=self.company_eps, company_prices=self.company_prices)
 
 
 
