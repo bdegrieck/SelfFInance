@@ -21,25 +21,19 @@ class DataDifferentials:
     """
 
     def __init__(self, company: type(CompanyData)):
-        self.report_prices_df = self.get_price_differentials_earnings(company_prices_df=company.company_prices)
+        self.report_dates = list(company.company_balance_sheet.index)
+        self.report_prices_df = self.get_price_differentials_earnings(company_prices_df=company.company_prices, report_dates=self.report_dates)
         self.report_eps_df = self.get_eps_differentials(company_prices_df=self.report_prices_df, company_eps_df=company.company_eps)
         self.report_balance_sheet_df = self.get_balance_sheet_differentials(company_prices_df=self.report_prices_df, company_balance_sheet_df=company.company_balance_sheet)
         self.report_companydata_df = self.get_all_data_differentials(company_prices_df=self.report_prices_df, company_eps_df=company.company_eps, company_balance_sheet_df=company.company_balance_sheet)
 
-    def get_price_differentials_earnings(self, company_prices_df: pd.DataFrame):
-        years = list(set(company_prices_df.index.year))
-        start_year = years[1]
-        recent_year = years[-2]
-
-        quarter_dates = ["03-31", "06-30", "09-30", "12-31"]
-
-        report_dates = sorted(set(pd.Timestamp(f"{year}-{q}") for year in range(start_year, recent_year + 1) for q in quarter_dates))
-
+    def get_price_differentials_earnings(self, company_prices_df: pd.DataFrame, report_dates: list):
+        # finds closest dates in prices_df closest to the report date
         before_dates = [find_closest_dates_before(date, company_prices_df) for date in report_dates]
         after_dates = [find_closest_dates_after(date, company_prices_df) for date in report_dates]
-
         combined_report_dates = report_dates + before_dates + after_dates
 
+        # gets all rows where the date is before and after earning reports
         prices_report_dates_df = company_prices_df[(company_prices_df.index.isin(combined_report_dates))]
         prices_report_dates_df["Report"] = np.select(condlist=[
             prices_report_dates_df.index.isin(before_dates),
@@ -49,18 +43,18 @@ class DataDifferentials:
             default=np.nan
         )
 
+        # calculates price change before and after report closing price
         prices_report_dates_df.reset_index(inplace=True, names="Date")
         before_report = prices_report_dates_df[ prices_report_dates_df["Report"] == "before"]["Close"].reset_index(drop=True)
         after_report = prices_report_dates_df[ prices_report_dates_df["Report"] == "after"]["Close"].reset_index(drop=True)
         report_differentials = ((after_report - before_report) / before_report) * 100
-
         report_price_differentials = pd.DataFrame({
             "Before Report Price": before_report,
             "After Report Price": after_report,
             "Diff Price Percentage": report_differentials
         })
+        report_price_differentials.index = report_dates
 
-        report_price_differentials.index = report_dates[::-1]
         return report_price_differentials
 
     def get_eps_differentials(self, company_prices_df: pd.DataFrame, company_eps_df: pd.DataFrame):
@@ -76,4 +70,4 @@ class DataDifferentials:
     def get_all_data_differentials(self, company_prices_df: pd.DataFrame, company_eps_df: pd.DataFrame, company_balance_sheet_df: pd.DataFrame):
         company_prices_df = company_prices_df[(company_prices_df.index.isin(company_eps_df.index)) & (company_prices_df.index.isin(company_balance_sheet_df.index))]
         company_report_data = pd.concat([company_prices_df, company_eps_df, company_balance_sheet_df], axis=1).dropna()
-        return company_report_data
+        return company_report_data[(company_report_data != 0).all(axis=1)][::-1]
