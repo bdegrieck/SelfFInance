@@ -1,5 +1,8 @@
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
+from pandas import Timestamp
 
 
 def find_closest_dates_before(date, prices_df):
@@ -13,10 +16,10 @@ def find_closest_dates_after(date, prices_df):
 class ReportDifferences:
 
     def __init__(self, company_balance_sheet: pd.DataFrame, company_prices: pd.DataFrame, company_eps: pd.DataFrame):
-        self.report_dates = set(company_balance_sheet["reportedDate"])
-        self.report_prices_differences_df = self.get_price_differences(company_prices_df=company_prices, report_dates=self.report_dates)
+        report_dates = set(company_balance_sheet["reportedDate"])
         self.report_eps_differences_df = self.get_eps_differences(company_eps_df=company_eps, report_dates=company_eps.index)
         self.report_balance_sheet_differences_df = self.get_balance_sheet_differences(company_balance_sheet_df=company_balance_sheet)
+        self.report_prices_differences_df = self.get_price_differences(company_prices_df=company_prices, report_dates=report_dates)
         self.report_differences_df = self.get_all_data_differences(company_prices_df=self.report_prices_differences_df, company_eps_df=self.report_eps_differences_df, company_balance_sheet_df=self.report_balance_sheet_differences_df)
 
     def get_price_differences(self, company_prices_df: pd.DataFrame, report_dates: set) -> pd.DataFrame:
@@ -35,12 +38,22 @@ class ReportDifferences:
             default=np.nan
         )
 
+        # sorts reported dates
+        report_dates = sorted(report_dates, reverse=True)
+
         # calculates price change before and after report closing price
         before_report = prices_report_dates_df[prices_report_dates_df["report"] == "before"]["close"].reset_index(drop=True)
         after_report = prices_report_dates_df[prices_report_dates_df["report"] == "after"]["close"].reset_index(drop=True)
+
+        # if earnings was day of the the program run then before and after would be uneven since after hasn't happened yet
+        if len(before_report) == len(after_report) + 1:
+            before_report = before_report.drop([0]).reset_index(drop=True)
+            report_dates.pop(0)
+
+
         report_differentials = ((after_report - before_report) / before_report) * 100
         report_price_differentials = pd.DataFrame({
-            "reportedDate": sorted(report_dates, reverse=True),
+            "reportedDate": report_dates,
             "beforeReportPrice": before_report,
             "afterReportPrice": after_report,
             "priceDiffPercentage": report_differentials
@@ -53,6 +66,25 @@ class ReportDifferences:
             (report_price_differentials["afterReportPrice"] - report_price_differentials["afterReportPrice"].shift(-1)) / report_price_differentials["afterReportPrice"].shift(-1)) * 100
         report_price_differentials["priceDiffPercentageDiff"] = (
             (report_price_differentials["priceDiffPercentage"] - report_price_differentials["priceDiffPercentage"].shift(-1)) / report_price_differentials["priceDiffPercentage"].shift(-1)) * 100
+
+        # handles index
+        quarter_dates = ["03-31", "06-30", "09-30", "12-31"]
+        first_quarter_year = self.report_eps_differences_df.index[-1].year
+        most_recent_quarter_year = self.report_eps_differences_df.index[0].year
+        most_recent_quarter = self.report_eps_differences_df.index[0]
+        list_of_quarter_dates = [Timestamp(f"{year}-{quarter_date}") for year in range(first_quarter_year, most_recent_quarter_year + 1) for quarter_date in quarter_dates]
+
+        list_index = [date for date in list_of_quarter_dates if date <= most_recent_quarter]
+
+
+        index_length = len(report_price_differentials)
+        report_price_differentials.index = list_index[-index_length:][::-1]
+
+        # replace infinity values with nan
+        report_price_differentials = report_price_differentials.replace(to_replace=np.inf, value=np.nan)
+
+        # drop rows with nan and reverses df
+        report_price_differentials = report_price_differentials.dropna()
 
         return report_price_differentials
 
@@ -71,6 +103,12 @@ class ReportDifferences:
                 ((company_eps_df["surprisePercentage"] - company_eps_df["surprisePercentage"].shift(-1)) / company_eps_df["surprisePercentage"].shift(-1)) * 100
         )
 
+        # replace infinity values with nan
+        company_eps_df = company_eps_df.replace(to_replace=np.inf, value=np.nan)
+
+        # drop rows with nan and reverses df
+        company_eps_df = company_eps_df.dropna()
+
         return company_eps_df
 
     def get_balance_sheet_differences(self, company_balance_sheet_df: pd.DataFrame) -> pd.DataFrame:
@@ -84,10 +122,27 @@ class ReportDifferences:
         company_balance_sheet_df["cashFlowDiff"] = (
             ((company_balance_sheet_df["cashFlow"] - company_balance_sheet_df["cashFlow"].shift(-1)) * 100)
         )
+
+        # gets rid of balance sheet info with 0
+        company_balance_sheet_df = company_balance_sheet_df[(company_balance_sheet_df != 0).all(axis=1)]
+
+        # replace infinity values with nan
+        company_balance_sheet_df = company_balance_sheet_df.replace(to_replace=np.inf, value=np.nan)
+
+        # drop rows with nan and reverses df
+        company_balance_sheet_df = company_balance_sheet_df.dropna()
+
         return company_balance_sheet_df
 
     def get_all_data_differences(self, company_prices_df: pd.DataFrame, company_eps_df: pd.DataFrame, company_balance_sheet_df: pd.DataFrame) -> pd.DataFrame:
-        company_prices_df.index = list(company_balance_sheet_df.index)
-        company_prices_df = company_prices_df[(company_prices_df.index.isin(company_eps_df.index)) & (company_prices_df.index.isin(company_balance_sheet_df.index))]
-        data_differences_merged = pd.merge(company_prices_df, company_eps_df, how="outer", on="reportedDate").merge(company_balance_sheet_df, on="reportedDate", how="outer").set_index(company_eps_df.index[::-1])
-        return data_differences_merged[(data_differences_merged != 0).all(axis=1)].dropna()[::-1]
+        data_differences_merged = pd.merge(company_prices_df, company_eps_df, how="outer",left_index=True, right_index=True).merge(company_balance_sheet_df, how="outer", left_index=True, right_index=True)
+
+        # drops all values that are 0 because balance sheet would have 0 values since API doesn't have the data
+        data_differences_merged = data_differences_merged[(data_differences_merged != 0).all(axis=1)]
+
+        # replace infinity values with nan
+        data_differences_merged = data_differences_merged.replace(to_replace=np.inf, value=np.nan)
+
+        # drop rows with nan and reverses df
+        data_differences_merged = data_differences_merged.dropna()[::-1]
+        return data_differences_merged

@@ -7,23 +7,23 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 from BackEnd.Data.companydata import CompanyData
 
+def format_data_for_model(stock_report):
+    return pd.merge(stock_report.report_balance_sheet_differences_df, stock_report.report_eps_differences_df, how="outer").drop(columns="reportedDate")
 
 class OrdinaryLeastSquares:
     def __init__(self, company: type(CompanyData)):
-        self.stock_prices_prediction = None
-        self.stock_prices_target = None
+        company_report_differences = company.company_report_differences
         self.regr_model = linear_model.LinearRegression()
-        self.least_ordinary_squares = self.get_ordinary_least_squares(linear_model=self.regr_model, stock_data=company.company_report_differences)
+        stock_report_formatted = format_data_for_model(stock_report=company_report_differences)
+        self.least_ordinary_squares = self.get_ordinary_least_squares(linear_model=self.regr_model, stock_data=stock_report_formatted, stock_prices=company_report_differences.report_differences_df["priceDiffPercentage"])
 
+    def get_ordinary_least_squares(self, linear_model, stock_data: pd.DataFrame, stock_prices: pd.Series):
+        linear_model.fit(stock_data, stock_prices)
+        coefficients = linear_model.coef_
 
-    def get_ordinary_least_squares(self, linear_model, company_differentials: pd.DataFrame, user_stock_report_input: pd.DataFrame):
-        stock_report = company_differentials[["estimatedEPS", "estimatedEPSDiffPercentage", "profit", "cashFlow"]]
-        stock_prices = company_differentials["priceDiffPercentage"]
-        linear_model.fit(stock_report, stock_prices)
-        prices_guess = linear_model.predict(user_stock_report_input)
-
-        linear_model_results = {
-            "coefficients": linear_model.coef_
-            "prices prediction":
-        }
+        # gathers linear model coefficients
+        linear_model_coef = {}
+        for stock_report_column, stock_report_coef in zip(stock_data.columns, coefficients):
+            linear_model_coef[stock_report_column] = stock_report_coef
+        return linear_model_coef
 
