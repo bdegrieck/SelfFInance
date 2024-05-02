@@ -24,15 +24,22 @@ class ReportDifferences:
 
     def get_price_differences(self, company_prices_df: pd.DataFrame, report_dates: set) -> pd.DataFrame:
         # finds closest dates in prices_df closest to the report date
-        before_dates = set(find_closest_dates_before(date, company_prices_df) for date in report_dates)
-        after_dates = set(find_closest_dates_after(date, company_prices_df) for date in report_dates)
-        combined_report_dates = report_dates | before_dates | after_dates
+        combined_report_dates = set()
+        before_dates_dict = {}
+        after_dates_dict = {}
+
+        for date in report_dates:
+            before_date = find_closest_dates_before(date, company_prices_df)
+            after_date = find_closest_dates_after(date, company_prices_df)
+            before_dates_dict[date] = before_date
+            after_dates_dict[date] = after_date
+            combined_report_dates.update({date, before_date, after_date})
 
         # gets all rows where the date is before and after earning reports
         prices_report_dates_df = company_prices_df[(company_prices_df.index.isin(combined_report_dates))]
         prices_report_dates_df["report"] = np.select(condlist=[
-            prices_report_dates_df.index.isin(before_dates),
-            prices_report_dates_df.index.isin(after_dates),
+            prices_report_dates_df.index.isin(before_dates_dict.values()),
+            prices_report_dates_df.index.isin(after_dates_dict.values()),
             prices_report_dates_df.index.isin(report_dates)],
             choicelist=["before", "after", "report"],
             default=np.nan
@@ -51,21 +58,20 @@ class ReportDifferences:
             report_dates.pop(0)
 
 
-        report_differentials = ((after_report - before_report) / before_report) * 100
-        report_price_differentials = pd.DataFrame({
+        report_differences = ((after_report - before_report) / before_report) * 100
+        report_price_differences = pd.DataFrame({
             "reportedDate": report_dates,
             "beforeReportPrice": before_report,
             "afterReportPrice": after_report,
-            "priceDiffPercentage": report_differentials
+            "priceDiffPercentage": report_differences
         })
 
-        # calculates price differential percentage between quarters of before, after and price percentage differential
-        report_price_differentials["beforeReportPriceDiffPercentage"] = (
-            (report_price_differentials["beforeReportPrice"] - report_price_differentials["beforeReportPrice"].shift(-1)) / report_price_differentials["beforeReportPrice"].shift(-1)) * 100
-        report_price_differentials["afterReportPriceDiffPercentage"] = (
-            (report_price_differentials["afterReportPrice"] - report_price_differentials["afterReportPrice"].shift(-1)) / report_price_differentials["afterReportPrice"].shift(-1)) * 100
-        report_price_differentials["priceDiffPercentageDiff"] = (
-            (report_price_differentials["priceDiffPercentage"] - report_price_differentials["priceDiffPercentage"].shift(-1)) / report_price_differentials["priceDiffPercentage"].shift(-1)) * 100
+        report_price_differences["beforeReportPriceDiffPercentage"] = (
+            (report_price_differences["beforeReportPrice"] - report_price_differences["beforeReportPrice"].shift(-1)) / report_price_differences["beforeReportPrice"].shift(-1)) * 100
+        report_price_differences["afterReportPriceDiffPercentage"] = (
+            (report_price_differences["afterReportPrice"] - report_price_differences["afterReportPrice"].shift(-1)) / report_price_differences["afterReportPrice"].shift(-1)) * 100
+        report_price_differences["priceDiffPercentageDiff"] = (
+            (report_price_differences["priceDiffPercentage"] - report_price_differences["priceDiffPercentage"].shift(-1)) / report_price_differences["priceDiffPercentage"].shift(-1)) * 100
 
         # handles index
         quarter_dates = ["03-31", "06-30", "09-30", "12-31"]
@@ -77,16 +83,16 @@ class ReportDifferences:
         list_index = [date for date in list_of_quarter_dates if date <= most_recent_quarter]
 
 
-        index_length = len(report_price_differentials)
-        report_price_differentials.index = list_index[-index_length:][::-1]
+        index_length = len(report_price_differences)
+        report_price_differences.index = list_index[-index_length:][::-1]
 
         # replace infinity values with nan
-        report_price_differentials = report_price_differentials.replace(to_replace=np.inf, value=np.nan)
+        report_price_differences = report_price_differences.replace(to_replace=np.inf, value=np.nan)
 
         # drop rows with nan and reverses df
-        report_price_differentials = report_price_differentials.dropna()
+        report_price_differences = report_price_differences.dropna()
 
-        return report_price_differentials
+        return report_price_differences
 
     def get_eps_differences(self, report_dates: set, company_eps_df: pd.DataFrame) -> pd.DataFrame:
         # filters out eps data that is not in price df
@@ -135,7 +141,7 @@ class ReportDifferences:
         return company_balance_sheet_df
 
     def get_all_data_differences(self, company_prices_df: pd.DataFrame, company_eps_df: pd.DataFrame, company_balance_sheet_df: pd.DataFrame) -> pd.DataFrame:
-        data_differences_merged = pd.merge(company_prices_df, company_eps_df, how="outer",left_index=True, right_index=True).merge(company_balance_sheet_df, how="outer", left_index=True, right_index=True)
+        data_differences_merged = pd.merge(company_prices_df, company_eps_df, how="outer",left_index=True, right_index=True).merge(company_balance_sheet_df, how="outer", left_index=True, right_index=True).drop(columns="reportedDate_y").rename(columns={"reportedDate_x": "reportedDate"})
 
         # drops all values that are 0 because balance sheet would have 0 values since API doesn't have the data
         data_differences_merged = data_differences_merged[(data_differences_merged != 0).all(axis=1)]
