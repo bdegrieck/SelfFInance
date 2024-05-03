@@ -1,7 +1,6 @@
 import requests
 
 from BackEnd import constants
-from BackEnd.error import NoNews
 
 
 class News:
@@ -21,4 +20,4 @@ class News:
                     return news_feed[news_index]["url"]
             return news_feed[00]["url"]
         except:
-            raise NoNews(f'There are no relevant news for your ticker: "{self.ticker}"')
+            return ""
