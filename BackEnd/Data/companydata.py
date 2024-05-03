@@ -5,6 +5,7 @@ from BackEnd.Data.reportdifferences import ReportDifferences
 class CompanyData:
 
     def __init__(self, ticker: str):
+        self.ticker = ticker
         raw_data = API(ticker=ticker)
         self.company_prices = raw_data.ticker_df_data["ticker_prices_df"]
         self.company_overview = raw_data.ticker_df_data["ticker_overview_df"]

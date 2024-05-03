@@ -83,12 +83,12 @@
                     {% for index, row in comparison_data.iterrows() %}
                     <tr>
                         <td>{{ index }}</td>
-                        <td>{{ row['Prices'] | format_currency }}</td>
-                        <td>{{ row['Market Cap'] | format_currency }}</td>
-                        <td>{{ row['Reported EPS'] | format_currency }}</td>
-                        <td>{{ row['Revenue'] | format_currency }}</td>
-                        <td>{{ row['Profit'] | format_currency }}</td>
-                        <td>{{ row['Price Per Earnings'] | format_currency }}</td>
+                        <td>{{ row['prices'] | format_currency }}</td>
+                        <td>{{ row['marketCap'] | format_currency }}</td>
+                        <td>{{ row['reportedEPS'] | format_currency }}</td>
+                        <td>{{ row['revenue'] | format_currency }}</td>
+                        <td>{{ row['profit'] | format_currency }}</td>
+                        <td>{{ row['pricePerEarnings'] | format_currency }}</td>
                     </tr>
                     {% endfor %}
                 </table>

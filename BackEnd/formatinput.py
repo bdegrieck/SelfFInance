@@ -38,9 +38,6 @@ def check_for_blank_ticker_input(user_input_tickers: list):
 class UserInput:
     def __init__(self, raw_user_input):
         self.raw_tickers_input = format_ticker_input(user_input_tickers=raw_user_input["Ticker Input"])
-        self.micro_input = raw_user_input["Microeconomic Input"]
-        self.news_input = raw_user_input["News Input"]
-        self.endpoints_input = raw_user_input["Endpoints Input"]
 
 
 # check tickers and reformat tickers

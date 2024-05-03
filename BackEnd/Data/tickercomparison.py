@@ -11,24 +11,24 @@ class TickerComparison:
 
     # compares company financials: ticker prices, market cap, eps, revenue, and profit
     def compare_financials(self) -> pd.DataFrame:
-        main_market_cap = self.main_ticker_data.ticker_df_data["ticker_overview_df"]["marketCap"].iloc[0]
-        second_market_cap = self.second_ticker_data.ticker_df_data["ticker_overview_df"]["marketCap"].iloc[0]
+        main_market_cap = self.main_ticker_data.company_overview["marketCap"].iloc[0]
+        second_market_cap = self.second_ticker_data.company_overview["marketCap"].iloc[0]
         market_cap_diff = abs(main_market_cap - second_market_cap)
 
-        main_ticker_price = self.main_ticker_data.ticker_df_data["ticker_prices_df"]["close"].iloc[0]
-        second_ticker_price = self.second_ticker_data.ticker_df_data["ticker_prices_df"]["close"].iloc[0]
+        main_ticker_price = self.main_ticker_data.company_prices["close"].iloc[0]
+        second_ticker_price = self.second_ticker_data.company_prices["close"].iloc[0]
         ticker_price_dff = abs(main_ticker_price - second_ticker_price)
 
-        main_reported_EPS = self.main_ticker_data.ticker_df_data["ticker_eps_df"]["reportedEPS"].iloc[0]
-        second_reported_EPS = self.second_ticker_data.ticker_df_data["ticker_eps_df"]["reportedEPS"].iloc[0]
+        main_reported_EPS = self.main_ticker_data.company_eps["reportedEPS"].iloc[0]
+        second_reported_EPS = self.second_ticker_data.company_eps["reportedEPS"].iloc[0]
         reported_EPS_diff = abs(main_reported_EPS - second_reported_EPS)
 
-        main_revenue = self.main_ticker_data.ticker_df_data["ticker_balance_df"]["totalRevenue"].iloc[0]
-        second_revenue = self.second_ticker_data.ticker_df_data["ticker_balance_df"]["totalRevenue"].iloc[0]
+        main_revenue = self.main_ticker_data.company_balance_sheet["totalRevenue"].iloc[0]
+        second_revenue = self.second_ticker_data.company_balance_sheet["totalRevenue"].iloc[0]
         revenue_diff = abs(main_revenue - second_revenue)
 
-        main_profit = self.main_ticker_data.ticker_df_data["ticker_balance_df"]["profit"].iloc[0]
-        second_profit = self.second_ticker_data.ticker_df_data["ticker_balance_df"]["profit"].iloc[0]
+        main_profit = self.main_ticker_data.company_balance_sheet["profit"].iloc[0]
+        second_profit = self.second_ticker_data.company_balance_sheet["profit"].iloc[0]
         profit_diff = abs(main_profit - second_profit)
 
         main_price_per_earnings = main_ticker_price/main_reported_EPS

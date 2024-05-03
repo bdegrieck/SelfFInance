@@ -126,22 +126,15 @@
 
 <body>
     <a href="/" class="back-button">Back to Home</a>
+    <a href="/micro" class="micro-button">Micro Data</a>
+    {% if news_link != "" %}
+        <a href={{ news_link }} class="news-button">News Button</a>
+    {% endif %}
 </body>
-
-{% if micro == "yes" %}
-    <a href="/micro" class="micro-button">Microeconomic Data</a>
-{% endif %}
-
-{% if news_input == "yes" %}
-    <a href={{ news_link }} class="news-button">News</a>
-{% endif %}
 
 <body>
     <div class="container">
         <h1>{{ ticker }}</h1>
-
-        {% if endpoints["Company Overview + Price"] %}
-
             <h2>Company Overview</h2>
             <table border="1" class="dataframe table table-striped">
                 <thead>
@@ -154,11 +147,11 @@
                     </tr>
                 </thead>
                 <tr>
-                    <td>{{ ticker_data.ticker_overview_df["Ticker Symbol"].iloc[0] }}</td>
-                    <td>{{ ticker_data.ticker_overview_df['Company Description'].iloc[0] }}</td>
-                    <td>{{ ticker_data.ticker_overview_df['Market Cap'].iloc[0] | format_currency }}</td>
-                    <td>{{ ticker_data.ticker_overview_df['52 Week High'].iloc[0] | format_currency }}</td>
-                    <td>{{ ticker_data.ticker_overview_df['52 Week Low'].iloc[0] | format_currency }}</td>
+                    <td>{{ ticker_data.company_overview['tickerSymbol'].iloc[0] }}</td>
+                    <td>{{ ticker_data.company_overview['companyDescription'].iloc[0] }}</td>
+                    <td>{{ ticker_data.company_overview['marketCap'].iloc[0] | format_currency }}</td>
+                    <td>{{ ticker_data.company_overview['52weekHigh'].iloc[0] | format_currency }}</td>
+                    <td>{{ ticker_data.company_overview['52weekLow'].iloc[0] | format_currency }}</td>
                 </tr>
             </table>
 
@@ -207,12 +200,9 @@
             });
             </script>
 
-        {% endif %}
-
         </br>
         </br>
 
-        {% if endpoints["EPS"] %}
 
             <h2>EPS Data</h2>
 
@@ -225,7 +215,7 @@
                          <th>Surprise Percentage</th>
                     </tr>
                 </thead>
-                {% for index, row in ticker_data.ticker_eps_df.iterrows() %}
+                {% for index, row in ticker_data.company_eps.iterrows() %}
                 <tr>
                     <td>{{ index }}</td>
                     <td>{{ row['estimatedEPS'] | format_currency }}</td>
@@ -234,10 +224,6 @@
                 </tr>
                 {% endfor %}
             </table>
-
-        {% endif %}
-
-        {% if endpoints["Balance Sheet"] %}
 
             <h2>Balance Sheet</h2>
 
@@ -250,16 +236,15 @@
                         <th>Cash Flow</th>
                     </tr>
                 </thead>
-                {% for index, row in ticker_data.ticker_balance_df.iterrows() %}
+                {% for index, row in ticker_data.company_balance_sheet.iterrows() %}
                 <tr>
                     <td>{{ index }}</td>
-                    <td>{{ row['Total Revenue'] | format_currency }}</td>
-                    <td>{{ row['Profit'] | format_currency }}</td>
-                    <td>{{ row['Cash Flow'] | format_currency }}</td>
+                    <td>{{ row['totalRevenue'] | format_currency }}</td>
+                    <td>{{ row['profit'] | format_currency }}</td>
+                    <td>{{ row['cashFlow'] | format_currency }}</td>
                 </tr>
                 {% endfor %}
             </table>
-        {% endif %}
 
     </div>
 </body>

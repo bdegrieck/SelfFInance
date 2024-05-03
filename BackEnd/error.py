@@ -18,11 +18,6 @@ class InsufficientData(Exception):
         super().__init__(message)
 
 
-class NoNews(Exception):
-    def __init__(self, message:str):
-        super().__init__(message)
-
-
 class EmptyInput(Exception):
     def __init__(self, message:str):
         super().__init__(message)

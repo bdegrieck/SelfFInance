@@ -37,12 +37,21 @@ def get_ticker_balance_df_adj(balance_df: pd.DataFrame) -> pd.DataFrame:
     return balance_df[["totalRevenue", "profit", "cashFlow", "reportedDate"]]
 
 
+# get raw data endpoints are passed in
+def get_raw_api_data(endpoints: dict) -> dict:
+    raw_data = {}
+    for data_description, endpoint_url in endpoints.items():
+        raw_data[data_description] = requests.get(url=endpoint_url).json()
+    check_raw_data(ticker_raw_data=raw_data)
+    return raw_data
+
+
 class API:
 
     def __init__(self, ticker: str):
         self.ticker = ticker
-        self.ticker_endpoints = self.get_endpoint_company()
-        self.ticker_raw_data = self.get_raw_api_data(endpoints=self.ticker_endpoints)
+        ticker_endpoints = self.get_endpoint_company()
+        self.ticker_raw_data = get_raw_api_data(endpoints=ticker_endpoints)
         self.ticker_df_data = self.get_company_df_data()
 
     # format company endpoints
@@ -57,14 +66,6 @@ class API:
         }
 
         return dict_functions_company_urls
-
-    # get raw data endpoints are passed in
-    def get_raw_api_data(self, endpoints: dict) -> dict:
-        raw_data = {}
-        for data_description, endpoint_url in endpoints.items():
-            raw_data[data_description] = requests.get(url=endpoint_url).json()
-        check_raw_data(ticker_raw_data=raw_data)
-        return raw_data
 
     # format raw data to specific data returns a dictionary of dfs
     def get_company_df_data(self) -> dict:
