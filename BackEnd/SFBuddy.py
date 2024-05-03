@@ -6,13 +6,15 @@ from sklearn import datasets, linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 
 from BackEnd.Data.companydata import CompanyData
+from BackEnd.Data.reportdifferences import ReportDifferences
+
 
 def format_data_for_model(stock_report):
     return pd.merge(stock_report.report_balance_sheet_differences_df, stock_report.report_eps_differences_df, how="outer").drop(columns="reportedDate")
 
 class OrdinaryLeastSquares:
     def __init__(self, company: type(CompanyData)):
-        company_report_differences = company.company_report_differences
+        company_report_differences = ReportDifferences(company_balance_sheet=company.company_balance_sheet, company_eps=company.company_eps, company_prices=company.company_prices)
         self.regr_model = linear_model.LinearRegression()
         stock_report_formatted = format_data_for_model(stock_report=company_report_differences)
         self.least_ordinary_squares = self.get_ordinary_least_squares(linear_model=self.regr_model, stock_data=stock_report_formatted, stock_prices=company_report_differences.report_differences_df["priceDiffPercentage"])

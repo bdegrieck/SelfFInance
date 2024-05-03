@@ -98,6 +98,7 @@ class API:
         }).set_index("date")
 
         company_dfs["ticker_balance_df"].index = pd.DatetimeIndex(company_dfs["ticker_balance_df"].index)
+        company_dfs["ticker_balance_df"]["reportedDate"] = pd.DatetimeIndex(company_dfs["ticker_balance_df"]["reportedDate"])
 
         # data cleanse
         company_dfs = get_clean_data(company_dfs)
