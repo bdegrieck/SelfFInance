@@ -70,21 +70,21 @@ def get_micro():
     return render_template(
         template_name_or_list="micro.html",
 
-        real_gdp_dates=[date for date in micro_data_input.micro_df_data["real_gdp_df"][::-1].index],
+        real_gdp_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["real_gdp_df"][::-1].index],
         real_gdp_values=[value for value in micro_data_input.micro_df_data["real_gdp_df"]["Real GDP"][::-1]],
 
-        cpi_dates=[date for date in micro_data_input.micro_df_data["cpi_df"][::-1].index],
+        cpi_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["cpi_df"][::-1].index],
         cpi_values=[value for value in micro_data_input.micro_df_data["cpi_df"]["CPI"][::-1]],
 
-        inflation_dates=[date for date in micro_data_input.micro_df_data["inflation_df"][::-1].index],
+        inflation_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["inflation_df"][::-1].index],
         inflation_values=[value for value in micro_data_input.micro_df_data["inflation_df"]["Inflation Rate"][::-1]],
 
-        fed_dates=[date for date in micro_data_input.micro_df_data["federal_funds_rate_df"][::-1].index],
+        fed_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["federal_funds_rate_df"][::-1].index],
         fed_values=[value for value in micro_data_input.micro_df_data["federal_funds_rate_df"]["Federal Funds Rate"][::-1]],
 
-        retail_dates=[date for date in micro_data_input.micro_df_data["retail_sales_df"][::-1].index],
+        retail_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["retail_sales_df"][::-1].index],
         retail_values=[value for value in micro_data_input.micro_df_data["retail_sales_df"]["Retail Sales"][::-1]],
 
-        unemployment_dates=[date for date in micro_data_input.micro_df_data["unemployment_rate_df"][::-1].index],
+        unemployment_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["unemployment_rate_df"][::-1].index],
         unemployment_values=[value for value in micro_data_input.micro_df_data["unemployment_rate_df"]["Unemployment Rate"][::-1]],
     )

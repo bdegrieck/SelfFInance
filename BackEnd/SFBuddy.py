@@ -10,12 +10,15 @@ from BackEnd.Data.reportdifferences import ReportDifferences
 
 
 def format_data_for_model(stock_report):
-    return pd.merge(stock_report.report_balance_sheet_differences_df, stock_report.report_eps_differences_df, how="outer").drop(columns="reportedDate")
+    formatted_df = pd.merge(stock_report.report_balance_sheet_differences_df, stock_report.report_eps_differences_df, left_index=True, right_index=True)
+    formatted_df = formatted_df.drop(columns=["reportedDate_x", "reportedDate_y"])
+    return formatted_df
+
 
 class OrdinaryLeastSquares:
     def __init__(self, company: type(CompanyData)):
-        company_report_differences = ReportDifferences(company_balance_sheet=company.company_balance_sheet, company_eps=company.company_eps, company_prices=company.company_prices)
         self.regr_model = linear_model.LinearRegression()
+        company_report_differences = ReportDifferences(company_balance_sheet=company.company_balance_sheet, company_eps=company.company_eps, company_prices=company.company_prices)
         stock_report_formatted = format_data_for_model(stock_report=company_report_differences)
         self.least_ordinary_squares = self.get_ordinary_least_squares(linear_model=self.regr_model, stock_data=stock_report_formatted, stock_prices=company_report_differences.report_differences_df["priceDiffPercentage"])
 

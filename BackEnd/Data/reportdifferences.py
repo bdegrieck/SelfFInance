@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 import numpy as np
 import pandas as pd
 from pandas import Timestamp
@@ -7,6 +5,7 @@ from pandas import Timestamp
 
 def find_closest_dates_before(date, prices_df):
     return prices_df[prices_df.index < date].first_valid_index()
+
 
 def find_closest_dates_after(date, prices_df):
     return prices_df[prices_df.index > date].last_valid_index()
@@ -19,7 +18,11 @@ class ReportDifferences:
         self.report_eps_differences_df = self.get_eps_differences(company_eps_df=company_eps, report_dates=company_eps.index)
         self.report_balance_sheet_differences_df = self.get_balance_sheet_differences(company_balance_sheet_df=company_balance_sheet)
         self.report_prices_differences_df = self.get_price_differences(company_prices_df=company_prices, report_dates=report_dates)
-        self.report_differences_df = self.get_all_data_differences(company_prices_df=self.report_prices_differences_df, company_eps_df=self.report_eps_differences_df, company_balance_sheet_df=self.report_balance_sheet_differences_df)
+        self.report_differences_df = self.get_all_data_differences(
+            company_prices_df=self.report_prices_differences_df,
+            company_eps_df=self.report_eps_differences_df,
+            company_balance_sheet_df=self.report_balance_sheet_differences_df
+        )
 
     def get_price_differences(self, company_prices_df: pd.DataFrame, report_dates: set) -> pd.DataFrame:
         # finds closest dates in prices_df closest to the report date and removes 0 from report dates
@@ -107,13 +110,13 @@ class ReportDifferences:
 
         # calculates eps data differences
         company_eps_df["estimatedEPSDiffPercentage"] = (
-            ((company_eps_df["estimatedEPS"] - company_eps_df["estimatedEPS"].shift(-1)) / company_eps_df["estimatedEPS"].shift(-1)) * 100
+            ((company_eps_df["estimatedEPS"] - company_eps_df["estimatedEPS"].shift(-1)) / company_eps_df["estimatedEPS"].shift(-1))
         )
         company_eps_df["reportedEPSDiffPercentage"] = (
-                ((company_eps_df["reportedEPS"] - company_eps_df["reportedEPS"].shift(-1)) / company_eps_df["reportedEPS"].shift(-1)) * 100
+                ((company_eps_df["reportedEPS"] - company_eps_df["reportedEPS"].shift(-1)) / company_eps_df["reportedEPS"].shift(-1))
         )
         company_eps_df["surprisePercentageDiffPercentage"] = (
-                ((company_eps_df["surprisePercentage"] - company_eps_df["surprisePercentage"].shift(-1)) / company_eps_df["surprisePercentage"].shift(-1)) * 100
+                ((company_eps_df["surprisePercentage"] - company_eps_df["surprisePercentage"].shift(-1)) / company_eps_df["surprisePercentage"].shift(-1))
         )
 
         # replace infinity values with nan
@@ -127,13 +130,13 @@ class ReportDifferences:
     def get_balance_sheet_differences(self, company_balance_sheet_df: pd.DataFrame) -> pd.DataFrame:
         # calculates differences between quarterly reports
         company_balance_sheet_df["totalRevenueDiff"] = (
-            ((company_balance_sheet_df["totalRevenue"] - company_balance_sheet_df["totalRevenue"].shift(-1)) * 100)
+            (company_balance_sheet_df["totalRevenue"] - company_balance_sheet_df["totalRevenue"].shift(-1))
         )
         company_balance_sheet_df["profitDiff"] = (
-            ((company_balance_sheet_df["profit"] - company_balance_sheet_df["profit"].shift(-1)) * 100)
+            (company_balance_sheet_df["profit"] - company_balance_sheet_df["profit"].shift(-1))
         )
         company_balance_sheet_df["cashFlowDiff"] = (
-            ((company_balance_sheet_df["cashFlow"] - company_balance_sheet_df["cashFlow"].shift(-1)) * 100)
+            (company_balance_sheet_df["cashFlow"] - company_balance_sheet_df["cashFlow"].shift(-1))
         )
 
         # gets rid of balance sheet info with 0
@@ -147,8 +150,12 @@ class ReportDifferences:
 
         return company_balance_sheet_df
 
-    def get_all_data_differences(self, company_prices_df: pd.DataFrame, company_eps_df: pd.DataFrame, company_balance_sheet_df: pd.DataFrame) -> pd.DataFrame:
-        data_differences_merged = pd.merge(company_prices_df, company_eps_df, how="outer",left_index=True, right_index=True).merge(company_balance_sheet_df, how="outer", left_index=True, right_index=True).drop(columns="reportedDate_y").rename(columns={"reportedDate_x": "reportedDate"})
+    def get_all_data_differences(self, company_prices_df: pd.DataFrame, company_eps_df: pd.DataFrame,
+                                 company_balance_sheet_df: pd.DataFrame) -> pd.DataFrame:
+        data_differences_merged = pd.merge(
+            company_prices_df, company_eps_df, how="outer", left_index=True, right_index=True).merge(company_balance_sheet_df, how="outer",
+            left_index=True, right_index=True).drop(columns=["reportedDate_x", "reportedDate_y"])
+
 
         # drops all values that are 0 because balance sheet would have 0 values since API doesn't have the data
         data_differences_merged = data_differences_merged[(data_differences_merged != 0).all(axis=1)]
@@ -158,4 +165,5 @@ class ReportDifferences:
 
         # drop rows with nan and reverses df
         data_differences_merged = data_differences_merged.dropna()[::-1]
+
         return data_differences_merged

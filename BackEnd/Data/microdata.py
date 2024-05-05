@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas import Timestamp
 
 from BackEnd import constants
 from BackEnd.Data.api import get_raw_api_data
@@ -32,4 +33,6 @@ class MicroData:
             "retail_sales_df": pd.DataFrame(self.micro_raw_data["retail_sales"]["data"]).set_index("date").astype(float).rename(columns={"value": "Retail Sales"}),
             "unemployment_rate_df": pd.DataFrame(self.micro_raw_data["unemployment"]["data"]).set_index("date").astype(float).rename(columns={"value": "Unemployment Rate"}),
         }
+        for df_name, df_micro in micro_dfs.items():
+            df_micro.index = pd.DatetimeIndex(df_micro.index)
         return micro_dfs

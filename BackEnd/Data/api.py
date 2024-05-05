@@ -86,6 +86,7 @@ class API:
 
         company_dfs["ticker_eps_df"] = pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"]).set_index("fiscalDateEnding")[["estimatedEPS", "reportedEPS", "surprisePercentage", "reportedDate"]]
         company_dfs["ticker_eps_df"].index = pd.DatetimeIndex(company_dfs["ticker_eps_df"].index)
+        company_dfs["ticker_eps_df"]["reportedDate"] = pd.DatetimeIndex(company_dfs["ticker_eps_df"]["reportedDate"])
 
         company_dfs["ticker_balance_df"] = pd.DataFrame({
             "date": pd.DataFrame(self.ticker_raw_data["income_statement"]["quarterlyReports"])["fiscalDateEnding"],
