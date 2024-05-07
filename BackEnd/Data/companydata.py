@@ -1,5 +1,5 @@
 from BackEnd.Data.api import API
-from BackEnd.Data.reportdifferences import ReportDifferences
+from BackEnd.Data.earningsdata import EarningsData
 
 
 class CompanyData:

@@ -17,7 +17,7 @@ def check_raw_data(ticker_raw_data: dict) -> str:
 def get_clean_data(df_data: dict) -> dict:
     for data_category, df_value in df_data.items():
         for column in df_value.columns:
-            df_data[data_category][column] = df_value[column].fillna(0).replace(to_replace=["None", np.nan], value=0)
+            df_data[data_category][column] = df_value[column].fillna(0).replace(to_replace="None", value=np.nan)
             try:
                 df_data[data_category][column] = df_data[data_category][column].astype(float)
             except:
@@ -98,6 +98,7 @@ class API:
             "reportedDate": pd.DataFrame(self.ticker_raw_data["earnings"]["quarterlyEarnings"])["reportedDate"]
         }).set_index("date")
 
+        # settings dates to timestamps
         company_dfs["ticker_balance_df"].index = pd.DatetimeIndex(company_dfs["ticker_balance_df"].index)
         company_dfs["ticker_balance_df"]["reportedDate"] = pd.DatetimeIndex(company_dfs["ticker_balance_df"]["reportedDate"])
 
@@ -105,6 +106,7 @@ class API:
         company_dfs = get_clean_data(company_dfs)
         company_dfs = remove_empties(company_dfs)
 
+        # calculates cash flow
         company_dfs["ticker_balance_df"] = get_ticker_balance_df_adj(company_dfs["ticker_balance_df"])
 
         return company_dfs
