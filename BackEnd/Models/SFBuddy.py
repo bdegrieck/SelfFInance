@@ -7,6 +7,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 from BackEnd.Data.companydata import CompanyData
 from BackEnd.Data.earningsdata import EarningsData
+from BackEnd.Models.modelPrep import DataFit
 
 
 def format_data_for_model(stock_report):
@@ -16,19 +17,18 @@ def format_data_for_model(stock_report):
 
 
 class OrdinaryLeastSquares:
-    def __init__(self, company: type(CompanyData)):
+    def __init__(self, model_data: type(DataFit)):
+        self.model_data = model_data
         self.regr_model = linear_model.LinearRegression()
-        company_report_differences = EarningsData(company_balance_sheet=company.company_balance_sheet, company_eps=company.company_eps, company_prices=company.company_prices)
-        stock_report_formatted = format_data_for_model(stock_report=company_report_differences)
-        self.least_ordinary_squares = self.get_ordinary_least_squares(linear_model=self.regr_model, stock_data=stock_report_formatted, stock_prices=company_report_differences.report_differences_df["priceDiffPercentage"])
+        self.least_ordinary_squares = self.get_ordinary_least_squares(linear_model=self.regr_model, pre_linear_model_data=model_data)
 
-    def get_ordinary_least_squares(self, linear_model, stock_data: pd.DataFrame, stock_prices: pd.Series):
-        linear_model.fit(stock_data, stock_prices)
+    def get_ordinary_least_squares(self, linear_model, pre_linear_model_data: dict):
+        linear_model.fit(pre_linear_model_data["stock_data"], pre_linear_model_data["stock_prices"])
         coefficients = linear_model.coef_
 
         # gathers linear model coefficients
         linear_model_coef = {}
-        for stock_report_column, stock_report_coef in zip(stock_data.columns, coefficients):
+        for stock_report_column, stock_report_coef in zip(pre_linear_model_data["stock_data"].columns, coefficients):
             linear_model_coef[stock_report_column] = stock_report_coef
         return linear_model_coef
 
