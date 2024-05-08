@@ -19,15 +19,13 @@ def get_quarter_dates(df: pd.DataFrame):
 
 class EarningsData:
 
-    def __init__(self, stock_data):
+    def __init__(self, stock_data, technical_analysis_data, calender, micro_data):
         report_dates = set(stock_data.company_balance_sheet["reportedDate"])
         self.quarter_dates = stock_data.company_eps.index
         self.report_eps_differences_df = self.get_eps_differences(company_eps_df=stock_data.company_eps)
         self.report_balance_sheet_differences_df = self.get_balance_sheet_differences(company_balance_sheet_df=stock_data.company_balance_sheet)
         self.report_prices_differences_df = self.get_price_differences(company_prices_df=stock_data.company_prices, report_dates=report_dates)
-        technical_analysis_raw_data = TechnicalIndicators(ticker=stock_data.ticker).technical_indicator_data
-        self.technical_analysis_data_dfs = self.get_technical_analysis_earnings_data(tech_analysis_raw_data=technical_analysis_raw_data, report_dates=report_dates)
-        micro_data = MicroData()
+        self.technical_analysis_data_dfs = self.get_technical_analysis_earnings_data(tech_analysis_raw_data=technical_analysis_data.technical_indicator_data, report_dates=report_dates)
         self.micro_data = self.get_micro_data(micro_data=micro_data.micro_df_data, report_dates=report_dates)
 
     def get_price_differences(self, company_prices_df: pd.DataFrame, report_dates: set) -> pd.DataFrame:
@@ -183,3 +181,7 @@ class EarningsData:
             micro_earnings_dict[micro_name] = micro_value[micro_value.index.isin(micro_dates)]
 
         return micro_earnings_dict
+
+    def get_upcoming_report_dates(self, earnings_calender):
+        upcoming_company_calender = earnings_calender.company_earnings_calender["reportedDate"]
+        return upcoming_company_calender
