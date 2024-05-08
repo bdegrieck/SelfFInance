@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from pandas import Timestamp
 
+from BackEnd.Data.microdata import MicroData
 from BackEnd.Data.techindicators import TechnicalIndicators
 
 
@@ -21,11 +22,13 @@ class EarningsData:
     def __init__(self, stock_data):
         report_dates = set(stock_data.company_balance_sheet["reportedDate"])
         self.quarter_dates = stock_data.company_eps.index
-        self.report_eps_differences_df = self.get_eps_differences(company_eps_df=stock_data.company_eps, quarter_dates=self.quarter_dates)
+        self.report_eps_differences_df = self.get_eps_differences(company_eps_df=stock_data.company_eps)
         self.report_balance_sheet_differences_df = self.get_balance_sheet_differences(company_balance_sheet_df=stock_data.company_balance_sheet)
         self.report_prices_differences_df = self.get_price_differences(company_prices_df=stock_data.company_prices, report_dates=report_dates)
         technical_analysis_raw_data = TechnicalIndicators(ticker=stock_data.ticker).technical_indicator_data
         self.technical_analysis_data_dfs = self.get_technical_analysis_earnings_data(tech_analysis_raw_data=technical_analysis_raw_data, report_dates=report_dates)
+        micro_data = MicroData()
+        self.micro_data = self.get_micro_data(micro_data=micro_data.micro_df_data, report_dates=report_dates)
 
     def get_price_differences(self, company_prices_df: pd.DataFrame, report_dates: set) -> pd.DataFrame:
 
@@ -101,7 +104,7 @@ class EarningsData:
 
         return report_price_differences
 
-    def get_eps_differences(self, quarter_dates: set, company_eps_df: pd.DataFrame) -> pd.DataFrame:
+    def get_eps_differences(self, company_eps_df: pd.DataFrame) -> pd.DataFrame:
 
         # calculates eps data differences
         company_eps_df["estimatedEPSDiffPercentage"] = (
@@ -165,3 +168,18 @@ class EarningsData:
             technical_indicator_df.index = list_index[-index_length:][::-1]
 
         return technical_analysis_earnings_dict
+
+    def get_micro_data(self, micro_data, report_dates):
+
+        # filters out technical indicator df with report dates
+        micro_earnings_dict = {}
+        for micro_name, micro_value in micro_data.items():
+            micro_dates = set()
+            for date in report_dates:
+                micro_dates.add(find_closest_dates_before(
+                    data_df=micro_value,
+                    date=date,
+                ))
+            micro_earnings_dict[micro_name] = micro_value[micro_value.index.isin(micro_dates)]
+
+        return micro_earnings_dict

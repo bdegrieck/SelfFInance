@@ -25,6 +25,3 @@ class LinearModels:
         for stock_report_column, stock_report_coef in zip(pre_linear_model_data["stock_data"].columns, coefficients):
             linear_model_coef[stock_report_column] = stock_report_coef
         return linear_model_coef
-
-    def get_ridge_regression(self):
-        pass

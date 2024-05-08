@@ -3,15 +3,17 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 from BackEnd.Data.earningsdata import EarningsData
+from BackEnd.Data.microdata import MicroData
 
 
 class DataFit:
     def __init__(self, stock_data):
         self.stock_data = stock_data
         earnings_data = EarningsData(stock_data=stock_data)
-        self.linear_model_dict = self.linear_model_fit(stock_data=earnings_data, technical_indicators_data=earnings_data.technical_analysis_data_dfs)
+        micro_data = MicroData()
+        self.linear_model_dict = self.linear_model_fit(stock_data=earnings_data, technical_indicators_data=earnings_data.technical_analysis_data_dfs, micro_data=micro_data.micro_df_data)
 
-    def linear_model_fit(self, stock_data, technical_indicators_data) -> dict:
+    def linear_model_fit(self, stock_data, technical_indicators_data, micro_data) -> dict:
         formatted_data = {}
 
         raw_stock_data_df = pd.DataFrame({
