@@ -1,12 +1,6 @@
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
+from sklearn import linear_model
 
-from sklearn import datasets, linear_model
-from sklearn.metrics import mean_squared_error, r2_score
-
-from BackEnd.Data.companydata import CompanyData
-from BackEnd.Data.earningsdata import EarningsData
 from BackEnd.Models.modelPrep import DataFit
 
 
@@ -16,7 +10,7 @@ def format_data_for_model(stock_report):
     return formatted_df
 
 
-class OrdinaryLeastSquares:
+class LinearModels:
     def __init__(self, model_data: type(DataFit)):
         self.model_data = model_data
         self.regr_model = linear_model.LinearRegression()
@@ -32,3 +26,5 @@ class OrdinaryLeastSquares:
             linear_model_coef[stock_report_column] = stock_report_coef
         return linear_model_coef
 
+    def get_ridge_regression(self):
+        pass

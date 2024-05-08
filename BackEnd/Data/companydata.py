@@ -1,13 +1,14 @@
-from BackEnd.Data.api import API
-from BackEnd.Data.earningsdata import EarningsData
+from BackEnd.Data.api import get_raw_api_data, get_company_endpoints, get_company_df_data
 
 
 class CompanyData:
 
     def __init__(self, ticker: str):
         self.ticker = ticker
-        raw_data = API(ticker=ticker)
-        self.company_prices = raw_data.ticker_df_data["ticker_prices_df"]
-        self.company_overview = raw_data.ticker_df_data["ticker_overview_df"]
-        self.company_eps = raw_data.ticker_df_data["ticker_eps_df"]
-        self.company_balance_sheet = raw_data.ticker_df_data["ticker_balance_df"]
+        endpoints = get_company_endpoints(ticker=self.ticker)
+        raw_data = get_raw_api_data(endpoints=endpoints)
+        company_df_data = get_company_df_data(company_raw_data=raw_data)
+        self.company_prices = company_df_data["ticker_prices_df"]
+        self.company_overview = company_df_data["ticker_overview_df"]
+        self.company_eps = company_df_data["ticker_eps_df"]
+        self.company_balance_sheet = company_df_data["ticker_balance_df"]
