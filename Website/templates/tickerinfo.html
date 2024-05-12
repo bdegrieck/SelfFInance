@@ -126,7 +126,13 @@
 
 <body>
     <a href="/" class="back-button">Back to Home</a>
-    <a href="/micro" class="micro-button">Micro Data</a>
+
+    <form action="/micro" method="post">
+        <input type="hidden" name="stockTicker" value="{{ ticker }}">
+        <button type="submit" class="micro-button">Micro Data</button>
+    </form>
+
+
     {% if news_link != "" %}
         <a href={{ news_link }} class="news-button">News Button</a>
     {% endif %}

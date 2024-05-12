@@ -38,7 +38,12 @@
 </head>
 
 <body>
-    <a href="/" class="back-button">Back to Home</a>
+
+    <form action="/tickerdata" method="post">
+        <input type="hidden" name="stockTicker" value={{ ticker }}>
+        <button type="submit" class="back-button">Back</button>
+    </form>
+
 </body>
 
 <body>

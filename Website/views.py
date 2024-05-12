@@ -64,12 +64,16 @@ def get_comparison_input():
     )
 
 
-@views.route("/micro")
+@views.route("/micro", methods=["POST"])
 def get_micro():
     micro_data_input = MicroData()
 
+    ticker = request.form.get("stockTicker")
+
     return render_template(
         template_name_or_list="micro.html",
+
+        ticker=ticker,
 
         real_gdp_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["real_gdp_df"][::-1].index],
         real_gdp_values=[value for value in micro_data_input.micro_df_data["real_gdp_df"]["Real GDP"][::-1]],
