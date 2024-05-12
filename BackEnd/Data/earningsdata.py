@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from pandas import Timestamp
 
+from BackEnd.Data.calender import EarningsCalender
 from BackEnd.Data.microdata import MicroData
 from BackEnd.Data.techindicators import TechnicalIndicators
 
@@ -21,6 +22,7 @@ class EarningsData:
 
     def __init__(self, stock_data, technical_analysis_data, calender, micro_data):
         report_dates = set(stock_data.company_balance_sheet["reportedDate"])
+        self.calender = calender
         self.quarter_dates = stock_data.company_eps.index
         self.report_eps_differences_df = self.get_eps_differences(company_eps_df=stock_data.company_eps)
         self.report_balance_sheet_differences_df = self.get_balance_sheet_differences(company_balance_sheet_df=stock_data.company_balance_sheet)

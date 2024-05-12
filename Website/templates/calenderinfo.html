@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SelfFinance</title>
+    <style>
+        body {
+            margin-top: 20px;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #051018;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .table-striped>tbody>tr:nth-child(even)>td,
+        .table-striped>tbody>tr:nth-child(even)>th {
+            background-color: #0D2F44;
+        }
+
+        .table-striped>tbody>tr:nth-child(odd)>td,
+        .table-striped>tbody>tr:nth-child(odd)>th {
+            background-color: #0A2333;
+        }
+
+        table, th, td {
+            border: 1px solid #ffffff1f; /* Border color for the table and cells */
+            color: #ffffff; /* White text color */
+        }
+
+        h1 {
+            color: #AEECEF;
+        }
+
+       .back-button {
+            position: absolute; /* This positions the button absolutely within its container */
+            top: 10px; /* Distance from the top of its positioned ancestor */
+            left: 10px; /* Distance from the left of its positioned ancestor */
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0; /* Removing margin to tightly control position */
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #AEECEF;
+            border: none;
+            border-radius: 5%;
+            transition-duration: 0.4s;
+            transition-timing-function: ease;
+        }
+
+        .back-button:hover {
+            background-color: #000000; /* Black */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(174,236,239,0.24), 0 17px 50px 0 rgba(174,236,239,0.24);
+        }
+
+        .search-button {
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #000;
+            background-color: #AEECEF;
+            border: none;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <h1>Upcoming Earnings for {{ ticker }}:</h1>
+            <table border="1" class="dataframe table table-striped">
+                <thead>
+                    <tr>
+                        <th>Report Date</th>
+                        <th>Quarter Date</th>
+                        <th>Estimated EPS</th>
+                    </tr>
+                </thead>
+                {% for index, row in upcoming_earnings_calender_company.iterrows() %}
+                <tr>
+                    <td>{{ row['reportDate'] }}</td>
+                    <td>{{ row['fiscalDateEnding'] }}</td>
+                    <td>{{ row['estimate'] }}</td>
+                    <td>
+                        <form action="/tickerdata" method="post">
+                            <input type="hidden" name="ticker" value="{{ row['symbol'] }}">
+                            <button type="submit" class="search-button">Search</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <h1>Upcoming Earnings:</h1>
+            <table border="1" class="dataframe table table-striped">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Report Date</th>
+                        <th>Quarter Date</th>
+                        <th>Estimated EPS</th>
+                    </tr>
+                </thead>
+                {% for index, row in upcoming_earnings_calender.iterrows() %}
+                <tr>
+                    <td>{{ row['symbol'] }}</td>
+                    <td>{{ row['reportDate'] }}</td>
+                    <td>{{ row['fiscalDateEnding'] }}</td>
+                    <td>{{ row['estimate'] }}</td>
+                    <td>
+                        <form action="/tickerdata" method="post">
+                            <input type="hidden" name="ticker" value="{{ row['symbol'] }}">
+                            <button type="submit" class="search-button">Search</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <a href="/" class="back-button">Back to Home</a>
+    </body>
+</html>
+

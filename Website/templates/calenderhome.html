@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SelfFinance</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 20px;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #051018;
+            color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column; /* Stack child elements vertically */
+            width: 100%; /* Takes the full width to align children properly */
+            max-width: 600px; /* Maximum width of the container to maintain form readability */
+            align-items: center; /* Center-aligns the child elements horizontally */
+            margin: 20px; /* Adds some outer margin for spacing */
+        }
+
+        label {
+            color: #AEECEF; /* Light color for visibility against the dark background */
+            font-size: 25px; /* Set a reasonable font size */
+            margin-bottom: 10px; /* Space below the label */
+        }
+
+        input[type="text"] {
+            padding: 8px; /* Padding inside the text box for better text visibility */
+            margin-bottom: 20px; /* Space below the input field */
+            border: 1px solid #AEECEF; /* Border to make the input field stand out */
+            border-radius: 5px; /* Rounded corners for the input field */
+            width: 100%; /* Full width to match the container's width */
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #000000;
+            background-color: #AEECEF;
+            border: none;
+            border-radius: 5%;
+
+            /* transition */
+            transition-duration: 0.4s;
+            transition-timing-function: ease;
+        }
+
+        .button:hover {
+            background-color: #000000; /* Black */
+            color: white;
+            box-shadow: 0 12px 16px 0 rgba(174,236,239,0.24), 0 17px 50px 0 rgba(174,236,239,0.24);
+        }
+
+
+    </style>
+
+</head>
+<body>
+    <form action="/calenderinfo" method="post">
+        <div class="container">
+            <label for="calenderInput">Enter Ticker:</label>
+            <input type="text" id="calenderInput" name="calenderInput">
+            <input type="submit" value="Submit" class="button"/>
+        </div>
+    </form>
+</body>
+</html>
+

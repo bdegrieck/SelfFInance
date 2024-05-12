@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 
+from BackEnd.Data.calender import EarningsCalender
 from BackEnd.error import TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, EmptyInput
 from BackEnd.user import User
 from BackEnd.formatinput import UserInput
@@ -87,4 +88,24 @@ def get_micro():
 
         unemployment_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["unemployment_rate_df"][::-1].index],
         unemployment_values=[value for value in micro_data_input.micro_df_data["unemployment_rate_df"]["Unemployment Rate"][::-1]],
+    )
+
+
+@views.route("/calenderhome")
+def calender_home():
+    return render_template(
+        template_name_or_list="calenderhome.html"
+    )
+
+
+@views.route("/calenderinfo", methods=["POST"])
+def get_upcoming_calender():
+    user_input = UserInput({"Ticker Input": [request.form.get("calenderInput")]})
+    upcoming_calender = EarningsCalender(ticker=user_input.raw_tickers_input[0])
+
+    return render_template(
+        template_name_or_list="calenderinfo.html",
+        ticker=user_input.raw_tickers_input[0],
+        upcoming_earnings_calender=upcoming_calender.upcoming_earnings_calender_df,
+        upcoming_earnings_calender_company=upcoming_calender.upcoming_earnings_calender_company_df
     )

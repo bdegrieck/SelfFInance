@@ -14,9 +14,9 @@ class LinearModels:
     def __init__(self, model_data: type(DataFit)):
         self.model_data = model_data
         self.regr_model = linear_model.LinearRegression()
-        self.least_ordinary_squares = self.get_ordinary_least_squares(linear_model=self.regr_model, pre_linear_model_data=model_data)
+        self.least_ordinary_squares = self.get_linear_regression(linear_model=self.regr_model, pre_linear_model_data=model_data)
 
-    def get_ordinary_least_squares(self, linear_model, pre_linear_model_data: dict):
+    def get_linear_regression(self, linear_model, pre_linear_model_data: dict, stock_data_guess: pd.DataFrame):
         linear_model.fit(pre_linear_model_data["stock_data"], pre_linear_model_data["stock_prices"])
         coefficients = linear_model.coef_
 

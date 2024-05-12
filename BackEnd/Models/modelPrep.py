@@ -10,10 +10,13 @@ class DataFit:
     def __init__(self, stock_data):
         self.stock_data = stock_data
         earnings_data = EarningsData(stock_data=stock_data)
-        micro_data = MicroData()
-        self.linear_model_dict = self.linear_model_fit(stock_data=earnings_data, technical_indicators_data=earnings_data.technical_analysis_data_dfs, micro_data=micro_data.micro_df_data)
+        self.linear_model_dict = self.linear_model_fit(
+            stock_data=earnings_data,
+            technical_indicators_data=earnings_data.technical_analysis_data_dfs,
+            estimatedEPS=earnings_data.calender.upcoming_earnings_company_calender_df["estimatedEPS"]
+        )
 
-    def linear_model_fit(self, stock_data, technical_indicators_data, micro_data) -> dict:
+    def linear_model_fit(self, stock_data, technical_indicators_data, estimatedEPS) -> dict:
         formatted_data = {}
 
         raw_stock_data_df = pd.DataFrame({
@@ -50,7 +53,7 @@ class DataFit:
 
         # scale data to be ready to be processed
         data_scaler = StandardScaler()
-        linear_model_df = data_scaler.fit_transform(raw_stock_data_df)
+        linear_model_df = data_scaler.fit_transform(X=raw_stock_data_df)
 
         # convert the linear model to a dataframe
         linear_model_df = pd.DataFrame(linear_model_df)
@@ -64,5 +67,6 @@ class DataFit:
 
         formatted_data["stock_data"] = linear_model_df
         formatted_data["stock_prices"] = linear_model_stock_prices
+        formatted_data["estimatedEPS"] = estimatedEPS
 
         return formatted_data

@@ -1,4 +1,3 @@
-import csv
 from io import StringIO
 
 import pandas as pd
@@ -239,3 +238,10 @@ def get_technical_indicator_dfs(indicator_raw_data):
     }
 
     return technical_indicator_dfs_dict
+
+
+def get_calender_dfs(raw_data: dict):
+    for calender in raw_data.values():
+        calender["reportDate"] = pd.DatetimeIndex(calender["reportDate"])
+        calender["fiscalDateEnding"] = pd.DatetimeIndex(calender["fiscalDateEnding"])
+    return raw_data
