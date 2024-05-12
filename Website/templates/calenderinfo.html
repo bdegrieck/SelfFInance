@@ -102,7 +102,7 @@
                     <td>{{ row['estimate'] }}</td>
                     <td>
                         <form action="/tickerdata" method="post">
-                            <input type="hidden" name="ticker" value="{{ row['symbol'] }}">
+                            <input type="hidden" name="stockTicker" value="{{ row['symbol'] }}">
                             <button type="submit" class="search-button">Search</button>
                         </form>
                     </td>
@@ -128,8 +128,8 @@
                     <td>{{ row['estimate'] }}</td>
                     <td>
                         <form action="/tickerdata" method="post">
-                            <input type="hidden" name="ticker" value="{{ row['symbol'] }}">
                             <button type="submit" class="search-button">Search</button>
+                            <input type="hidden" name="stockTicker" value={{ row['symbol'] }}>
                         </form>
                     </td>
                 </tr>
