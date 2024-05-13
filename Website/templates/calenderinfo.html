@@ -103,6 +103,7 @@
                     <td>
                         <form action="/tickerdata" method="post">
                             <input type="hidden" name="stockTicker" value="{{ row['symbol'] }}">
+                            <input type="hidden" name="calenderRoute" value="True">
                             <button type="submit" class="search-button">Search</button>
                         </form>
                     </td>

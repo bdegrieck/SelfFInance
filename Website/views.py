@@ -20,10 +20,13 @@ def get_input():
     try:
         user_input = UserInput({"Ticker Input": [request.form.get("stockTicker")]})
 
+        calender_home = request.form.get("calenderRoute")
+
         user_data = User(user_input)
 
         return render_template(
             template_name_or_list="tickerinfo.html",
+            calender_home=calender_home,
             ticker=user_data.formatted_tickers[0],
             ticker_data=user_data.company_data[0],
             news_link=user_data.news_data.news,
