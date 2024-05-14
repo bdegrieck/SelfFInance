@@ -1,16 +1,21 @@
-import pandas as pd
-from BackEnd import constants
-import requests
-from BackEnd.Data.api import get_earnings_calender_endpoints, get_raw_api_csv_dfs, get_calender_dfs
 import datetime as dt
+from functools import lru_cache
+
+import pandas as pd
+import requests
+
+from BackEnd import constants
+from BackEnd.API.api import get_earnings_calender_endpoints, get_raw_api_csv_dfs, get_calender_raw_data
 
 
+@lru_cache(maxsize=1000)
 def get_market_cap(ticker: str):
     try:
         market_cap_endpoint = f"https://www.alphavantage.co/query?function=OVERVIEW&symbol={ticker}&apikey={constants.API_KEY}"
-        market_cap_raw = requests.get(url=market_cap_endpoint).json()
-        market_cap = float(market_cap_raw["MarketCapitalization"])
-    except:
+        response = requests.get(url=market_cap_endpoint)
+        response.raise_for_status()
+        market_cap = float(response.json()["MarketCapitalization"])
+    except (requests.exceptions.HTTPError, KeyError, ValueError):
         return None
     return market_cap
 
@@ -20,7 +25,7 @@ class EarningsCalender:
     def __init__(self, ticker: str):
         endpoints = get_earnings_calender_endpoints(ticker=ticker)
         raw_data = get_raw_api_csv_dfs(endpoints=endpoints)
-        calender_dfs = get_calender_dfs(raw_data=raw_data)
+        calender_dfs = get_calender_raw_data(raw_data=raw_data)
         self.upcoming_earnings_calender_df = self.get_sorted_companies_calender(calender_df=calender_dfs["upcoming_earnings_calender"])
         self.upcoming_earnings_calender_company_df = self.get_company_earnings_calender(calender_df=calender_dfs["company_earnings_calender"])
 
@@ -42,19 +47,12 @@ class EarningsCalender:
         calender_df["fiscalDateEnding"] = calender_df["fiscalDateEnding"].dt.date
 
         # filters out df with companies with market caps greater than 1 billion
-        big_companies = []
-        for ticker in calender_df["symbol"]:
-            market_cap = get_market_cap(ticker=ticker)
-            if market_cap is not None and market_cap >= 1000000000:
-                big_companies.append(ticker)
+        # calender_df["marketCap"] = calender_df["symbol"].apply(get_market_cap)
+        # calender_df = calender_df[calender_df["marketCap"] > 1e9].reset_index(drop=True)
 
-        calender_df = calender_df[calender_df["symbol"].isin(big_companies)].reset_index(drop=True)
-
-        return calender_df[["symbol", "reportDate", "fiscalDateEnding", "estimate"]]
+        return calender_df[["symbol", "name", "reportDate", "fiscalDateEnding", "estimate"]]
 
     def get_company_earnings_calender(self, calender_df: pd.DataFrame):
-
-        # return earnings calendar for a single company and drop unknown report dates
 
         # set dates to date
         calender_df["reportDate"] = calender_df["reportDate"].dt.date

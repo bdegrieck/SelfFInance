@@ -2,10 +2,6 @@ import numpy as np
 import pandas as pd
 from pandas import Timestamp
 
-from BackEnd.Data.calender import EarningsCalender
-from BackEnd.Data.microdata import MicroData
-from BackEnd.Data.techindicators import TechnicalIndicators
-
 
 def find_closest_dates_before(date, data_df):
     return data_df[data_df.index < date].first_valid_index()

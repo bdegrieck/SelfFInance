@@ -1,5 +1,5 @@
-from BackEnd.Data.api import get_earnings_calender_endpoints, get_raw_api_csv_dfs
 from BackEnd.Data.calender import EarningsCalender
+from BackEnd.Models.modelPrep import linear_model_eps_calender_fit
 
 
 class TestCalenderEarnings:
@@ -8,3 +8,4 @@ class TestCalenderEarnings:
 
         ticker = "AAPL"
         earnings_calender = EarningsCalender(ticker=ticker)
+        prep = linear_model_eps_calender_fit(calender_df=earnings_calender)

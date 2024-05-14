@@ -12,7 +12,6 @@ class TestWholeTicker:
                 "Ticker Input": ["AAPL"],
             })
             user_data = User(user_input=user_input)
-            micro = MicroData()
             print(user_data)
 
         except (TickerDoesNotExist, EnterTickerInstead, SameTickers) as error:

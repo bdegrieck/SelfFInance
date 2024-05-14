@@ -115,7 +115,8 @@
             <table border="1" class="dataframe table table-striped">
                 <thead>
                     <tr>
-                        <th>Ticker</th>
+                        <th>Symbol</th>
+                        <th>Name</th>
                         <th>Report Date</th>
                         <th>Quarter Date</th>
                         <th>Estimated EPS</th>
@@ -124,6 +125,7 @@
                 {% for index, row in upcoming_earnings_calender.iterrows() %}
                 <tr>
                     <td>{{ row['symbol'] }}</td>
+                    <td>{{ row['name'] }}</td>
                     <td>{{ row['reportDate'] }}</td>
                     <td>{{ row['fiscalDateEnding'] }}</td>
                     <td>{{ row['estimate'] }}</td>
