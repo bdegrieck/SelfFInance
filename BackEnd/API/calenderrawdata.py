@@ -1,5 +1,7 @@
-from pydantic import BaseModel, validator
+import datetime
 from typing import List, Optional
+
+from pydantic import BaseModel, validator
 
 
 class BaseEarningsCalendar(BaseModel):
@@ -15,15 +17,15 @@ class BaseEarningsCalendar(BaseModel):
 
 class CompanyEarningsCalendar(BaseEarningsCalendar):
     symbol: str
-    report_date: str
-    quarter_date: str
+    report_date: datetime.datetime
+    quarter_date: datetime.datetime
 
 
 class UpcomingEarningsCalendar(BaseEarningsCalendar):
     symbol: str
     company_name: str
-    report_date: str
-    quarter_date: str
+    report_date: datetime.datetime
+    quarter_date: datetime.datetime
     currency: str
 
 

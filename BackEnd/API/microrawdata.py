@@ -1,34 +1,36 @@
-from pydantic import BaseModel
+import datetime
 from typing import List
+
+from pydantic import BaseModel
 
 
 class RealGDP(BaseModel):
-    date: str
+    date: datetime.datetime
     real_gdp: float
 
 
 class CPI(BaseModel):
-    date: str
+    date: datetime.datetime
     cpi: float
 
 
 class Inflation(BaseModel):
-    date: str
+    date: datetime.datetime
     inflation_rate: float
 
 
 class RetailSales(BaseModel):
-    date: str
+    date: datetime.datetime
     retail_sales: float
 
 
 class InterestRates(BaseModel):
-    date: str
+    date: datetime.datetime
     interest_rate: float
 
 
 class UnemploymentRate(BaseModel):
-    date: str
+    date: datetime.datetime
     unemployment_rate: float
 
 

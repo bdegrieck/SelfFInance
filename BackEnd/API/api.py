@@ -1,13 +1,14 @@
 import csv
+
 import requests
 from pydantic import BaseModel, HttpUrl
 
 from BackEnd import constants
+from BackEnd.API.calenderrawdata import CompanyEarningsCalendar, UpcomingEarningsCalendar, EarningsCalendar
 from BackEnd.API.companyrawdata import TimeSeriesData, CompanyEPS, CompanyRawData, CompanyIncomeStatement, \
     CompanyCashFlow, CompanyOverview
 from BackEnd.API.microrawdata import RealGDP, CPI, Inflation, InterestRates, RetailSales, UnemploymentRate, MicroRawData
 from BackEnd.API.technicalindicatorrawdata import SMA, EMA, BBANDS, RSI, AD, ADX, OBV, MACD, TechnicalIndicatorsRawData
-from BackEnd.API.calenderrawdata import CompanyEarningsCalendar, UpcomingEarningsCalendar, EarningsCalendar
 from BackEnd.Data.dataclean import check_raw_data
 
 
@@ -70,10 +71,9 @@ class TechnicalIndicatorEndpoints(BaseModel):
 def get_company_raw_data(company_raw_data: dict) -> CompanyRawData:
 
     company_prices = [TimeSeriesData(
-        open=data["1. open"],
         high=data["2. high"],
         low=data["3. low"],
-        close=data["4. close"],
+        close=data["5. adjusted close"],
         volume=data["6. volume"],
     ) for data in company_raw_data["times_series_data"]["Time Series (Daily)"].values()]
 
