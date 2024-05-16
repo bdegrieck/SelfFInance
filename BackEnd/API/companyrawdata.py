@@ -1,11 +1,11 @@
-import datetime
+import datetime as dt
 from typing import Optional, List
 
 from pydantic import BaseModel, validator
 
 
 class TimeSeriesData(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     high: float
     low: float
     close: float
@@ -24,7 +24,7 @@ class CompanyEPS(BaseModel):
     estimated_eps: Optional[float]
     reported_eps: Optional[float]
     surprise_percentage: Optional[float]
-    reported_date: datetime.datetime
+    reported_date: dt.date
 
     @validator("estimated_eps", "reported_eps", "surprise_percentage", pre=True, allow_reuse=True)
     def handle_none_values(cls, value):
@@ -34,7 +34,7 @@ class CompanyEPS(BaseModel):
 
 
 class CompanyCashFlow(BaseModel):
-    quarter_date: datetime.datetime
+    quarter_date: dt.date
     cashflow_from_investment: Optional[float]
     cashflow_from_financing: Optional[float]
     cashflow_from_operations: Optional[float]
@@ -47,7 +47,7 @@ class CompanyCashFlow(BaseModel):
 
 
 class CompanyIncomeStatement(BaseModel):
-    quarter_date: datetime.datetime
+    quarter_date: dt.date
     profit: Optional[float]
     revenue: Optional[float]
 

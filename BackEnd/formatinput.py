@@ -36,7 +36,7 @@ def check_for_blank_ticker_input(user_input_tickers: list):
 
 
 class UserInput:
-    def __init__(self, raw_user_input):
+    def __init__(self, raw_user_input: dict):
         self.raw_tickers_input = format_ticker_input(user_input_tickers=raw_user_input["Ticker Input"])
 
 

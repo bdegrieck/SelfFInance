@@ -90,19 +90,19 @@
             <table border="1" class="dataframe table table-striped">
                 <thead>
                     <tr>
-                        <th>Report Date</th>
                         <th>Quarter Date</th>
+                        <th>Report Date</th>
                         <th>Estimated EPS</th>
                     </tr>
                 </thead>
                 {% for index, row in upcoming_earnings_calender_company.iterrows() %}
                 <tr>
+                    <td>{{ index }}</td>
                     <td>{{ row['reportDate'] }}</td>
-                    <td>{{ row['fiscalDateEnding'] }}</td>
-                    <td>{{ row['estimate'] }}</td>
+                    <td>{{ row['epsEstimate'] }}</td>
                     <td>
                         <form action="/tickerdata" method="post">
-                            <input type="hidden" name="stockTicker" value="{{ row['symbol'] }}">
+                            <input type="hidden" name="stockTicker" value={{ ticker }}>
                             <input type="hidden" name="calenderRoute" value="True">
                             <button type="submit" class="search-button">Search</button>
                         </form>
@@ -115,24 +115,25 @@
             <table border="1" class="dataframe table table-striped">
                 <thead>
                     <tr>
-                        <th>Symbol</th>
-                        <th>Name</th>
+                        <th>Quarter</th>
                         <th>Report Date</th>
-                        <th>Quarter Date</th>
+                        <th>Company Name</th>
+                        <th>Ticker</th>
                         <th>Estimated EPS</th>
                     </tr>
                 </thead>
                 {% for index, row in upcoming_earnings_calender.iterrows() %}
                 <tr>
-                    <td>{{ row['symbol'] }}</td>
-                    <td>{{ row['name'] }}</td>
+                    <td>{{ index }}</td>
                     <td>{{ row['reportDate'] }}</td>
-                    <td>{{ row['fiscalDateEnding'] }}</td>
-                    <td>{{ row['estimate'] }}</td>
+                    <td>{{ row['companyName'] }}</td>
+                    <td>{{ row['ticker'] }}</td>
+                    <td>{{ row['epsEstimate'] }}</td>
                     <td>
                         <form action="/tickerdata" method="post">
+                            <input type="hidden" name="stockTicker" value={{ row['ticker'] }}>
+                            <input type="hidden" name="calenderRoute" value="True">
                             <button type="submit" class="search-button">Search</button>
-                            <input type="hidden" name="stockTicker" value={{ row['symbol'] }}>
                         </form>
                     </td>
                 </tr>

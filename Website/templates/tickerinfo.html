@@ -132,7 +132,7 @@
 
     {% if calender_home == "True" %}
     <form action="/calenderinfo" method="post">
-        <input type="hidden" name="calenderInput" value="{{ ticker }}">
+        <input type="hidden" name="calenderInput" value={{ ticker }}>
         <button type="submit" class="back-button">Back</button>
     </form>
     {% else %}

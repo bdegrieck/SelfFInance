@@ -17,15 +17,15 @@ class BaseEarningsCalendar(BaseModel):
 
 class CompanyEarningsCalendar(BaseEarningsCalendar):
     symbol: str
-    report_date: datetime.datetime
-    quarter_date: datetime.datetime
+    report_date: dt.date
+    quarter_date: dt.date
 
 
 class UpcomingEarningsCalendar(BaseEarningsCalendar):
-    symbol: str
+    symbol: Optional[str]
     company_name: str
-    report_date: dt.datetime
-    quarter_date: dt.datetime
+    report_date: Optional[dt.date]
+    quarter_date: dt.date
     currency: Optional[str]
 
     # checks if currency is USD instead of European stocks
@@ -52,7 +52,7 @@ class UpcomingEarningsCalendar(BaseEarningsCalendar):
         todays_date_str = todays_date.strftime('%Y-%m-%d')
         next_date_str = next_date.strftime('%Y-%m-%d')
 
-        if todays_date <= date <= next_date:
+        if todays_date_str <= date <= next_date_str:
             return date
         return None
 

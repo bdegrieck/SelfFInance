@@ -26,29 +26,17 @@ class EarningsCalender:
         endpoints = get_earnings_calender_endpoints(ticker=ticker)
         raw_data = get_raw_api_csv_dfs(endpoints=endpoints)
         calender_raw_data = get_calender_raw_data(raw_data=raw_data)
-        company_earnings_df = get_company_earnings_df(calender_raw_data=calender_raw_data.company_earnings_calendar)
-        upcoming_earnings_df = get_upcoming_earnings_calender_df(calender_raw_data=calender_raw_data.upcoming_earnings_calendar)
-        self.upcoming_earnings_calender_df = self.get_sorted_companies_calender(calender_df=upcoming_earnings_df)
-        self.upcoming_earnings_calender_company_df = self.get_company_earnings_calender(calender_df=company_earnings_df)
+        self.company_earnings_df = get_company_earnings_df(calender_raw_data=calender_raw_data.company_earnings_calendar)
+        self.upcoming_earnings_df = get_upcoming_earnings_calender_df(calender_raw_data=calender_raw_data.upcoming_earnings_calendar)
+        # self.upcoming_earnings_calender_df = self.get_sorted_companies_calender(calender_df=upcoming_earnings_df)
 
     def get_sorted_companies_calender(self, calender_df: pd.DataFrame):
 
-        # set dates to date
-        calender_df["reportDate"] = calender_df["reportDate"].dt.date
-        calender_df["fiscalDateEnding"] = calender_df["fiscalDateEnding"].dt.date
-
         # filters out df with companies with market caps greater than 1 billion
-        # calender_df["marketCap"] = calender_df["symbol"].apply(get_market_cap)
-        # calender_df = calender_df[calender_df["marketCap"] > 1e9].reset_index(drop=True)
+        calender_df["marketCap"] = calender_df["symbol"].apply(get_market_cap)
+        calender_df = calender_df[calender_df["marketCap"] > 1e9].reset_index(drop=True)
 
-        return calender_df[["symbol", "name", "reportDate", "fiscalDateEnding", "estimate"]]
-
-    def get_company_earnings_calender(self, calender_df: pd.DataFrame):
-        # set dates to date
-        calender_df["reportDate"] = calender_df["reportDate"].dt.date
-        calender_df["fiscalDateEnding"] = calender_df["fiscalDateEnding"].dt.date
-
-        return calender_df[["symbol", "reportDate", "fiscalDateEnding", "estimate"]].dropna()
+        return calender_df
 
 
 def get_company_earnings_df(calender_raw_data):

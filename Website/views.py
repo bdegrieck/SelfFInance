@@ -108,11 +108,11 @@ def calender_home():
 @views.route("/calenderinfo", methods=["POST"])
 def get_upcoming_calender():
     user_input = UserInput({"Ticker Input": [request.form.get("calenderInput")]})
-    upcoming_calender = EarningsCalender(ticker=user_input.raw_tickers_input[0])
+    earnings_calenders = EarningsCalender(ticker=user_input.raw_tickers_input[0])
 
     return render_template(
         template_name_or_list="calenderinfo.html",
         ticker=user_input.raw_tickers_input[0],
-        upcoming_earnings_calender=upcoming_calender.upcoming_earnings_calender_df,
-        upcoming_earnings_calender_company=upcoming_calender.upcoming_earnings_calender_company_df
+        upcoming_earnings_calender=earnings_calenders.upcoming_earnings_df,
+        upcoming_earnings_calender_company=earnings_calenders.company_earnings_df
     )
