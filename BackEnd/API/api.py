@@ -7,7 +7,7 @@ from BackEnd import constants
 from BackEnd.API.calenderrawdata import CompanyEarningsCalendar, UpcomingEarningsCalendar, EarningsCalendar
 from BackEnd.API.companyrawdata import TimeSeriesData, CompanyEPS, CompanyRawData, CompanyIncomeStatement, \
     CompanyCashFlow, CompanyOverview
-from BackEnd.API.microrawdata import RealGDP, CPI, Inflation, InterestRates, RetailSales, UnemploymentRate, MicroRawData
+from BackEnd.API.microrawdata import RealGDP, CPI, InflationRates, InterestRates, RetailSales, UnemploymentRates, MicroRawData
 from BackEnd.API.technicalindicatorrawdata import SMA, EMA, BBANDS, RSI, AD, ADX, OBV, MACD, TechnicalIndicatorsRawData
 from BackEnd.Data.dataclean import check_raw_data
 
@@ -71,11 +71,12 @@ class TechnicalIndicatorEndpoints(BaseModel):
 def get_company_raw_data(company_raw_data: dict) -> CompanyRawData:
 
     company_prices = [TimeSeriesData(
+        date=date,
         high=data["2. high"],
         low=data["3. low"],
         close=data["5. adjusted close"],
         volume=data["6. volume"],
-    ) for data in company_raw_data["times_series_data"]["Time Series (Daily)"].values()]
+    ) for date, data in company_raw_data["times_series_data"]["Time Series (Daily)"].items()]
 
     company_overview = CompanyOverview(
         ticker_symbol=company_raw_data["overview"]["Symbol"],
@@ -120,18 +121,18 @@ def get_micro_raw_data(raw_data: dict) -> MicroRawData:
 
     real_gdp = [RealGDP(date=data["date"], real_gdp=data["value"]) for data in raw_data["real_gdp"]["data"]]
     cpi = [CPI(date=data["date"], cpi=data["value"]) for data in raw_data["cpi"]["data"]]
-    inflation = [Inflation(date=data["date"], inflation_rate=data["value"]) for data in raw_data["inflation"]["data"]]
+    inflation_rates = [InflationRates(date=data["date"], inflation_rate=data["value"]) for data in raw_data["inflation"]["data"]]
     interest_rates = [InterestRates(date=data["date"], interest_rate=data["value"]) for data in raw_data["federal_funds_rate"]["data"]]
-    retail_sales = [RetailSales(date=data["date"], retail_sales=data["value"]) for data in raw_data["retail_sales"]["data"]]
-    unemployment_rate = [UnemploymentRate(date=data["date"], unemployment_rate=data["value"]) for data in raw_data["unemployment"]["data"]]
+    retail_sales = [RetailSales(date=data["date"], retail_sale=data["value"]) for data in raw_data["retail_sales"]["data"]]
+    unemployment_rates = [UnemploymentRates(date=data["date"], unemployment_rate=data["value"]) for data in raw_data["unemployment"]["data"]]
 
     micro_raw_data = MicroRawData(
         real_gdp=real_gdp,
         cpi=cpi,
-        inflation=inflation,
+        inflation_rates=inflation_rates,
         interest_rates=interest_rates,
         retail_sales=retail_sales,
-        unemployment_rate=unemployment_rate
+        unemployment_rates=unemployment_rates
     )
 
     return micro_raw_data

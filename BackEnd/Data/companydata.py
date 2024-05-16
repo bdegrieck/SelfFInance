@@ -1,6 +1,7 @@
 import pandas as pd
 
 from BackEnd.API.api import get_raw_api_data, get_company_endpoints, get_company_raw_data
+from BackEnd.routines import merge
 
 
 class CompanyData:
@@ -16,10 +17,11 @@ class CompanyData:
 
 class CompanyDataDFS:
     def __init__(self, company_data):
-        self.cashflow_df = get_company_cashflow_df(cashflow_data=company_data.company_cashflow)
         self.eps_df = get_company_eps_df(eps_data=company_data.company_eps)
         self.stock_data_df = get_company_stock_data(company_stock=company_data.company_prices)
-        self.income_statement = get_company_income_statement_df(income_statement=company_data.company_income_statement)
+        income_statement = get_company_income_statement_df(income_statement=company_data.company_income_statement)
+        cashflow_df = get_company_cashflow_df(cashflow_data=company_data.company_cashflow)
+        self.balance_sheet_df = get_balance_sheet(cashflow=cashflow_df, income_statement=income_statement)
 
 
 def get_company_cashflow_df(cashflow_data) -> pd.DataFrame:
@@ -39,6 +41,11 @@ def get_company_cashflow_df(cashflow_data) -> pd.DataFrame:
         "cashFlowFromInvestment": cashflow_from_investment,
         "cashFlowFromOperations": cashflow_from_operations
     })
+
+    cashflow_df = cashflow_df.dropna().set_index("quarterDate")
+
+    # calculates cash flow
+    cashflow_df["cashFlow"] = cashflow_df["cashFlowFromFinancing"] + cashflow_df["cashFlowFromInvestment"] + cashflow_df["cashFlowFromOperations"]
 
     return cashflow_df
 
@@ -61,6 +68,8 @@ def get_company_eps_df(eps_data):
         "surprisePercentage": surprise_percentage
     })
 
+    eps_df = eps_df.dropna().set_index("reportedDate")
+
     return eps_df
 
 
@@ -80,25 +89,37 @@ def get_company_income_statement_df(income_statement):
         "revenue": revenue
     })
 
+    income_statement_dfs = income_statement_dfs.dropna().set_index("quarterDates")
+
     return income_statement_dfs
 
 
 def get_company_stock_data(company_stock):
+    dates = []
     close_prices = []
     high_prices = []
     low_prices = []
     volume = []
     for stock_data in company_stock:
+        dates.append(stock_data.date)
         close_prices.append(stock_data.close)
         high_prices.append(stock_data.high)
         low_prices.append(stock_data.low)
         volume.append(stock_data.volume)
 
     stock_data_df = pd.DataFrame({
+        "date": dates,
         "low": low_prices,
         "high": high_prices,
         "close": close_prices,
         "volume": volume
     })
 
+    stock_data_df = stock_data_df.dropna().set_index("date")
+
     return stock_data_df
+
+
+def get_balance_sheet(cashflow: pd.DataFrame, income_statement: pd.DataFrame):
+    balance_sheet = merge(cashflow, income_statement)
+    return balance_sheet

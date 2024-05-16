@@ -160,11 +160,11 @@
                     </tr>
                 </thead>
                 <tr>
-                    <td>{{ ticker_data.company_overview['tickerSymbol'].iloc[0] }}</td>
-                    <td>{{ ticker_data.company_overview['companyDescription'].iloc[0] }}</td>
-                    <td>{{ ticker_data.company_overview['marketCap'].iloc[0] | format_currency }}</td>
-                    <td>{{ ticker_data.company_overview['52weekHigh'].iloc[0] | format_currency }}</td>
-                    <td>{{ ticker_data.company_overview['52weekLow'].iloc[0] | format_currency }}</td>
+                    <td>{{ ticker_data.company_overview.ticker_symbol }}</td>
+                    <td>{{ ticker_data.company_overview.company_description }}</td>
+                    <td>{{ ticker_data.company_overview.market_cap | format_currency }}</td>
+                    <td>{{ ticker_data.company_overview.year_price_high | format_currency }}</td>
+                    <td>{{ ticker_data.company_overview.year_price_low | format_currency }}</td>
                 </tr>
             </table>
 
@@ -228,7 +228,7 @@
                          <th>Surprise Percentage</th>
                     </tr>
                 </thead>
-                {% for index, row in ticker_data.company_eps.iterrows() %}
+                {% for index, row in ticker_data.company_dfs.eps_df.iterrows() %}
                 <tr>
                     <td>{{ index }}</td>
                     <td>{{ row['estimatedEPS'] | format_currency }}</td>
@@ -246,14 +246,20 @@
                          <th>Date</th>
                         <th>Total Revenue</th>
                         <th>Profit</th>
+                         <th>Cash Flow From Financing</th>
+                         <th>Cash Flow From Investment</th>
+                         <th>Cash Flow From Operations</th>
                         <th>Cash Flow</th>
                     </tr>
                 </thead>
-                {% for index, row in ticker_data.company_balance_sheet.iterrows() %}
+                {% for index, row in ticker_data.company_dfs.balance_sheet_df.iterrows() %}
                 <tr>
                     <td>{{ index }}</td>
-                    <td>{{ row['totalRevenue'] | format_currency }}</td>
+                    <td>{{ row['revenue'] | format_currency }}</td>
                     <td>{{ row['profit'] | format_currency }}</td>
+                    <td>{{ row['cashFlowFromFinancing'] | format_currency }}</td>
+                    <td>{{ row['cashFlowFromInvestment'] | format_currency }}</td>
+                    <td>{{ row['cashFlowFromOperations'] | format_currency }}</td>
                     <td>{{ row['cashFlow'] | format_currency }}</td>
                 </tr>
                 {% endfor %}

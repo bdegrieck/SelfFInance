@@ -5,6 +5,7 @@ from pydantic import BaseModel, validator
 
 
 class TimeSeriesData(BaseModel):
+    date: datetime.datetime
     high: float
     low: float
     close: float

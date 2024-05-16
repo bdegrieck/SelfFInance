@@ -14,14 +14,14 @@ class CPI(BaseModel):
     cpi: float
 
 
-class Inflation(BaseModel):
+class InflationRates(BaseModel):
     date: datetime.datetime
     inflation_rate: float
 
 
 class RetailSales(BaseModel):
     date: datetime.datetime
-    retail_sales: float
+    retail_sale: float
 
 
 class InterestRates(BaseModel):
@@ -29,7 +29,7 @@ class InterestRates(BaseModel):
     interest_rate: float
 
 
-class UnemploymentRate(BaseModel):
+class UnemploymentRates(BaseModel):
     date: datetime.datetime
     unemployment_rate: float
 
@@ -37,7 +37,7 @@ class UnemploymentRate(BaseModel):
 class MicroRawData(BaseModel):
     real_gdp: List[RealGDP]
     cpi: List[CPI]
-    inflation: List[Inflation]
+    inflation_rates: List[InflationRates]
     retail_sales: List[RetailSales]
-    interest_rate: List[InterestRates]
-    unemployment_rate: List[UnemploymentRate]
+    interest_rates: List[InterestRates]
+    unemployment_rates: List[UnemploymentRates]

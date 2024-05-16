@@ -30,8 +30,8 @@ def get_input():
             ticker=user_data.formatted_tickers[0],
             ticker_data=user_data.company_data[0],
             news_link=user_data.news_data.news,
-            prices_dates=[f"{date.month}-{date.day}-{date.year}" for date in user_data.company_data[0].company_prices['close'][::-1].index],
-            prices_values=[row for row in user_data.company_data[0].company_prices['close'][::-1]]
+            prices_dates=[f"{date.month}-{date.day}-{date.year}" for date in user_data.company_data[0].company_dfs.stock_data_df["close"][::-1].index],
+            prices_values=[row for row in user_data.company_data[0].company_dfs.stock_data_df['close'][::-1]]
         )
 
     except (TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, EmptyInput) as error:
@@ -69,7 +69,7 @@ def get_comparison_input():
 
 @views.route("/micro", methods=["POST"])
 def get_micro():
-    micro_data_input = MicroData()
+    micro_data = MicroData()
 
     ticker = request.form.get("stockTicker")
 
@@ -78,23 +78,23 @@ def get_micro():
 
         ticker=ticker,
 
-        real_gdp_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["real_gdp_df"][::-1].index],
-        real_gdp_values=[value for value in micro_data_input.micro_df_data["real_gdp_df"]["Real GDP"][::-1]],
+        real_gdp_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data.real_gdp[::-1].index],
+        real_gdp_values=[value for value in micro_data.real_gdp["realGDP"][::-1]],
 
-        cpi_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["cpi_df"][::-1].index],
-        cpi_values=[value for value in micro_data_input.micro_df_data["cpi_df"]["CPI"][::-1]],
+        cpi_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data.cpi[::-1].index],
+        cpi_values=[value for value in micro_data.cpi["cpi"][::-1]],
 
-        inflation_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["inflation_df"][::-1].index],
-        inflation_values=[value for value in micro_data_input.micro_df_data["inflation_df"]["Inflation Rate"][::-1]],
+        inflation_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data.inflation_rates[::-1].index],
+        inflation_values=[value for value in micro_data.inflation_rates["inflationRate"][::-1]],
 
-        fed_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["federal_funds_rate_df"][::-1].index],
-        fed_values=[value for value in micro_data_input.micro_df_data["federal_funds_rate_df"]["Federal Funds Rate"][::-1]],
+        fed_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data.interest_rates[::-1].index],
+        fed_values=[value for value in micro_data.interest_rates["interestRate"][::-1]],
 
-        retail_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["retail_sales_df"][::-1].index],
-        retail_values=[value for value in micro_data_input.micro_df_data["retail_sales_df"]["Retail Sales"][::-1]],
+        retail_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data.retail_sales[::-1].index],
+        retail_values=[value for value in micro_data.retail_sales["retailSales"][::-1]],
 
-        unemployment_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data_input.micro_df_data["unemployment_rate_df"][::-1].index],
-        unemployment_values=[value for value in micro_data_input.micro_df_data["unemployment_rate_df"]["Unemployment Rate"][::-1]],
+        unemployment_dates=[f"{date.month}-{date.day}-{date.year}" for date in micro_data.unemployment_rates[::-1].index],
+        unemployment_values=[value for value in micro_data.unemployment_rates["unemploymentRate"][::-1]],
     )
 
 

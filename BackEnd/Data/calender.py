@@ -25,22 +25,13 @@ class EarningsCalender:
     def __init__(self, ticker: str):
         endpoints = get_earnings_calender_endpoints(ticker=ticker)
         raw_data = get_raw_api_csv_dfs(endpoints=endpoints)
-        calender_dfs = get_calender_raw_data(raw_data=raw_data)
-        self.upcoming_earnings_calender_df = self.get_sorted_companies_calender(calender_df=calender_dfs["upcoming_earnings_calender"])
-        self.upcoming_earnings_calender_company_df = self.get_company_earnings_calender(calender_df=calender_dfs["company_earnings_calender"])
+        calender_raw_data = get_calender_raw_data(raw_data=raw_data)
+        company_earnings_df = get_company_earnings_df(calender_raw_data=calender_raw_data.company_earnings_calendar)
+        upcoming_earnings_df = get_upcoming_earnings_calender_df(calender_raw_data=calender_raw_data.upcoming_earnings_calendar)
+        self.upcoming_earnings_calender_df = self.get_sorted_companies_calender(calender_df=upcoming_earnings_df)
+        self.upcoming_earnings_calender_company_df = self.get_company_earnings_calender(calender_df=company_earnings_df)
 
     def get_sorted_companies_calender(self, calender_df: pd.DataFrame):
-
-        # gets today's date and ranges a week so df is smaller
-        todays_date = dt.datetime.today()
-        next_date = todays_date + dt.timedelta(days=2)
-
-        # reformat calendar that filters U.S companies, sorts the report Dates and drops empty rows and only a week range
-        calender_df = calender_df[
-            (calender_df["currency"] == "USD") &
-            (calender_df["symbol"].str.len() <= 4) &
-            ((calender_df["reportDate"] >= todays_date) & (calender_df["reportDate"] <= next_date))
-        ].sort_values(by="reportDate").dropna()
 
         # set dates to date
         calender_df["reportDate"] = calender_df["reportDate"].dt.date
@@ -53,9 +44,60 @@ class EarningsCalender:
         return calender_df[["symbol", "name", "reportDate", "fiscalDateEnding", "estimate"]]
 
     def get_company_earnings_calender(self, calender_df: pd.DataFrame):
-
         # set dates to date
         calender_df["reportDate"] = calender_df["reportDate"].dt.date
         calender_df["fiscalDateEnding"] = calender_df["fiscalDateEnding"].dt.date
 
         return calender_df[["symbol", "reportDate", "fiscalDateEnding", "estimate"]].dropna()
+
+
+def get_company_earnings_df(calender_raw_data):
+    quarter_dates = []
+    eps_estimates = []
+    report_dates = []
+
+    for earning_report in calender_raw_data:
+        quarter_dates.append(earning_report.quarter_date)
+        eps_estimates.append(earning_report.eps_estimate)
+        report_dates.append(earning_report.report_date)
+
+    company_earnings_df = pd.DataFrame({
+        "quarterDate": quarter_dates,
+        "reportDate": report_dates,
+        "epsEstimate": eps_estimates
+    })
+
+    company_earnings_df = company_earnings_df.dropna().set_index("quarterDate")
+
+    return company_earnings_df
+
+
+def get_upcoming_earnings_calender_df(calender_raw_data):
+    quarter_dates = []
+    report_dates = []
+    company_names = []
+    symbols = []
+    currencies = []
+    eps_estimates = []
+
+    for earnings_report in calender_raw_data:
+        quarter_dates.append(earnings_report.quarter_date)
+        report_dates.append(earnings_report.report_date)
+        company_names.append(earnings_report.company_name)
+        symbols.append(earnings_report.symbol)
+        currencies.append(earnings_report.currency)
+        eps_estimates.append(earnings_report.eps_estimate)
+
+    upcoming_earnings = pd.DataFrame({
+        "quarterDate": quarter_dates,
+        "reportDate": report_dates,
+        "companyName": company_names,
+        "ticker": symbols,
+        "epsEstimate": eps_estimates,
+        "currency": currencies
+    })
+
+    upcoming_earnings = upcoming_earnings.dropna().set_index("quarterDate").drop(columns="currency").sort_values(by="reportDate")
+
+    return upcoming_earnings
+
