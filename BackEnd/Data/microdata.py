@@ -1,5 +1,6 @@
-import pandas as pd
 from typing import List
+
+import pandas as pd
 
 from BackEnd.API.api import get_raw_api_data, get_micro_endpoints, get_micro_raw_data
 from BackEnd.API.microrawdata import UnemploymentRates, RetailSales, InterestRates, InflationRates, CPI, RealGDP

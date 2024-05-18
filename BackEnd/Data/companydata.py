@@ -1,6 +1,9 @@
 import pandas as pd
+from typing import List
 
 from BackEnd.API.api import get_raw_api_data, get_company_endpoints, get_company_raw_data
+from BackEnd.API.companyrawdata import CompanyRawData, CompanyCashFlow, CompanyEPS, CompanyIncomeStatement, \
+    TimeSeriesData
 from BackEnd.routines import merge
 
 
@@ -16,7 +19,7 @@ class CompanyData:
 
 
 class CompanyDataDFS:
-    def __init__(self, company_data):
+    def __init__(self, company_data: CompanyRawData):
         self.eps_df = get_company_eps_df(eps_data=company_data.company_eps)
         self.stock_data_df = get_company_stock_data(company_stock=company_data.company_prices)
         income_statement = get_company_income_statement_df(income_statement=company_data.company_income_statement)
@@ -24,7 +27,7 @@ class CompanyDataDFS:
         self.balance_sheet_df = get_balance_sheet(cashflow=cashflow_df, income_statement=income_statement)
 
 
-def get_company_cashflow_df(cashflow_data) -> pd.DataFrame:
+def get_company_cashflow_df(cashflow_data: List[CompanyCashFlow]) -> pd.DataFrame:
     quarter_dates = []
     cashflow_from_financing = []
     cashflow_from_investment = []
@@ -50,7 +53,7 @@ def get_company_cashflow_df(cashflow_data) -> pd.DataFrame:
     return cashflow_df
 
 
-def get_company_eps_df(eps_data):
+def get_company_eps_df(eps_data: List[CompanyEPS]) -> pd.DataFrame:
     reported_date = []
     estimated_eps = []
     reported_eps = []
@@ -73,7 +76,7 @@ def get_company_eps_df(eps_data):
     return eps_df
 
 
-def get_company_income_statement_df(income_statement):
+def get_company_income_statement_df(income_statement: List[CompanyIncomeStatement]) -> pd.DataFrame:
     quarter_dates = []
     profit = []
     revenue = []
@@ -94,7 +97,7 @@ def get_company_income_statement_df(income_statement):
     return income_statement_dfs
 
 
-def get_company_stock_data(company_stock):
+def get_company_stock_data(company_stock: List[TimeSeriesData]) -> pd.DataFrame:
     dates = []
     close_prices = []
     high_prices = []
@@ -120,6 +123,6 @@ def get_company_stock_data(company_stock):
     return stock_data_df
 
 
-def get_balance_sheet(cashflow: pd.DataFrame, income_statement: pd.DataFrame):
+def get_balance_sheet(cashflow: pd.DataFrame, income_statement: pd.DataFrame) -> pd.DataFrame:
     balance_sheet = merge(cashflow, income_statement)
     return balance_sheet

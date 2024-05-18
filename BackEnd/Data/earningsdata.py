@@ -2,6 +2,11 @@ import numpy as np
 import pandas as pd
 from pandas import Timestamp
 
+from BackEnd.Data.calender import EarningsCalender
+from BackEnd.Data.companydata import CompanyData
+from BackEnd.Data.microdata import MicroData
+from BackEnd.Data.techindicators import TechnicalIndicators
+
 
 def find_closest_dates_before(date, data_df):
     return data_df[data_df.index < date].first_valid_index()
@@ -16,15 +21,15 @@ def get_quarter_dates(df: pd.DataFrame):
 
 class EarningsData:
 
-    def __init__(self, stock_data, technical_analysis_data, calender, micro_data):
-        report_dates = set(stock_data.company_balance_sheet["reportedDate"])
+    def __init__(self, stock_data: CompanyData, technical_analysis_data: TechnicalIndicators, calender: EarningsCalender, micro_data: MicroData):
+        report_dates = set(stock_data.company_dfs.eps_df.index)
         self.calender = calender
-        self.quarter_dates = stock_data.company_eps.index
-        self.report_eps_differences_df = self.get_eps_differences(company_eps_df=stock_data.company_eps)
-        self.report_balance_sheet_differences_df = self.get_balance_sheet_differences(company_balance_sheet_df=stock_data.company_balance_sheet)
-        self.report_prices_differences_df = self.get_price_differences(company_prices_df=stock_data.company_prices, report_dates=report_dates)
+        self.quarter_dates = set(stock_data.company_dfs.balance_sheet_df.index)
+        self.report_eps_differences_df = self.get_eps_differences(company_eps_df=stock_data.company_dfs.eps_df)
+        self.report_balance_sheet_differences_df = self.get_balance_sheet_differences(company_balance_sheet_df=stock_data.company_dfs.balance_sheet_df)
+        self.report_prices_differences_df = self.get_price_differences(company_prices_df=stock_data.company_dfs.stock_data_df, report_dates=report_dates)
         self.technical_analysis_data_dfs = self.get_technical_analysis_earnings_data(tech_analysis_raw_data=technical_analysis_data.technical_indicator_data, report_dates=report_dates)
-        self.micro_data = self.get_micro_data(micro_data=micro_data.micro_df_data, report_dates=report_dates)
+        self.micro_data = self.get_micro_data(micro_data=micro_data, report_dates=report_dates)
 
     def get_price_differences(self, company_prices_df: pd.DataFrame, report_dates: set) -> pd.DataFrame:
 
@@ -116,15 +121,11 @@ class EarningsData:
         return company_eps_df
 
     def get_balance_sheet_differences(self, company_balance_sheet_df: pd.DataFrame) -> pd.DataFrame:
-        company_balance_sheet_diff = pd.DataFrame({
-            "totalRevenue": company_balance_sheet_df["totalRevenue"],
-            "profit": company_balance_sheet_df["profit"],
-            "cashFlow": company_balance_sheet_df["cashFlow"]
-        })
+        company_balance_sheet_diff = company_balance_sheet_df[["cashFlow", "revenue", "profit"]]
 
         # calculates differences between quarterly reports
-        company_balance_sheet_diff["totalRevenueDiff"] = (
-            (company_balance_sheet_df["totalRevenue"] - company_balance_sheet_df["totalRevenue"].shift(-1))
+        company_balance_sheet_diff["revenueDiff"] = (
+            (company_balance_sheet_df["revenue"] - company_balance_sheet_df["revenue"].shift(-1))
         )
         company_balance_sheet_diff["profitDiff"] = (
             (company_balance_sheet_df["profit"] - company_balance_sheet_df["profit"].shift(-1))

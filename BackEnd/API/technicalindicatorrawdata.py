@@ -1,48 +1,48 @@
-import datetime
+import datetime as dt
 from typing import List
 
 from pydantic import BaseModel
 
 
 class SMA(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     sma: float
 
 
 class EMA(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     ema: float
 
 
 class RSI(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     rsi: float
 
 
 class MACD(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     macd: float
 
 
 class BBANDS(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     lower_band: float
     middle_band: float
     upper_band: float
 
 
 class ADX(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     adx: float
 
 
 class AD(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     ad: float
 
 
 class OBV(BaseModel):
-    date: datetime.datetime
+    date: dt.date
     obv: float
 
 

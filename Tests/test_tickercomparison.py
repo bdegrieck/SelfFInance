@@ -5,7 +5,6 @@ from BackEnd.user import User
 
 class TestTickerComparison:
 
-
     def test_ticker_comparison(self):
         input_raw = UserInput({"Ticker Input": ["apple", "microsoft"]})
         input = User(input_raw)

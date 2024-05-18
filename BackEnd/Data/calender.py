@@ -1,11 +1,12 @@
-import datetime as dt
 from functools import lru_cache
 
 import pandas as pd
 import requests
+from typing import List
 
 from BackEnd import constants
 from BackEnd.API.api import get_earnings_calender_endpoints, get_raw_api_csv_dfs, get_calender_raw_data
+from BackEnd.API.calenderrawdata import CompanyEarningsCalendar, UpcomingEarningsCalendar
 
 
 @lru_cache(maxsize=1000)
@@ -30,8 +31,7 @@ class EarningsCalender:
         self.upcoming_earnings_df = get_upcoming_earnings_calender_df(calender_raw_data=calender_raw_data.upcoming_earnings_calendar)
         # self.upcoming_earnings_calender_df = self.get_sorted_companies_calender(calender_df=upcoming_earnings_df)
 
-    def get_sorted_companies_calender(self, calender_df: pd.DataFrame):
-
+    def get_sorted_companies_calender(self, calender_df: pd.DataFrame) -> pd.DataFrame:
         # filters out df with companies with market caps greater than 1 billion
         calender_df["marketCap"] = calender_df["symbol"].apply(get_market_cap)
         calender_df = calender_df[calender_df["marketCap"] > 1e9].reset_index(drop=True)
@@ -39,7 +39,7 @@ class EarningsCalender:
         return calender_df
 
 
-def get_company_earnings_df(calender_raw_data):
+def get_company_earnings_df(calender_raw_data: List[CompanyEarningsCalendar]) -> pd.DataFrame:
     quarter_dates = []
     eps_estimates = []
     report_dates = []
@@ -60,7 +60,7 @@ def get_company_earnings_df(calender_raw_data):
     return company_earnings_df
 
 
-def get_upcoming_earnings_calender_df(calender_raw_data):
+def get_upcoming_earnings_calender_df(calender_raw_data: List[UpcomingEarningsCalendar]) -> pd.DataFrame:
     quarter_dates = []
     report_dates = []
     company_names = []

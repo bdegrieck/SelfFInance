@@ -7,7 +7,8 @@ from BackEnd import constants
 from BackEnd.API.calenderrawdata import CompanyEarningsCalendar, UpcomingEarningsCalendar, EarningsCalendar
 from BackEnd.API.companyrawdata import TimeSeriesData, CompanyEPS, CompanyRawData, CompanyIncomeStatement, \
     CompanyCashFlow, CompanyOverview
-from BackEnd.API.microrawdata import RealGDP, CPI, InflationRates, InterestRates, RetailSales, UnemploymentRates, MicroRawData
+from BackEnd.API.microrawdata import RealGDP, CPI, InflationRates, InterestRates, RetailSales, UnemploymentRates, \
+    MicroRawData
 from BackEnd.API.technicalindicatorrawdata import SMA, EMA, BBANDS, RSI, AD, ADX, OBV, MACD, TechnicalIndicatorsRawData
 from BackEnd.Data.dataclean import check_raw_data
 

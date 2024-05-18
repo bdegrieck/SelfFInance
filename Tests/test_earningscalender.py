@@ -1,0 +1,17 @@
+from BackEnd.Data.calender import EarningsCalender
+from BackEnd.Data.companydata import CompanyData
+from BackEnd.Data.earningsdata import EarningsData
+from BackEnd.Data.microdata import MicroData
+from BackEnd.Data.techindicators import TechnicalIndicators
+
+
+class TestEarningsCalender:
+
+    def test_data(self):
+        ticker = "AAPL"
+        company_data = CompanyData(ticker=ticker)
+        technical_data = TechnicalIndicators(ticker=ticker)
+        micro_data = MicroData()
+        calender = EarningsCalender(ticker=ticker)
+        earnings = EarningsData(stock_data=company_data, technical_analysis_data=technical_data, calender=calender, micro_data=micro_data)
+        print(earnings)

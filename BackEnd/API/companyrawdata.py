@@ -13,11 +13,11 @@ class TimeSeriesData(BaseModel):
 
 
 class CompanyOverview(BaseModel):
-    ticker_symbol: str
-    company_description: str
-    market_cap: float
-    year_price_high: float
-    year_price_low: float
+    ticker_symbol: str = None
+    company_description: str = None
+    market_cap: float = None
+    year_price_high: float = None
+    year_price_low: float = None
 
 
 class CompanyEPS(BaseModel):
