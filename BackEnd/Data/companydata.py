@@ -16,6 +16,7 @@ class CompanyData:
         company_data = get_company_raw_data(company_raw_data=raw_data_dict)
         self.company_overview = company_data.company_overview
         self.company_dfs = CompanyDataDFS(company_data=company_data)
+        self.report_dates=self.company_dfs.eps_df["reportedDate"]
 
 
 class CompanyDataDFS:
@@ -25,6 +26,7 @@ class CompanyDataDFS:
         income_statement = get_company_income_statement_df(income_statement=company_data.company_income_statement)
         cashflow_df = get_company_cashflow_df(cashflow_data=company_data.company_cashflow)
         self.balance_sheet_df = get_balance_sheet(cashflow=cashflow_df, income_statement=income_statement)
+
 
 
 def get_company_cashflow_df(cashflow_data: List[CompanyCashFlow]) -> pd.DataFrame:
@@ -106,22 +108,36 @@ def get_company_stock_data(company_stock: List[TimeSeriesData]) -> pd.DataFrame:
     high_prices = []
     low_prices = []
     volume = []
+    splits = []
     for stock_data in company_stock:
         dates.append(stock_data.date)
         close_prices.append(stock_data.close)
         high_prices.append(stock_data.high)
         low_prices.append(stock_data.low)
         volume.append(stock_data.volume)
+        splits.append(stock_data.split)
 
     stock_data_df = pd.DataFrame({
         "date": dates,
         "low": low_prices,
         "high": high_prices,
         "close": close_prices,
-        "volume": volume
+        "volume": volume,
+        "split": splits
     })
 
     stock_data_df = stock_data_df.dropna().set_index("date")
+
+    # Calculate the cumulative product of the splits
+    stock_data_df['splitSum'] = stock_data_df['split'].cumprod()
+
+    # Adjust the 'low', 'high', and 'close' columns
+    stock_data_df['low'] = stock_data_df['low'] / stock_data_df['splitSum']
+    stock_data_df['high'] = stock_data_df['high'] / stock_data_df['splitSum']
+    stock_data_df['close'] = stock_data_df['close'] / stock_data_df['splitSum']
+
+    # Drop the 'split_sum' column if you don't need it anymore
+    stock_data_df.drop(columns=['splitSum'], inplace=True)
 
     return stock_data_df
 

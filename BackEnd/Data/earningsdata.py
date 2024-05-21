@@ -6,6 +6,7 @@ from BackEnd.Data.calender import EarningsCalender
 from BackEnd.Data.companydata import CompanyData
 from BackEnd.Data.microdata import MicroData
 from BackEnd.Data.techindicators import TechnicalIndicators
+from BackEnd.routines import get_shifted_differences, get_series_difference_percentage
 
 
 def find_closest_dates_before(date, data_df):
@@ -28,78 +29,64 @@ class EarningsData:
         self.technical_analysis_data_dfs = self.get_technical_analysis_earnings_data(tech_analysis_raw_data=technical_analysis_data.technical_indicator_data, report_dates=report_dates)
         self.micro_data = self.get_micro_data(micro_data=micro_data, report_dates=report_dates)
 
-    def get_price_differences(self, company_prices_df: pd.DataFrame, report_dates: set) -> pd.DataFrame:
+    def get_price_differences(company_prices_df: pd.DataFrame, report_dates: dict) -> pd.DataFrame:
 
         # finds closest dates in prices_df closest to the report date and removes 0 from report dates
         combined_report_dates = set()
-        before_dates_dict = {}
-        after_dates_dict = {}
+        before_dates = []
+        after_dates = []
+        filtered_report_dates = []
+        filtered_quarter_dates = []
 
-        for date in report_dates:
-            before_date = find_closest_dates_before(date, company_prices_df)
-            after_date = find_closest_dates_after(date, company_prices_df)
-
-            # Check if before_date is not equal to 0 before adding to before_dates_dict
-            if before_date is not None:
-                before_dates_dict[date] = before_date
-
-            if after_date is not None:
-                after_dates_dict[date] = after_date
+        for quarter_date, report_date in report_dates.items():
+            before_date = find_closest_dates_before(report_date, company_prices_df)
+            after_date = find_closest_dates_after(quarter_date, company_prices_df)
 
             # Use set union to combine dates without duplicates
-            combined_report_dates.update({date, before_date, after_date})
+            if before_date and after_date is not None:
+                combined_report_dates.update({report_date, before_date, after_date})
+                before_dates.append(before_date)
+                after_dates.append(after_date)
+                filtered_report_dates.append(report_date)
+                filtered_quarter_dates.append(quarter_date)
 
         # gets all rows where the date is before and after earning reports
-        prices_report_dates_df = company_prices_df[(company_prices_df.index.isin(combined_report_dates))]
+        prices_report_dates_df = company_prices_df[company_prices_df.index.isin(combined_report_dates)]
         prices_report_dates_df["report"] = np.select(condlist=[
-            prices_report_dates_df.index.isin(before_dates_dict.values()),
-            prices_report_dates_df.index.isin(after_dates_dict.values()),
-            prices_report_dates_df.index.isin(report_dates)],
+            prices_report_dates_df.index.isin(before_dates),
+            prices_report_dates_df.index.isin(after_dates),
+            prices_report_dates_df.index.isin(filtered_report_dates)],
             choicelist=["before", "after", "report"],
             default=np.nan
         )
 
         # calculates price change before and after report closing price
-        before_report_prices = prices_report_dates_df[prices_report_dates_df["report"] == "before"]["close"].reset_index(drop=True)
-        after_report_prices = prices_report_dates_df[prices_report_dates_df["report"] == "after"]["close"].reset_index(drop=True)
+        before_report_prices = prices_report_dates_df[prices_report_dates_df["report"] == "before"][
+            "close"].reset_index(drop=True)
+        after_report_prices = prices_report_dates_df[prices_report_dates_df["report"] == "after"]["close"].reset_index(
+            drop=True)
+        report_differences = get_series_difference_percentage(series1=before_report_prices, series2=after_report_prices)
 
-        # if earnings was day of the the program run then before and after would be uneven since after hasn't happened yet
-        if len(before_dates_dict) == len(after_dates_dict) + 1:
-            before_report_prices = before_report_prices.drop([0]).reset_index(drop=True)
-            report_dates.pop(0)
-
-        # if there is a report and closing price the next day hasn't been out yet
-        if len(report_dates) == len(before_dates_dict) + 1:
-            report_dates.pop(0)
-
-        report_differences = ((after_report_prices - before_report_prices) / before_report_prices) * 100
-        report_price_differences = pd.DataFrame({
-            "reportedDate": report_dates,
+        report_price_differences_df = pd.DataFrame({
+            "reportedDate": sorted(filtered_report_dates, reverse=True),
             "beforeReportPrice": before_report_prices,
             "afterReportPrice": after_report_prices,
             "priceDiffPercentage": report_differences
         })
 
-        report_price_differences["beforeReportPriceDiffPercentage"] = (
-            (report_price_differences["beforeReportPrice"] - report_price_differences["beforeReportPrice"].shift(-1)) / report_price_differences["beforeReportPrice"].shift(-1))
-        report_price_differences["afterReportPriceDiffPercentage"] = (
-            (report_price_differences["afterReportPrice"] - report_price_differences["afterReportPrice"].shift(-1)) / report_price_differences["afterReportPrice"].shift(-1))
-        report_price_differences["priceDiffPercentageDiff"] = (
-            (report_price_differences["priceDiffPercentage"] - report_price_differences["priceDiffPercentage"].shift(-1)) / report_price_differences["priceDiffPercentage"].shift(-1))
+        report_price_differences_df = get_shifted_differences(
+            df=report_price_differences_df,
+            columns_to_shift=["beforeReportPrice", "afterReportPrice", "priceDiffPercentage"],
+            shift_motion=-1
+        )
 
         # handles index
-        quarter_dates = ["03-31", "06-30", "09-30", "12-31"]
-        first_quarter_year = self.report_eps_differences_df.index[-1].year
-        most_recent_quarter_year = self.report_eps_differences_df.index[0].year
-        most_recent_quarter = self.report_eps_differences_df.index[0]
-        list_of_quarter_dates = [Timestamp(f"{year}-{quarter_date}") for year in range(first_quarter_year, most_recent_quarter_year + 1) for quarter_date in quarter_dates]
+        report_price_differences_df.index = filtered_quarter_dates
 
-        list_index = [date for date in list_of_quarter_dates if date <= most_recent_quarter]
+        # drops na values
+        report_price_differences_df = report_price_differences_df.dropna()
 
-        index_length = len(report_price_differences)
-        report_price_differences.index = list_index[-index_length:][::-1]
-
-        return report_price_differences
+        return report_price_differences_df
 
     def get_eps_differences(self, company_eps_df: pd.DataFrame) -> pd.DataFrame:
 

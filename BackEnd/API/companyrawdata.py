@@ -10,6 +10,7 @@ class TimeSeriesData(BaseModel):
     low: float
     close: float
     volume: float
+    split: float
 
 
 class CompanyOverview(BaseModel):

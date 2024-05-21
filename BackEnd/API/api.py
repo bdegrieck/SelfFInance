@@ -75,8 +75,9 @@ def get_company_raw_data(company_raw_data: dict) -> CompanyRawData:
         date=date,
         high=data["2. high"],
         low=data["3. low"],
-        close=data["5. adjusted close"],
+        close=data["4. close"],
         volume=data["6. volume"],
+        split=data["8. split coefficient"]
     ) for date, data in company_raw_data["times_series_data"]["Time Series (Daily)"].items()]
 
     company_overview = CompanyOverview(
