@@ -89,6 +89,7 @@ def get_company_raw_data(company_raw_data: dict) -> CompanyRawData:
 
     company_eps = [CompanyEPS(
         estimated_eps=data["estimatedEPS"],
+        quarter_date=data["fiscalDateEnding"],
         reported_eps=data["reportedEPS"],
         surprise_percentage=data["surprisePercentage"],
         reported_date=data["reportedDate"]

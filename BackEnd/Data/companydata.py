@@ -58,20 +58,23 @@ def get_company_eps_df(eps_data: List[CompanyEPS]) -> pd.DataFrame:
     estimated_eps = []
     reported_eps = []
     surprise_percentage = []
+    quarter_dates = []
     for eps_statement in eps_data:
+        quarter_dates.append(eps_statement.quarter_date)
         reported_date.append(eps_statement.reported_date)
         estimated_eps.append(eps_statement.estimated_eps)
         reported_eps.append(eps_statement.reported_eps)
         surprise_percentage.append(eps_statement.surprise_percentage)
 
     eps_df = pd.DataFrame({
+        "quarterDate": quarter_dates,
         "reportedDate": reported_date,
         "estimatedEPS": estimated_eps,
         "reportedEPS": reported_eps,
         "surprisePercentage": surprise_percentage
     })
 
-    eps_df = eps_df.dropna().set_index("reportedDate")
+    eps_df = eps_df.dropna().set_index("quarterDate")
 
     return eps_df
 

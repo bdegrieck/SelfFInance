@@ -15,9 +15,6 @@ def find_closest_dates_before(date, data_df):
 def find_closest_dates_after(date, data_df):
     return data_df[data_df.index > date].last_valid_index()
 
-def get_quarter_dates(df: pd.DataFrame):
-    pass
-
 
 class EarningsData:
 
@@ -37,7 +34,6 @@ class EarningsData:
         combined_report_dates = set()
         before_dates_dict = {}
         after_dates_dict = {}
-        report_dates = sorted({date for date in report_dates if date != 0 and date > self.report_eps_differences_df.index[-1]}, reverse=True)
 
         for date in report_dates:
             before_date = find_closest_dates_before(date, company_prices_df)

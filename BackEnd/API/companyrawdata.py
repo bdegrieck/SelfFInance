@@ -25,6 +25,7 @@ class CompanyEPS(BaseModel):
     reported_eps: Optional[float]
     surprise_percentage: Optional[float]
     reported_date: dt.date
+    quarter_date: dt.date
 
     @validator("estimated_eps", "reported_eps", "surprise_percentage", pre=True, allow_reuse=True)
     def handle_none_values(cls, value):
