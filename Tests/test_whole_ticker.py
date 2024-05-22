@@ -1,6 +1,6 @@
-from BackEnd.Data.microdata import MicroData
-from BackEnd.error import TickerDoesNotExist, EnterTickerInstead, SameTickers
 from BackEnd.formatinput import UserInput
+
+from BackEnd.error import TickerDoesNotExist, EnterTickerInstead, SameTickers
 from BackEnd.user import User
 
 

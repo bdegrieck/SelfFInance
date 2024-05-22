@@ -19,7 +19,7 @@ def linear_model_eps_calender_fit(calender_df):
         company_data = CompanyData(ticker=report.symbol)
         technical_analysis = TechnicalIndicators(ticker=report.symbol)
         raw_stock_data_df = pd.DataFrame({
-            "estimatedEPS": company_data.company_eps["estimatedEPS"],
+            "estimatedEPS": company_data.company_dfs.eps_df["estimatedEPS"],
             "SMA": technical_analysis.technical_indicator_data["SMA"]["SMA"],
             "EMA": technical_analysis.technical_indicator_data["EMA"]["EMA"],
             "RSI": technical_analysis.technical_indicator_data["RSI"]["RSI"],

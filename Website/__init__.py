@@ -1,5 +1,7 @@
 from flask import Flask
+
 from Website import views
+
 
 def create_app():
     app = Flask(__name__)

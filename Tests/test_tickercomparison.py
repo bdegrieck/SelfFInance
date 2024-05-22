@@ -1,5 +1,6 @@
-from BackEnd.Data.tickercomparison import TickerComparison
 from BackEnd.formatinput import UserInput
+
+from BackEnd.Data.tickercomparison import TickerComparison
 from BackEnd.user import User
 
 

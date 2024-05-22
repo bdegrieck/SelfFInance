@@ -1,4 +1,3 @@
-from BackEnd.Data.calender import EarningsCalender
 from BackEnd.Data.companydata import CompanyData
 from BackEnd.Data.earningsdata import EarningsData
 from BackEnd.Data.microdata import MicroData

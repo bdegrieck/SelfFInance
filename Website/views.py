@@ -2,11 +2,11 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from BackEnd.Data.calender import EarningsCalender
 from BackEnd.Data.companydata import CompanyData
+from BackEnd.Data.microdata import MicroData
 from BackEnd.Data.news import News
+from BackEnd.Data.tickercomparison import TickerComparison
 from BackEnd.error import TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, EmptyInput
 from BackEnd.user import UserInput
-from BackEnd.Data.tickercomparison import TickerComparison
-from BackEnd.Data.microdata import MicroData
 
 views = Blueprint("views", __name__)
 
@@ -109,12 +109,17 @@ def calender_home():
 
 @views.route("/calenderinfo", methods=["POST"])
 def get_upcoming_calender():
-    user_input = UserInput(tickers=[request.form.get("calenderInput")])
-    earnings_calenders = EarningsCalender(ticker=user_input.tickers[0])
+    try:
+        user_input = UserInput(tickers=[request.form.get("calenderInput")])
+        earnings_calenders = EarningsCalender(ticker=user_input.tickers[0])
 
-    return render_template(
-        template_name_or_list="calenderinfo.html",
-        ticker=user_input.tickers[0],
-        upcoming_earnings_calender=earnings_calenders.upcoming_earnings_df,
-        upcoming_earnings_calender_company=earnings_calenders.company_earnings_df
-    )
+        return render_template(
+            template_name_or_list="calenderinfo.html",
+            ticker=user_input.tickers[0],
+            upcoming_earnings_calender=earnings_calenders.upcoming_earnings_df,
+            upcoming_earnings_calender_company=earnings_calenders.company_earnings_df
+        )
+
+    except (TickerDoesNotExist, EnterTickerInstead, SameTickers, InsufficientData, EmptyInput) as error:
+        flash(str(error))
+        return redirect(url_for("views.calender_home"))
