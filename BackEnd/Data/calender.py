@@ -1,8 +1,8 @@
 from functools import lru_cache
+from typing import List
 
 import pandas as pd
 import requests
-from typing import List
 
 from BackEnd import constants
 from BackEnd.API.api import get_earnings_calender_endpoints, get_raw_api_csv_dfs, get_calender_raw_data

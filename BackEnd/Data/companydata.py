@@ -1,5 +1,6 @@
-import pandas as pd
 from typing import List
+
+import pandas as pd
 
 from BackEnd.API.api import get_raw_api_data, get_company_endpoints, get_company_raw_data
 from BackEnd.API.companyrawdata import CompanyRawData, CompanyCashFlow, CompanyEPS, CompanyIncomeStatement, \

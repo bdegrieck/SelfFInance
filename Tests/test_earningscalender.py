@@ -10,5 +10,7 @@ class TestEarningsCalender:
     def test_data(self):
         ticker = "AAPL"
         company_data = CompanyData(ticker=ticker)
-        report_dates = company_data.company_dfs.eps_df["reportDate"]
-        get_price_differences
+        technical_analysis_data = TechnicalIndicators(ticker=ticker)
+        micro_data = MicroData()
+        earnings = EarningsData(micro_data=micro_data, stock_data=company_data, technical_analysis_data=technical_analysis_data)
+        print(earnings)
