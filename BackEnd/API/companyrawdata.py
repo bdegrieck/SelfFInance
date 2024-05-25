@@ -9,7 +9,7 @@ class TimeSeriesData(BaseModel):
     high: float
     low: float
     close: float
-    volume: float
+    volume: int
     split: float
 
 
