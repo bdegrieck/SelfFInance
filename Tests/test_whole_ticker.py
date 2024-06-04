@@ -8,9 +8,7 @@ class TestWholeTicker:
     # purpose of this test is to test random instances for debugging not part of phase 4
     def test_ticker(self):
         try:
-            user_input = UserInput({
-                "Ticker Input": ["AAPL"],
-            })
+            user_input = UserInput(["AAPL"])
             user_data = User(user_input=user_input)
             print(user_data)
 
