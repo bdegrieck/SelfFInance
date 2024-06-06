@@ -17,7 +17,7 @@ class CompanyData:
         company_data = get_company_raw_data(company_raw_data=raw_data_dict)
         self.company_overview = company_data.company_overview
         self.company_dfs = CompanyDataDFS(company_data=company_data)
-        self.report_dates=self.company_dfs.eps_df["reportedDate"]
+        self.report_dates = self.company_dfs.eps_df["reportedDate"]
 
 
 class CompanyDataDFS:
@@ -27,7 +27,6 @@ class CompanyDataDFS:
         income_statement = get_company_income_statement_df(income_statement=company_data.company_income_statement)
         cashflow_df = get_company_cashflow_df(cashflow_data=company_data.company_cashflow)
         self.balance_sheet_df = get_balance_sheet(cashflow=cashflow_df, income_statement=income_statement)
-
 
 
 def get_company_cashflow_df(cashflow_data: List[CompanyCashFlow]) -> pd.DataFrame:
